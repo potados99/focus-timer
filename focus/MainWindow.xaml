@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:focus"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
+        MouseDown="Window_MouseDown"
         Top="0"
         Topmost="True"
-        WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="200" Width="300">
     <Grid>
 

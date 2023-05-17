@@ -38,14 +38,12 @@ namespace focus
         const int WM_SIZING = 0x0214;
         const int WM_MOVING = 0x0216;
 
-        private Point InitialWindowLocation;
+        int InitialHeight = -1;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
             HwndSource.FromHwnd(helper.Handle).AddHook(HwndMessageHook);
-
-            InitialWindowLocation = new Point(this.Left, this.Top);
         }
 
         public MainWindow()
@@ -66,20 +64,21 @@ namespace focus
         {
             switch (msg)
             {
-                case WM_SIZING:
                 case WM_MOVING:
                     {
                         WIN32Rectangle rectangle = (WIN32Rectangle)Marshal.PtrToStructure(lParam, typeof(WIN32Rectangle));
 
+                        if (InitialHeight == -1)
+                        {
+                            InitialHeight = rectangle.Bottom - rectangle.Top;
+                        }
+
                         rectangle.Top = 0;
-                        rectangle.Bottom = 250;
+                        rectangle.Bottom = InitialHeight;
 
                         bHandled = true;
 
-                        if (bHandled)
-                        {
-                            Marshal.StructureToPtr(rectangle, lParam, true);
-                        }
+                        Marshal.StructureToPtr(rectangle, lParam, true);                     
                     }
                     break;
 
@@ -87,5 +86,12 @@ namespace focus
             return IntPtr.Zero;
         }
 
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
     }
 }
