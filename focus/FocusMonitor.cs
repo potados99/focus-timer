@@ -10,10 +10,15 @@ namespace focus
 {
     class FocusMonitor
     {
+        public FocusMonitor() {
+            CurrentlyFocusedProcessName = Process.GetCurrentProcess().ProcessName;
+        }  
 
-        public delegate void FocusedEventHandler(string processName);
+        public delegate void FocusedEventHandler(string focusedProcessName);
 
         public event FocusedEventHandler? OnFocused;
+
+        public string CurrentlyFocusedProcessName { get; private set; }
 
         public void StartListening()
         {
