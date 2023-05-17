@@ -9,8 +9,16 @@
         MouseDown="Window_MouseDown"
         Top="0"
         Topmost="True"
-        Title="MainWindow" Height="200" Width="300">
-    <Grid>
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="{x:Null}"
+        AllowsTransparency="True"
+        Title="MainWindow" 
+        Height="32" Width="200">
 
-    </Grid>
+    <Border BorderThickness="3" CornerRadius="0,0,12,12" Background="#FFFFFFFF">
+        <Grid>
+            <Label Content="hahahh" />
+        </Grid>
+    </Border>
 </Window>
