@@ -35,21 +35,14 @@ namespace focus
     public partial class MainWindow : Window
     {
 
-        const int WM_SIZING = 0x0214;
-        const int WM_MOVING = 0x0216;
-
-        int InitialHeight = -1;
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowInteropHelper helper = new WindowInteropHelper(this);
-            HwndSource.FromHwnd(helper.Handle).AddHook(HwndMessageHook);
-        }
-
         public MainWindow()
         {
             InitializeComponent();
+        }
 
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             FocusMonitor monitor = new FocusMonitor();
 
             monitor.OnFocused += (focusedProcessName) =>
@@ -58,32 +51,10 @@ namespace focus
             };
 
             monitor.StartListening();
-        }
 
-        private IntPtr HwndMessageHook(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool bHandled)
-        {
-            switch (msg)
-            {
-                case WM_MOVING:
-                    {
-                        WIN32Rectangle rectangle = (WIN32Rectangle)Marshal.PtrToStructure(lParam, typeof(WIN32Rectangle));
+            WindowStickHelper stickHelper = new WindowStickHelper(this);
 
-                        if (InitialHeight == -1)
-                        {
-                            InitialHeight = rectangle.Bottom - rectangle.Top;
-                        }
-
-                        rectangle.Top = 0;
-                        rectangle.Bottom = InitialHeight;
-
-                        bHandled = true;
-
-                        Marshal.StructureToPtr(rectangle, lParam, true);                     
-                    }
-                    break;
-
-            }
-            return IntPtr.Zero;
+            stickHelper.StickWindowToTopOnMove();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
