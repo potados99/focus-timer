@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -20,9 +23,20 @@ namespace focus
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
+
+            FocusMonitor monitor = new FocusMonitor();
+
+            monitor.OnFocused += (processName) =>
+            {
+                Debug.WriteLine("Yeah! " + processName);
+            };
+
+            monitor.StartListening();
         }
+
     }
 }
