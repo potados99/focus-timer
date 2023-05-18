@@ -13,23 +13,8 @@ namespace focus
 {
     class FocusMonitor
     {
-        delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
-
-        [DllImport("user32.dll")]
-        static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
-
-        private const uint WINEVENT_OUTOFCONTEXT = 0;
-        private const uint EVENT_SYSTEM_FOREGROUND = 3;
-
-        [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
-
-
         public FocusMonitor() {
-            FocusedWindow = GetForegroundWindow();
+            FocusedWindow = API.GetForegroundWindow();
         }  
 
         public delegate void FocusedEventHandler(IntPtr prev, IntPtr current);
@@ -40,7 +25,7 @@ namespace focus
 
         public void StartListening()
         {
-            IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, WinEventProc, 0, 0, WINEVENT_OUTOFCONTEXT);
+            IntPtr m_hhook = API.SetWinEventHook(API.EVENT_SYSTEM_FOREGROUND, API.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, WinEventProc, 0, 0, API.WINEVENT_OUTOFCONTEXT);
         }
 
         public void StopListening()

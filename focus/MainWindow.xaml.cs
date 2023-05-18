@@ -20,34 +20,12 @@ using System.Windows.Shapes;
 
 namespace focus
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct WIN32Rectangle
-    {
-        public int Left;
-        public int Top;
-        public int Right;
-        public int Bottom;
-    }
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        [DllImport("user32.dll")]
-        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll")]
-        static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
-
-        public const int GWL_EXSTYLE = -20;
-        public const int WS_EX_LAYERED = 0x80000;
-        public const int LWA_ALPHA = 0x2;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -59,13 +37,27 @@ namespace focus
 
             monitor.OnFocused += (prev, current) =>
             {
-                Debug.WriteLine("Yeah! " + prev + " -> " + current);
+                //SetWindowLong(current, GWL_EXSTYLE, GetWindowLong(current, GWL_EXSTYLE) | WS_EX_LAYERED);
+                //SetLayeredWindowAttributes(current, 0, 255, LWA_ALPHA);
 
-                SetWindowLong(prev, GWL_EXSTYLE, GetWindowLong(prev, GWL_EXSTYLE) | WS_EX_LAYERED);
-                SetLayeredWindowAttributes(prev, 0, 255, LWA_ALPHA);
+                //SetWindowLong(prev, GWL_EXSTYLE, GetWindowLong(prev, GWL_EXSTYLE) | WS_EX_LAYERED);
+                //SetLayeredWindowAttributes(prev, 0, 128, LWA_ALPHA);
 
-                SetWindowLong(current, GWL_EXSTYLE, GetWindowLong(current, GWL_EXSTYLE) | WS_EX_LAYERED);
-                SetLayeredWindowAttributes(current, 0, 128, LWA_ALPHA);
+                var allowList = new List<string>() { "focus", "devenv" };
+
+                API.GetWindowThreadProcessId(current, out var processId);
+
+                string processName = Process.GetProcessById((int)processId).ProcessName;
+                
+                Debug.WriteLine("Yeah! " + prev + " -> " + current + ". The [" + processName + "] got focus!");
+
+                if (allowList.IndexOf(processName) < 0)
+                {
+                    Debug.WriteLine($"No, [{processName}] is not allowd!");
+                    MessageBox.Show($"{processName}은(는) 지금 사용하실 수 없어요!", "안 돼요!");
+
+                    API.SetForegroundWindow(prev);
+                }
             };
 
             monitor.StartListening();
@@ -74,7 +66,6 @@ namespace focus
 
             stickHelper.StickWindowToTopOnMove();
         }
-
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {

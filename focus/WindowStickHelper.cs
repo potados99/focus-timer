@@ -11,7 +11,6 @@ namespace focus
 {
     class WindowStickHelper
     {
-        const int WM_MOVING = 0x0216;
 
         int InitialHeight = -1;
 
@@ -32,9 +31,9 @@ namespace focus
         {
             switch (msg)
             {
-                case WM_MOVING:
+                case API.WM_MOVING:
                     {
-                        WIN32Rectangle rectangle = (WIN32Rectangle)Marshal.PtrToStructure(lParam, typeof(WIN32Rectangle));
+                        API.WIN32Rectangle rectangle = (API.WIN32Rectangle)Marshal.PtrToStructure(lParam, typeof(API.WIN32Rectangle));
 
                         if (InitialHeight == -1)
                         {
