@@ -4,21 +4,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Automation;
+using System.Windows.Interop;
 
 namespace focus
 {
     class FocusMonitor
     {
         public FocusMonitor() {
-            CurrentlyFocusedProcessName = Process.GetCurrentProcess().ProcessName;
+            FocusedWindow = new WindowInteropHelper(Application.Current.MainWindow).Handle;
         }  
 
-        public delegate void FocusedEventHandler(string focusedProcessName);
+        public delegate void FocusedEventHandler(IntPtr prev, IntPtr current);
 
         public event FocusedEventHandler? OnFocused;
 
-        public string CurrentlyFocusedProcessName { get; private set; }
+        public IntPtr FocusedWindow { get; private set; }
 
         public void StartListening()
         {
@@ -44,10 +46,11 @@ namespace focus
                 return;
             }
 
-            int processId = focusedElement.Current.ProcessId;
-            using Process process = Process.GetProcessById(processId);
+            IntPtr handle = (IntPtr)focusedElement.Current.NativeWindowHandle;
 
-            OnFocused?.Invoke(process.ProcessName);
+            OnFocused?.Invoke(FocusedWindow, handle);
+
+            FocusedWindow = handle;
         }
     }
 }
