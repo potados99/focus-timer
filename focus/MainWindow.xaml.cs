@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using focus.lib;
 
 namespace focus
 {
@@ -33,34 +34,7 @@ namespace focus
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            FocusMonitor monitor = new FocusMonitor();
-
-            monitor.OnFocused += (prev, current) =>
-            {
-                //SetWindowLong(current, GWL_EXSTYLE, GetWindowLong(current, GWL_EXSTYLE) | WS_EX_LAYERED);
-                //SetLayeredWindowAttributes(current, 0, 255, LWA_ALPHA);
-
-                //SetWindowLong(prev, GWL_EXSTYLE, GetWindowLong(prev, GWL_EXSTYLE) | WS_EX_LAYERED);
-                //SetLayeredWindowAttributes(prev, 0, 128, LWA_ALPHA);
-
-                var allowList = new List<string>() { "focus", "devenv" };
-
-                API.GetWindowThreadProcessId(current, out var processId);
-
-                string processName = Process.GetProcessById((int)processId).ProcessName;
-                
-                Debug.WriteLine("Yeah! " + prev + " -> " + current + ". The [" + processName + "] got focus!");
-
-                if (allowList.IndexOf(processName) < 0)
-                {
-                    Debug.WriteLine($"No, [{processName}] is not allowd!");
-                    MessageBox.Show($"{processName}은(는) 지금 사용하실 수 없어요!", "안 돼요!");
-
-                    API.SetForegroundWindow(prev);
-                }
-            };
-
-            monitor.StartListening();
+            new Worker().StartWorking();
 
             WindowStickHelper stickHelper = new WindowStickHelper(this);
 

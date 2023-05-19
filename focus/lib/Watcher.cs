@@ -9,13 +9,14 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Interop;
 
-namespace focus
+namespace focus.lib
 {
-    class FocusMonitor
+    class Watcher
     {
-        public FocusMonitor() {
+        public Watcher()
+        {
             FocusedWindow = API.GetForegroundWindow();
-        }  
+        }
 
         public delegate void FocusedEventHandler(IntPtr prev, IntPtr current);
 

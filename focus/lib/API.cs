@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace focus
+namespace focus.lib
 {
     class API
     {
@@ -52,5 +52,24 @@ namespace focus
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+
+        public const int SW_MAXIMIZE = 3;
+        public const int SW_MINIMIZE = 6;
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        public static string GetClassName(IntPtr windowHandle)
+        {
+            StringBuilder builder = new StringBuilder(256);
+
+            GetClassName(windowHandle, builder, builder.Capacity);
+
+            return builder.ToString();
+        }
     }
 }
