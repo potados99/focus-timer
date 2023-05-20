@@ -31,6 +31,7 @@
 
         </Style>
 
+        <FontFamily x:Key="digital-7">pack://application:,,,/res/#digital-7 mono</FontFamily>
 
         <Style x:Key="WhiteTextLabel" TargetType="Label">
             <Setter Property="Foreground" Value="White" />
@@ -39,6 +40,16 @@
 
         <Style x:Key="PrimaryTextLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
             <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style x:Key="BigTimerLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
+            <Setter Property="FontSize" Value="38" />
+            <Setter Property="FontFamily" Value="{StaticResource digital-7}" />
+        </Style>
+
+        <Style x:Key="SmallTimerLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="FontFamily" Value="{StaticResource digital-7}" />
         </Style>
 
         <Style x:Key="BitmapImage" TargetType="Image">

@@ -16,8 +16,8 @@
         Background="{x:Null}"
         AllowsTransparency="True"
         Title="MainWindow" 
-        Height="{Binding Path=WindowHeight, FallbackValue=130, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        Width="200">
+        Height="{Binding Path=WindowHeight, FallbackValue=160, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        Width="230">
 
     <Window.Resources>
 
@@ -36,26 +36,24 @@
         <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{StaticResource Black}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="{Binding FixedPartLength, FallbackValue=1.4*}" />
                     <RowDefinition Height="{Binding ExpandablePartLength, FallbackValue=3*}" />
                 </Grid.RowDefinitions>
 
                 <!-- 항상 보이는 영역 -->
-                <Grid Grid.Row="0">
+                <Grid Grid.Row="0" Margin="8, 0, 8, 0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*" />
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="6*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="res/locked.png" Width="24" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <Label Grid.Column="1" Content="집중 모드" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="2" Content="06:36:12" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Image Grid.Column="0" Source="res/locked.png" Width="24" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Label Grid.Column="1" Content="06:36:12" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
 
                 <!-- 확대되었을 때에(expanded) 보이는 영역 -->
-                <Grid Grid.Row="1" Visibility="Visible">
+                <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
@@ -63,7 +61,7 @@
 
                     <Separator Grid.Row="0" Background="{StaticResource LightGray}" Margin="0"/>
 
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="1" Margin="0, 4, 0, 4">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                             <RowDefinition Height="1*"/>

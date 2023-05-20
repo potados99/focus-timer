@@ -110,7 +110,7 @@ namespace focus
             Expanded = !Expanded;
         }
         
-        private readonly int windowHeight = 130;
+        private readonly int windowHeight = 160;
         public int WindowHeight
         {
             get
@@ -123,11 +123,27 @@ namespace focus
                 {
                     int borderThickness = 1;
                     int separatorThickness = 1;
-                    double contentGridRowLengthStar = 1;
-                    double expandableGridRowLengthStar = 3;
+                    double contentGridRowLengthStar = fixedPartLength.Value;
+                    double expandableGridRowLengthStar = expadedLength.Value;
                     double expandableGridRowLength = (double)windowHeight / (contentGridRowLengthStar + expandableGridRowLengthStar) * contentGridRowLengthStar;
                     return (int)expandableGridRowLength + borderThickness + separatorThickness;
                 }
+            }
+            set
+            {
+
+            }
+        }
+
+        private GridLength fixedPartLength = new GridLength(1.4, GridUnitType.Star);
+        private GridLength expadedLength = new GridLength(4, GridUnitType.Star);
+        private GridLength collapsedLength = new GridLength(0);
+            
+        public GridLength FixedPartLength
+        {
+            get
+            {
+                return fixedPartLength;
             }
             set
             {
@@ -139,7 +155,7 @@ namespace focus
         {
             get
             {
-                return Expanded ? new GridLength(3, GridUnitType.Star) : new GridLength(0);
+                return Expanded ? expadedLength : collapsedLength;
             }
             set
             {

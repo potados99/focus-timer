@@ -16,40 +16,40 @@
     <Grid>
 
         <!-- 앱이 있을 때 -->
-        <Grid d:Visibility="Visible" Visibility="{Binding IsAppVisible}">
+        <Grid d:Visibility="Visible" Visibility="{Binding IsAppVisible}" Margin="8, 0, 8, 0" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Source="{Binding CurrentApp.Image}" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
-            <Label Grid.Column="1" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" ToolTip="{Binding CurrentApp.AppName}">
+            <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="{Binding CurrentApp.Image}" Width="20" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <Label Grid.Column="1" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Left" ToolTip="{Binding CurrentApp.AppName}">
                 <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentApp.AppName, FallbackValue=Chrome}" />
             </Label>
-            <Label Grid.Column="2" Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Button Grid.Column="3" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" HorizontalContentAlignment="Left" Click="Clear_Click">
-                <Image Source="res/x.png" Width="14" RenderOptions.BitmapScalingMode="HighQuality"/>
+            <Label Grid.Column="2" Style="{StaticResource SmallTimerLabel}" Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button Grid.Column="3" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" HorizontalContentAlignment="Right" Click="Clear_Click">
+                <Image Source="res/x.png" Style="{StaticResource BitmapImage}" Width="14"/>
             </Button>
         </Grid>
 
         <!-- 앱이 없을 때 -->
-        <Button d:Visibility="Hidden" Visibility="{Binding IsSetButtonVisible}" HorizontalContentAlignment="Stretch" Background="#FF2E2E2E" Margin="4" Style="{StaticResource HoverOpacityEffect}" Click="Register_Click">
+        <Button d:Visibility="Hidden" Visibility="{Binding IsSetButtonVisible}" HorizontalContentAlignment="Stretch" Background="#FF2E2E2E" Margin="4, 2, 4, 2" Style="{StaticResource HoverOpacityEffect}" Click="Register_Click">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="4"/>
                 </Style>
             </Button.Resources>
-            <Grid>
+            <Grid Margin="8, 0, 8, 0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="6*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="res/plus.png" Width="14" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
-                <Label Grid.Column="1" Content="프로그램 추가" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="res/plus.png" Width="14" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <Label Grid.Column="1" Content="프로그램 등록" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
 

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="res\bird.png" />
+    <None Remove="res\digital-7.ttf" />
     <None Remove="res\locked.png" />
     <None Remove="res\plus.png" />
     <None Remove="res\x.png" />
@@ -20,6 +21,9 @@
 
   <ItemGroup>
     <Resource Include="res\bird.png" />
+    <Resource Include="res\digital-7.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="res\locked.png" />
     <Resource Include="res\plus.png" />
     <Resource Include="res\x.png" />
