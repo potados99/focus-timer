@@ -11,6 +11,7 @@
              d:DesignHeight="20" d:DesignWidth="180">
 
     <UserControl.Resources>
+ 
     </UserControl.Resources>
 
     <Grid>
@@ -54,7 +55,7 @@
         </Button>
 
         <!-- 앱이 정해지는 중일 때 -->
-        <Label d:Visibility="Hidden" Visibility="{Binding IsWaitLabelVisible}" Foreground="White" FontSize="14" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="기다리는 중..."/>
+        <Label d:Visibility="Hidden" Visibility="{Binding IsWaitLabelVisible}" Style="{StaticResource PrimaryTextLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" Content="창을 클릭해주세요"/>
 
     </Grid>
 </UserControl>
