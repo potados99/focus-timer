@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace focus.common.component
 {
-    class BaseModel : INotifyPropertyChanged
+    public class BaseModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

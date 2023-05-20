@@ -21,15 +21,15 @@ namespace focus
         {
             foreach (var slot in TimerSlots)
             {
-                slot.OnSet += () => SetTimerSlot(slot);
-                slot.OnClear += () => ClearTimerSlot(slot);
+                slot.OnRegisterApplication += () => StartRegisteringApplication(slot);
+                slot.OnClearApplication += () => ClearApplication(slot);
             }
-
+            
             var watcher = new Watcher();
 
             watcher.OnFocused += (prev, current) =>
             {
-               if (currentSettingTimerSlot != null)
+               if (currentRegisteringTimerSlot != null)
                 {
 
                     API.GetWindowThreadProcessId(current, out var processId);
@@ -38,47 +38,56 @@ namespace focus
                     string filePath = proc.MainModule.FileName;
                     string process_description = proc.MainModule.FileVersionInfo.FileDescription;
 
-
                     var app = new TimerApp { 
                         Image = Icon.ExtractAssociatedIcon(filePath).ToImageSource(),
                         AppName = process_description, 
                         Elapsed = "01:26:31" 
                     };
 
-                    // TODO 하나의 메소드 호출로
-                    currentSettingTimerSlot.CurrentApp = app;
-                    currentSettingTimerSlot.WaitingForApp = false;
-
-                    currentSettingTimerSlot = null;
+                    FinishRegisteringApp(app);
                 }
             };
 
             watcher.StartListening();
         }
 
-        private TimerSlotItem? currentSettingTimerSlot = null;
+        #region 타이머 슬롯의 등록 및 초기화
 
-        private void SetTimerSlot(TimerSlotItem slot)
+        public IEnumerable<TimerSlotModel> TimerSlots { get; } = new List<TimerSlotModel>() {
+            new TimerSlotModel() { SlotNumber = 0 },
+            new TimerSlotModel() { SlotNumber = 1 },
+            new TimerSlotModel() { SlotNumber = 2 },
+        };
+
+        private TimerSlotModel? currentRegisteringTimerSlot = null;
+
+        private void StartRegisteringApplication(TimerSlotModel slot)
         {
-            slot.WaitingForApp = true;
-            currentSettingTimerSlot = slot;
+            currentRegisteringTimerSlot = slot;
+            currentRegisteringTimerSlot.StartWaitingForApp();
 
             Debug.WriteLine($"Set slot number {slot.SlotNumber}!");
         }
 
-        private void ClearTimerSlot(TimerSlotItem slot)
+        private void FinishRegisteringApp(TimerApp app)
         {
-            slot.CurrentApp = null;
+            if (currentRegisteringTimerSlot != null)
+            {
+                currentRegisteringTimerSlot.StopWaitingAndRegisterApp(app);
+                currentRegisteringTimerSlot = null;
+            }
+        }
+
+        private void ClearApplication(TimerSlotModel slot)
+        {
+            slot.ClearRegisteredApp();
 
             Debug.WriteLine($"Clear slot number {slot.SlotNumber}!");
         }
 
-        public IEnumerable<TimerSlotItem> TimerSlots { get; } = new List<TimerSlotItem>() {
-            new TimerSlotItem() { SlotNumber = 0, CurrentApp = null },
-            new TimerSlotItem() { SlotNumber = 1, CurrentApp = null },
-            new TimerSlotItem() { SlotNumber = 2, CurrentApp = null },
-        };
+        #endregion
 
+        #region Main Window의 확장 및 축소
 
         private bool expanded = true;
         public bool Expanded
@@ -100,7 +109,7 @@ namespace focus
         {
             Expanded = !Expanded;
         }
-
+        
         private readonly int windowHeight = 130;
         public int WindowHeight
         {
@@ -137,5 +146,7 @@ namespace focus
 
             }
         }
+
+        #endregion
     }
 }
