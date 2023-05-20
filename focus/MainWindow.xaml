@@ -16,7 +16,7 @@
         Background="{x:Null}"
         AllowsTransparency="True"
         Title="MainWindow" 
-        Height="{Binding Path=WindowHeight, FallbackValue=130, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+        Height="{Binding Path=WindowHeight, FallbackValue=130, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
         Width="200">
 
     <Window.Resources>
@@ -51,7 +51,7 @@
 
                     <Image Grid.Column="0" Source="res/locked.png" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
                     <Label Grid.Column="1" Content="집중 모드" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="2" Content="01:36:12" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Label Grid.Column="2" Content="06:36:12" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                 </Grid>
 
@@ -71,9 +71,9 @@
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
-                        <local:TimerSlot Grid.Row="0" DataContext="{Binding TimerSlot1}" />
-                        <local:TimerSlot Grid.Row="1" DataContext="{Binding TimerSlot2}" />
-                        <local:TimerSlot Grid.Row="2" DataContext="{Binding TimerSlot3}" />
+                        <local:TimerSlot Grid.Row="0" DataContext="{Binding TimerSlots[0]}" />
+                        <local:TimerSlot Grid.Row="1" DataContext="{Binding TimerSlots[1]}"/>
+                        <local:TimerSlot Grid.Row="2" DataContext="{Binding TimerSlots[2]}"/>
                     </Grid>
                 </Grid>
             </Grid>

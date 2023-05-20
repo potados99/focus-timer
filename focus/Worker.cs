@@ -1,9 +1,4 @@
 ﻿using focus.lib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace focus
 {
@@ -23,7 +18,8 @@ namespace focus
                 if (result == Judge.Result.ALLOW)
                 {
                     // Do nothing
-                } else
+                }
+                else
                 {
                     actuator.SetFocus(prev);
                     actuator.Minimize(current);

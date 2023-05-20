@@ -1,17 +1,78 @@
-﻿using focus.models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using focus.lib;
+using focus.models;
 using focus.utils;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Security.Cryptography;
 
 namespace focus
 {
     internal class ViewModel : INotifyPropertyChanged
     {
+
+        public ViewModel()
+        {
+            foreach (var slot in TimerSlots)
+            {
+                slot.OnSet += () => SetTimerSlot(slot);
+                slot.OnClear += () => ClearTimerSlot(slot);
+            }
+
+            var watcher = new Watcher();
+
+            watcher.OnFocused += (prev, current) =>
+            {
+               if (currentSettingTimerSlot != null)
+                {
+
+                    API.GetWindowThreadProcessId(current, out var processId);
+
+                    Process proc = Process.GetProcessById((int)processId);
+                    string filePath = proc.MainModule.FileName;
+                    string process_description = proc.MainModule.FileVersionInfo.FileDescription;
+
+
+                    var app = new TimerApp { 
+                        Image = Icon.ExtractAssociatedIcon(filePath).ToImageSource(),
+                        AppName = process_description, 
+                        Elapsed = "01:26:31" 
+                    };
+
+                    // TODO 하나의 메소드 호출로
+                    currentSettingTimerSlot.CurrentApp = app;
+                    currentSettingTimerSlot.WaitingForApp = false;
+
+                    currentSettingTimerSlot = null;
+                }
+            };
+
+            watcher.StartListening();
+        }
+
+        private TimerSlotItem? currentSettingTimerSlot = null;
+
+        private void SetTimerSlot(TimerSlotItem slot)
+        {
+            slot.WaitingForApp = true;
+            currentSettingTimerSlot = slot;
+
+            Debug.WriteLine($"Set slot number {slot.SlotNumber}!");
+        }
+
+
+
+        private void ClearTimerSlot(TimerSlotItem slot)
+        {
+            slot.CurrentApp = null;
+
+            Debug.WriteLine($"Clear slot number {slot.SlotNumber}!");
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void NotifyPropertyChanged(string propertyName = "")
@@ -19,29 +80,11 @@ namespace focus
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public TimerApp? TimerSlot1
-        {
-            get
-            {
-                return new TimerApp { Image = Icon.ExtractAssociatedIcon("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe").ToImageSource(), AppName = "Google Chrome", Elapsed = "01:26:31" };
-            }
-        }
-
-        public TimerApp? TimerSlot2
-        {
-            get
-            {
-                return new TimerApp { Image = Icon.ExtractAssociatedIcon("C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe").ToImageSource(), AppName = "Microsoft Visual Studio", Elapsed = "05:42:32" };
-            }
-        }
-
-        public TimerApp? TimerSlot3
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public IEnumerable<TimerSlotItem> TimerSlots { get; } = new List<TimerSlotItem>() {
+            new TimerSlotItem() { SlotNumber = 0, CurrentApp = null },
+            new TimerSlotItem() { SlotNumber = 1, CurrentApp = null },
+            new TimerSlotItem() { SlotNumber = 2, CurrentApp = null },
+        };
 
         private bool controlVisible = true;
         public bool ControlVisible

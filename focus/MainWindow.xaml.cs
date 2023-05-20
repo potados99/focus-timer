@@ -1,23 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Automation;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using focus.lib;
 
 namespace focus
 {
@@ -42,7 +27,7 @@ namespace focus
             // WindowStickHelper stickHelper = new WindowStickHelper(this);
             // stickHelper.StickWindowToTopOnMove();
         }
-   
+
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
             //vm.ControlVisible = true;
@@ -76,7 +61,7 @@ namespace focus
 
 
 
-        int xx = 0; 
+        int xx = 0;
         Point prepoint;
         private bool _IsDragInProgress { get; set; }
         private bool _IsDraggedFar { get; set; }
@@ -133,7 +118,7 @@ namespace focus
 
                 vm.ControlVisible = !vm.ControlVisible;
             }
-            
+
         }
 
 

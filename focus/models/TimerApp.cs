@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace focus.models
 {
-    public class TimerApp : INotifyPropertyChanged
+    public class TimerApp
     {
         public ImageSource Image { get; set; }
         public string AppName { get; set; }
         public string Elapsed { get; set; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
