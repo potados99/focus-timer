@@ -23,10 +23,26 @@ namespace focus.lib
 
         public Result Decide(IntPtr windowHandle)
         {
-            Debug.WriteLine(API.GetClassName(windowHandle));
+            API.GetWindowThreadProcessId(windowHandle, out var processId);
+            string processName = Process.GetProcessById((int)processId).ProcessName;
+
+            Debug.WriteLine($"[{API.GetClassName(windowHandle)}] of [{processName}]");
+
+            if (settings.GetWindowClassAllowList().Contains(API.GetClassName(windowHandle)))
+            {
+                Debug.WriteLine($"OK, [{API.GetClassName(windowHandle)}] is allowed.");
+
+                return Result.ALLOW;
+            }
+            else
+            {
+                Debug.WriteLine($"No, [{API.GetClassName(windowHandle)}] is not allowed!");
+
+                return Result.BLOCK;
+            }
 
             return Result.ALLOW;
-
+            /*
             API.GetWindowThreadProcessId(windowHandle, out var processId);
             string processName = Process.GetProcessById((int)processId).ProcessName;
 
@@ -41,6 +57,7 @@ namespace focus.lib
 
                 return Result.BLOCK;
             }
+            */
         }
     }
 }

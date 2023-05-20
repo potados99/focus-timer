@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="focus.TimerSlot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:focus" 
+             xmlns:models="clr-namespace:focus.models" 
+             d:DataContext="{d:DesignInstance Type=models:TimerApp}"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="180">
+
+    <UserControl.Resources>
+        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <local:InversedNullToVisibilityConverter x:Key="InversedNullToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <!-- 값이 있을 때 -->
+        <Grid d:Visibility="Visible" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Visible}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0" Source="{Binding Image}" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+            <Label Grid.Column="1" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding AppName, FallbackValue=Chrome}" />
+            </Label>
+            <Label Grid.Column="2" Content="{Binding Elapsed, FallbackValue=00:00:00}" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button Grid.Column="3" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" HorizontalContentAlignment="Left">
+                <Image Source="res/x.png" Width="14" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Button>
+        </Grid>
+
+        <!-- 값이 없을 때 -->
+        <Button d:Visibility="Hidden" HorizontalContentAlignment="Stretch" Background="#FF2E2E2E" Margin="4" Style="{StaticResource HoverOpacityEffect}" Visibility="{Binding Converter={StaticResource InversedNullToVisibilityConverter}, FallbackValue=Hidden}" >
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="6*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="res/plus.png" Width="14" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <Label Grid.Column="1" Content="프로그램 추가" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+    </Grid>
+</UserControl>

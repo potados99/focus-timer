@@ -7,4 +7,22 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="res\bird.png" />
+    <None Remove="res\locked.png" />
+    <None Remove="res\plus.png" />
+    <None Remove="res\x.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="res\bird.png" />
+    <Resource Include="res\locked.png" />
+    <Resource Include="res\plus.png" />
+    <Resource Include="res\x.png" />
+  </ItemGroup>
+
 </Project>
