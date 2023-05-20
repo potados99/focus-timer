@@ -15,7 +15,6 @@
             </Border>
         </ControlTemplate>
         <Style x:Key="HoverOpacityEffect" TargetType="{x:Type Button}">
-
             <Setter Property="BorderBrush" Value="{x:Null}"/>
             <Setter Property="Template" Value="{StaticResource ButtonTemplate}" />
 
@@ -31,5 +30,22 @@
             </Style.Triggers>
 
         </Style>
+
+
+        <Style x:Key="WhiteTextLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style x:Key="PrimaryTextLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style x:Key="BitmapImage" TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+        </Style>
+
+        <SolidColorBrush x:Key="Black" Color="#FF000000"/>
+        <SolidColorBrush x:Key="LightGray" Color="#FFC9C9C9"/>
     </Application.Resources>
 </Application>

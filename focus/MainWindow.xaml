@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:focus" 
-        d:DataContext="{d:DesignInstance Type=local:ViewModel}"
+        xmlns:local="clr-namespace:focus"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         MouseEnter="Window_MouseEnter"
@@ -20,7 +20,7 @@
         Width="200">
 
     <Window.Resources>
-        <local:BoolToGridRowHeightConverter x:Key="gridConverter"/>
+
 
     </Window.Resources>
 
@@ -31,16 +31,16 @@
             <MenuItem x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click"/>
         </ContextMenu>
     </Window.ContextMenu>
-    
-    <Border BorderThickness="0" CornerRadius="6,6,6,6" BorderBrush="#FFC9C9C9" Background="#FFC9C9C9">
-        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="#FF000000">
+
+    <Border CornerRadius="6,6,6,6" Background="{StaticResource LightGray}">
+        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{StaticResource Black}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="{Binding Path=ControlVisible, Converter={StaticResource gridConverter}, FallbackValue=3*}" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="{Binding ExpandablePartLength, FallbackValue=3*}" />
                 </Grid.RowDefinitions>
 
-                <!-- 축소되었을 때에 보이는 영역 -->
+                <!-- 항상 보이는 영역 -->
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1.5*" />
@@ -49,20 +49,19 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="res/locked.png" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
-                    <Label Grid.Column="1" Content="집중 모드" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="2" Content="06:36:12" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
+                    <Image Grid.Column="0" Source="res/locked.png" Width="24" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <Label Grid.Column="1" Content="집중 모드" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Label Grid.Column="2" Content="06:36:12" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
 
-                <!-- 확대되었을 때에 보이는 영역 -->
+                <!-- 확대되었을 때에(expanded) 보이는 영역 -->
                 <Grid Grid.Row="1" Visibility="Visible">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Separator Grid.Row="0" Background="#FFC9C9C9" Margin="0"/>
+                    <Separator Grid.Row="0" Background="{StaticResource LightGray}" Margin="0"/>
 
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>

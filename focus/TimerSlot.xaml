@@ -11,8 +11,6 @@
              d:DesignHeight="20" d:DesignWidth="180">
 
     <UserControl.Resources>
-        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-        <local:InversedNullToVisibilityConverter x:Key="InversedNullToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Grid>

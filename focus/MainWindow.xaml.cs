@@ -18,7 +18,7 @@ namespace focus
             this.DataContext = vm;
         }
 
-        private ViewModel vm = new ViewModel();
+        private MainViewModel vm = new MainViewModel();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -116,7 +116,7 @@ namespace focus
                 xx = 0;
                 base.OnMouseLeftButtonUp(e);
 
-                vm.ControlVisible = !vm.ControlVisible;
+                vm.ToggleExpanded();
             }
 
         }

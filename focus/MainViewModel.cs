@@ -1,4 +1,5 @@
-﻿using focus.lib;
+﻿using focus.common.component;
+using focus.lib;
 using focus.models;
 using focus.utils;
 using System;
@@ -9,13 +10,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography;
+using System.Windows;
 
 namespace focus
 {
-    internal class ViewModel : INotifyPropertyChanged
+    internal class MainViewModel : BaseModel
     {
 
-        public ViewModel()
+        public MainViewModel()
         {
             foreach (var slot in TimerSlots)
             {
@@ -64,20 +66,11 @@ namespace focus
             Debug.WriteLine($"Set slot number {slot.SlotNumber}!");
         }
 
-
-
         private void ClearTimerSlot(TimerSlotItem slot)
         {
             slot.CurrentApp = null;
 
             Debug.WriteLine($"Clear slot number {slot.SlotNumber}!");
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected void NotifyPropertyChanged(string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public IEnumerable<TimerSlotItem> TimerSlots { get; } = new List<TimerSlotItem>() {
@@ -86,20 +79,26 @@ namespace focus
             new TimerSlotItem() { SlotNumber = 2, CurrentApp = null },
         };
 
-        private bool controlVisible = true;
-        public bool ControlVisible
+
+        private bool expanded = true;
+        public bool Expanded
         {
             get
             {
-                return controlVisible;
+                return expanded;
             }
-
             set
             {
-                controlVisible = value;
-                NotifyPropertyChanged("ControlVisible");
-                NotifyPropertyChanged("WindowHeight");
+                expanded = value;
+                NotifyPropertyChanged(nameof(Expanded));
+                NotifyPropertyChanged(nameof(ExpandablePartLength)); // 얘가 WindowHeight보다 먼저 바뀌어야 탈이 없습니다.
+                NotifyPropertyChanged(nameof(WindowHeight));
             }
+        }
+
+        public void ToggleExpanded()
+        {
+            Expanded = !Expanded;
         }
 
         private readonly int windowHeight = 130;
@@ -107,25 +106,36 @@ namespace focus
         {
             get
             {
-                if (ControlVisible)
+                if (Expanded)
                 {
                     return windowHeight;
                 }
                 else
                 {
-                    int borderThickness = 2;
+                    int borderThickness = 1;
+                    int separatorThickness = 1;
                     double contentGridRowLengthStar = 1;
-                    double collapableGridRowLengthStar = BoolToGridRowHeightConverter.CollapsableGridRowLengthStar;
-                    double collapableGridRowLength = (double)windowHeight / (contentGridRowLengthStar + collapableGridRowLengthStar) * contentGridRowLengthStar;
-                    return (int)collapableGridRowLength + borderThickness;
+                    double expandableGridRowLengthStar = 3;
+                    double expandableGridRowLength = (double)windowHeight / (contentGridRowLengthStar + expandableGridRowLengthStar) * contentGridRowLengthStar;
+                    return (int)expandableGridRowLength + borderThickness + separatorThickness;
                 }
             }
-
             set
             {
 
             }
         }
 
+        public GridLength ExpandablePartLength
+        {
+            get
+            {
+                return Expanded ? new GridLength(3, GridUnitType.Star) : new GridLength(0);
+            }
+            set
+            {
+
+            }
+        }
     }
 }
