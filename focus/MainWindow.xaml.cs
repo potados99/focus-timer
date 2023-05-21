@@ -26,6 +26,8 @@ namespace focus
 
             // WindowStickHelper stickHelper = new WindowStickHelper(this);
             // stickHelper.StickWindowToTopOnMove();
+
+            vm.Loaded();
         }
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)

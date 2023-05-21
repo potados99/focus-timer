@@ -22,12 +22,12 @@ namespace focus
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as TimerSlotModel)?.FireAppClearEvent();
+            (this.DataContext as TimerSlotViewModel)?.FireAppClearEvent();
         }
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as TimerSlotModel)?.FireAppRegisterEvent();
+            (this.DataContext as TimerSlotViewModel)?.FireAppRegisterEvent();
         }
     }
 }

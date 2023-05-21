@@ -33,7 +33,7 @@
     </Window.ContextMenu>
 
     <Border CornerRadius="6,6,6,6" Background="{StaticResource LightGray}">
-        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{StaticResource Black}">
+        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{Binding BackgroundColor, FallbackValue=Black}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{Binding FixedPartLength, FallbackValue=1.4*}" />
@@ -49,7 +49,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Image Grid.Column="0" Source="res/locked.png" Width="24" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="1" Content="06:36:12" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
 
                 <!-- 확대되었을 때에(expanded) 보이는 영역 -->

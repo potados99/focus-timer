@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:focus" 
              xmlns:models="clr-namespace:focus.models" 
-             d:DataContext="{d:DesignInstance Type=models:TimerSlotModel}"
+             d:DataContext="{d:DesignInstance Type=models:TimerSlotViewModel}"
              mc:Ignorable="d" 
              Loaded="UserControl_Loaded"
              d:DesignHeight="20" d:DesignWidth="180">
@@ -36,7 +36,7 @@
         </Grid>
 
         <!-- 앱이 없을 때 -->
-        <Button d:Visibility="Hidden" Visibility="{Binding IsSetButtonVisible}" HorizontalContentAlignment="Stretch" Background="#FF2E2E2E" Margin="4, 2, 4, 2" Style="{StaticResource HoverOpacityEffect}" Click="Register_Click">
+        <Button d:Visibility="Hidden" Visibility="{Binding IsSetButtonVisible}" HorizontalContentAlignment="Stretch" Background="#BB333333" Margin="4, 2, 4, 2" Style="{StaticResource HoverOpacityEffect}" Click="Register_Click">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="4"/>

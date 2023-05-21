@@ -1,10 +1,13 @@
 ﻿using focus.common.component;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace focus.models
 {
-    public class TimerSlotModel : BaseModel
+    public class TimerSlotViewModel : BaseModel
     {
         #region 이벤트 핸들러 정의와 구현
 
@@ -66,6 +69,8 @@ namespace focus.models
         {
             CurrentApp = app;
             IsWaitingForApp = false;
+            stopWatch.Reset();
+            stopWatch.Start();
 
             Render();
         }
@@ -85,6 +90,40 @@ namespace focus.models
             NotifyPropertyChanged(nameof(IsAppVisible));
             NotifyPropertyChanged(nameof(IsSetButtonVisible));
             NotifyPropertyChanged(nameof(IsWaitLabelVisible));
+        }
+
+        public bool IsInSameProcess(IntPtr windowHandle)
+        {
+            return CurrentApp != null && CurrentApp.IsInSameProcess(windowHandle);
+        }
+
+        public void PauseStopwatch()
+        {
+            stopWatch.Stop();
+        }
+
+        public void ResumeStopwatch()
+        {
+            stopWatch.Start();
+        }
+
+        #endregion
+
+        #region 스탑워치
+
+        private Stopwatch stopWatch = new Stopwatch();
+
+        public void RenderElapsedTime()
+        {
+            if (CurrentApp != null)
+            {
+                TimeSpan ts = stopWatch.Elapsed;
+                string currentTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+
+                CurrentApp.Elapsed = currentTime;
+
+                NotifyPropertyChanged(nameof(CurrentApp));
+            }
         }
 
         #endregion
