@@ -17,6 +17,10 @@ namespace focus
             InitializeComponent();
 
             DataContext = ViewModel;
+
+            var borderWindow = new BorderWindow();
+            borderWindow.DataContext = ViewModel;
+            borderWindow.Show();
         }
 
         private readonly MainViewModel ViewModel = new();

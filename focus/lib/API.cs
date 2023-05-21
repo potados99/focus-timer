@@ -14,10 +14,7 @@ namespace focus.lib
 
         public const int SW_MAXIMIZE = 3;
         public const int SW_MINIMIZE = 6;
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
-
+      
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
 

@@ -1,0 +1,18 @@
+﻿<Window x:Class="focus.BorderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:focus"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="{x:Null}"
+        Topmost="True"
+        Title="BorderWindow" Height="450" Width="800">
+    <Border BorderThickness="15" BorderBrush="#FFFF8800" Visibility="{Binding IsWarningBorderVisible, FallbackValue=Visible}">
+        
+    </Border>
+</Window>

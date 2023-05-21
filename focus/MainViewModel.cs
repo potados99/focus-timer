@@ -73,6 +73,14 @@ namespace focus
             } 
         }
 
+        public Visibility IsWarningBorderVisible
+        {
+            get
+            {
+                return IsAnyAppActive ? Visibility.Hidden : Visibility.Visible;
+            }
+        }
+
         #endregion
 
         #region 타이머 슬롯의 등록 및 초기화
@@ -245,6 +253,8 @@ namespace focus
             NotifyPropertyChanged(nameof(ElapsedTime));
             NotifyPropertyChanged(nameof(IsAnyAppActive));
             NotifyPropertyChanged(nameof(BackgroundColor));
+            NotifyPropertyChanged(nameof(IsWarningBorderVisible));
+
         }
 
         #endregion
