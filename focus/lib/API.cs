@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -68,5 +69,19 @@ namespace focus.lib
 
             return builder.ToString();
         }
+
+        public static Process GetProcessByWindowHandle(IntPtr windowHandle)
+        {
+            GetWindowThreadProcessId(windowHandle, out var processId);
+
+            return Process.GetProcessById((int)processId);
+        }
+
+        public static Process GetForegroundProcess()
+        {
+            return GetProcessByWindowHandle(GetForegroundWindow());
+        }
+
+
     }
 }

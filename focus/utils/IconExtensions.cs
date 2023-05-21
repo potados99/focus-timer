@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 namespace focus.utils
 {
-    internal static class IconExtensions
+    public static class IconExtensions
     {
         public static ImageSource ToImageSource(this Icon icon)
         {

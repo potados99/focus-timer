@@ -1,4 +1,5 @@
-﻿using focus.lib;
+﻿using focus.common.component;
+using focus.lib;
 using focus.utils;
 using System;
 using System.Diagnostics;
@@ -7,37 +8,56 @@ using System.Windows.Media;
 
 namespace focus.models
 {
-    public class TimerApp
+    public class TimerApp : BaseModel
     {
         public TimerApp(IntPtr windowHandle)
         {
-            this.WindowHandle = windowHandle;
+            Process process = API.GetProcessByWindowHandle(windowHandle);
 
-            API.GetWindowThreadProcessId(windowHandle, out var processId);
+            WindowHandle = windowHandle;
+            ProcessId = process.Id;
 
-            this.ProcessId = (int)processId;
-
-            Process proc = Process.GetProcessById((int)processId);
-            string filePath = proc.MainModule.FileName;
-            string process_description = proc.MainModule.FileVersionInfo.FileDescription;
-
-            this.Image = Icon.ExtractAssociatedIcon(filePath).ToImageSource();
-            this.AppName = process_description;
-            this.Elapsed = "00:00:00";
+            Image = Icon.ExtractAssociatedIcon(process.ExecutablePath())?.ToImageSource();
+            AppName = process.ExecutableDescription();
         }
 
-        public IntPtr WindowHandle { get; set; }
-        public int ProcessId { get; set; }
-
-        public ImageSource Image { get; set; }
-        public string AppName { get; set; }
-        public string Elapsed { get; set; }
-
-        public bool IsInSameProcess(IntPtr windowHandle)
+        ~TimerApp()
         {
-            API.GetWindowThreadProcessId(windowHandle, out var processId);
+            ActiveStopwatch.Reset();
+        }
 
-            return processId == this.ProcessId;
+        private readonly Stopwatch ActiveStopwatch = new();
+
+        public IntPtr WindowHandle { get; init; }
+        public int ProcessId { get; init; }
+
+        public ImageSource? Image { get; init; }
+        public string AppName { get; init; }
+        public string Elapsed
+        {
+            get
+            {
+                return ActiveStopwatch.ElapsedString();
+            }
+        }
+
+        public bool IsAppActive
+        {
+            get
+            {
+                return API.GetForegroundProcess().Id == this.ProcessId;
+            }
+        }
+
+        public void Render()
+        {
+            if (IsAppActive)
+            {
+                ActiveStopwatch.Start();
+            } else
+            {
+                ActiveStopwatch.Stop();
+            }
         }
     }
 }

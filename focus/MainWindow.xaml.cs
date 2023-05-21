@@ -15,30 +15,17 @@ namespace focus
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = vm;
+
+            DataContext = ViewModel;
         }
 
-        private MainViewModel vm = new MainViewModel();
+        private readonly MainViewModel ViewModel = new();
+
+        #region 이벤트 핸들러
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // new Worker().StartWorking();
-
-            // WindowStickHelper stickHelper = new WindowStickHelper(this);
-            // stickHelper.StickWindowToTopOnMove();
-
-            vm.Loaded();
-        }
-
-        private void Window_MouseEnter(object sender, MouseEventArgs e)
-        {
-            //vm.ControlVisible = true;
-        }
-
-        private void Window_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Debug.WriteLine("Mouse left!");
-            //vm.ControlVisible = false;
+            ViewModel.Loaded();
         }
 
         private void ExitItem_Click(object sender, RoutedEventArgs e)
@@ -56,73 +43,65 @@ namespace focus
                 );
         }
 
+        #endregion
 
+        #region 드래그 오버라이드
 
-
-
-
-
-
-        int xx = 0;
         Point prepoint;
-        private bool _IsDragInProgress { get; set; }
-        private bool _IsDraggedFar { get; set; }
+        bool isDragInProgress;
+        bool isMouseCaptured;
+        bool isDraggedFar;
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            this._IsDragInProgress = true;
-            this.CaptureMouse();
-            this.prepoint = Mouse.GetPosition(this);
-            xx = 1;
+            isDragInProgress = true;
+            prepoint = Mouse.GetPosition(this);
+
+            CaptureMouse();
+            isMouseCaptured = true;
+
             base.OnMouseLeftButtonDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (!this._IsDragInProgress)
+            if (!isDragInProgress || !isMouseCaptured)
+            {
                 return;
-            if (xx == 0)
-                return;
+            }
 
             Point newmouse = Mouse.GetPosition(this);
-            double top = (double)newmouse.Y - (double)this.prepoint.Y;
-            double left = (double)newmouse.X - (double)this.prepoint.X;
+            double top = (double)newmouse.Y - (double)prepoint.Y;
+            double left = (double)newmouse.X - (double)prepoint.X;
 
             if (Math.Abs(top) > 0 || Math.Abs(left) > 0)
             {
-                Debug.WriteLine("Dragged so far");
-
-                _IsDraggedFar = true;
+                isDraggedFar = true;
             }
 
-            this.SetValue(MainWindow.TopProperty, (Application.Current.MainWindow.Top + top));
-            this.SetValue(MainWindow.LeftProperty, (Application.Current.MainWindow.Left + left));
+            SetValue(MainWindow.TopProperty, (Application.Current.MainWindow.Top + top));
+            SetValue(MainWindow.LeftProperty, (Application.Current.MainWindow.Left + left));
+
             base.OnMouseMove(e);
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
-            if (_IsDraggedFar)
+            bool wasDraggedFar = isDraggedFar;
+
+            isDragInProgress = false;
+            isDraggedFar = false;
+            ReleaseMouseCapture();
+            isMouseCaptured = false;
+
+            if (!wasDraggedFar)
             {
-                this._IsDragInProgress = false;
-                this._IsDraggedFar = false;
-                this.ReleaseMouseCapture();
-                xx = 0;
-                Debug.WriteLine("Dragged so far, so not firing button up.");
-            }
-            else
-            {
-                this._IsDragInProgress = false;
-                this._IsDraggedFar = false;
-                this.ReleaseMouseCapture();
-                xx = 0;
                 base.OnMouseLeftButtonUp(e);
 
-                vm.ToggleExpanded();
+                ViewModel.ToggleExpanded();
             }
-
         }
 
-
+        #endregion
     }
 }

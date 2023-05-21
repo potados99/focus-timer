@@ -18,7 +18,6 @@ namespace focus
 {
     internal class MainViewModel : BaseModel
     {
-
         public MainViewModel()
         {
             foreach (var slot in TimerSlots)
@@ -31,15 +30,12 @@ namespace focus
 
             watcher.OnFocused += (prev, current) =>
             {
-                NotifyPropertyChanged(nameof(IsInAllowedWindow));
-                NotifyPropertyChanged(nameof(BackgroundColor));
-
-                if (currentRegisteringTimerSlot != null)
+                if (CurrentRegisteringTimerSlot != null)
                 {
                     FinishRegisteringApp(new TimerApp(current));
                 }
 
-                RenderTimerStatus();
+                RenderAll();
             };
 
             watcher.StartListening();
@@ -49,61 +45,32 @@ namespace focus
         {
             StartTimer();
 
-            RenderTimerStatus();
-        }
-
-        public void RenderTimerStatus()
-        {
-            IntPtr current = API.GetForegroundWindow();
-
-            foreach (var slot in TimerSlots)
-            {
-                if (slot.IsInSameProcess(current))
-                {
-                    slot.ResumeStopwatch();
-                }
-                else
-                {
-                    slot.PauseStopwatch();
-                }
-            }
-
-            if (IsInAllowedWindow)
-            {
-                this.ResumeStopwatch();
-            }
-            else
-            {
-                this.PauseStopwatch();
-            }
+            RenderAll();
         }
 
         #region 속성들
 
-        public string ElapsedTime { get; private set; } = "00:00:00";
-
-        public bool IsInAllowedWindow
+        public string ElapsedTime
         {
             get
             {
-                IntPtr current = API.GetForegroundWindow();
-
-                return TimerSlots.Any(s => s.IsInSameProcess(current));
+                return stopWatch.ElapsedString();
             }
-            set
-            {
+        }
 
+        public bool IsAnyAppActive
+        {
+            get
+            {
+                return TimerSlots.Any(s => s.IsAppActive);
             }
         }
 
         public SolidColorBrush BackgroundColor { 
             get {
-                Color color = IsInAllowedWindow ? Color.FromRgb(0, 0, 0) : Color.FromRgb(255, 128, 0);
+                Color color = IsAnyAppActive ? Color.FromRgb(0, 0, 0) : Color.FromRgb(255, 128, 0);
                 return new SolidColorBrush(color);
             } 
-            set {
-
-            }
         }
 
         #endregion
@@ -116,49 +83,43 @@ namespace focus
             new TimerSlotViewModel() { SlotNumber = 2 },
         };
 
-        private TimerSlotViewModel? currentRegisteringTimerSlot = null;
+        private TimerSlotViewModel? CurrentRegisteringTimerSlot
+        {
+            get
+            {
+                return TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
+            }
+        }
 
         private void StartRegisteringApplication(TimerSlotViewModel slot)
         {
-            if (TimerSlots.Any(s => s.IsWaitingForApp))
+            if (CurrentRegisteringTimerSlot != null)
             {
                 return;
             }
 
-            currentRegisteringTimerSlot = slot;
-            currentRegisteringTimerSlot.StartWaitingForApp();
+            slot.StartWaitingForApp();
 
-            Debug.WriteLine($"Set slot number {slot.SlotNumber}!");
-
-            NotifyPropertyChanged(nameof(IsInAllowedWindow));
-            NotifyPropertyChanged(nameof(BackgroundColor));
+            Render();
         }
 
         private void FinishRegisteringApp(TimerApp app)
         {
-            if (currentRegisteringTimerSlot != null)
-            {
-                currentRegisteringTimerSlot.StopWaitingAndRegisterApp(app);
-                currentRegisteringTimerSlot = null;
-            }
+            CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(app);
 
-            NotifyPropertyChanged(nameof(IsInAllowedWindow));
-            NotifyPropertyChanged(nameof(BackgroundColor));
+            Render();
         }
 
         private void ClearApplication(TimerSlotViewModel slot)
         {
-            if (TimerSlots.Any(s => s.IsWaitingForApp))
+            if (CurrentRegisteringTimerSlot != null)
             {
                 return;
             }
 
             slot.ClearRegisteredApp();
 
-            NotifyPropertyChanged(nameof(IsInAllowedWindow));
-            NotifyPropertyChanged(nameof(BackgroundColor));
-
-            Debug.WriteLine($"Clear slot number {slot.SlotNumber}!");
+            Render();
         }
 
         #endregion
@@ -253,41 +214,37 @@ namespace focus
 
         public void StartTimer()
         {
-            dispatcherTimer.Tick += new EventHandler(Tick);
+            dispatcherTimer.Tick += (_, _) => RenderAll();
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
             dispatcherTimer.Start();
 
             stopWatch.Start();
         }
 
-        private void Tick(object? sender, EventArgs e)
+        public void RenderAll()
         {
-            UpdateTimeLabels();
-        }
-
-        public void UpdateTimeLabels()
-        {
-            TimeSpan ts = stopWatch.Elapsed;
-            string currentTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
-
-            ElapsedTime = currentTime;
-
-            NotifyPropertyChanged(nameof(ElapsedTime));
+            Render();
 
             foreach (var slot in TimerSlots)
             {
-                slot.RenderElapsedTime();
+                slot.Render();
             }
         }
 
-        public void PauseStopwatch()
+        public void Render()
         {
-            stopWatch.Stop();
-        }
+            if (IsAnyAppActive)
+            {
+                stopWatch.Start();
+            }
+            else
+            {
+                stopWatch.Stop();
+            }
 
-        public void ResumeStopwatch()
-        {
-            stopWatch.Start();
+            NotifyPropertyChanged(nameof(ElapsedTime));
+            NotifyPropertyChanged(nameof(IsAnyAppActive));
+            NotifyPropertyChanged(nameof(BackgroundColor));
         }
 
         #endregion

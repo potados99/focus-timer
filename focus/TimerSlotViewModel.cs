@@ -1,4 +1,5 @@
 ﻿using focus.common.component;
+using focus.utils;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -53,6 +54,14 @@ namespace focus.models
             }
         }
 
+        public bool IsAppActive
+        {
+            get
+            {
+                return CurrentApp != null && CurrentApp.IsAppActive;
+            }
+        }
+
         #endregion
 
         #region 외부에 노출하는 제어용 메소드
@@ -69,8 +78,6 @@ namespace focus.models
         {
             CurrentApp = app;
             IsWaitingForApp = false;
-            stopWatch.Reset();
-            stopWatch.Start();
 
             Render();
         }
@@ -82,48 +89,15 @@ namespace focus.models
             Render();
         }
 
-        private void Render()
+        public void Render()
         {
+            CurrentApp?.Render();
 
             NotifyPropertyChanged(nameof(CurrentApp));
 
             NotifyPropertyChanged(nameof(IsAppVisible));
             NotifyPropertyChanged(nameof(IsSetButtonVisible));
             NotifyPropertyChanged(nameof(IsWaitLabelVisible));
-        }
-
-        public bool IsInSameProcess(IntPtr windowHandle)
-        {
-            return CurrentApp != null && CurrentApp.IsInSameProcess(windowHandle);
-        }
-
-        public void PauseStopwatch()
-        {
-            stopWatch.Stop();
-        }
-
-        public void ResumeStopwatch()
-        {
-            stopWatch.Start();
-        }
-
-        #endregion
-
-        #region 스탑워치
-
-        private Stopwatch stopWatch = new Stopwatch();
-
-        public void RenderElapsedTime()
-        {
-            if (CurrentApp != null)
-            {
-                TimeSpan ts = stopWatch.Elapsed;
-                string currentTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
-
-                CurrentApp.Elapsed = currentTime;
-
-                NotifyPropertyChanged(nameof(CurrentApp));
-            }
         }
 
         #endregion

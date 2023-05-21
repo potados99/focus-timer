@@ -7,8 +7,6 @@
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        MouseEnter="Window_MouseEnter"
-        MouseLeave="Window_MouseLeave"
         Topmost="True"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
