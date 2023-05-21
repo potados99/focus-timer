@@ -1,7 +1,7 @@
-﻿using focus.common.component;
-using focus.lib;
-using focus.models;
-using focus.utils;
+﻿using FocusTimer.Common.Component;
+using FocusTimer.Lib;
+using FocusTimer.Models;
+using FocusTimer.Utility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace focus
+namespace FocusTimer
 {
     internal class MainViewModel : BaseModel
     {

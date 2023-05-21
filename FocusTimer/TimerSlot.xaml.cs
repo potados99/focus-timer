@@ -1,9 +1,9 @@
-﻿using focus.models;
+﻿using FocusTimer.Models;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace focus
+namespace FocusTimer
 {
     /// <summary>
     /// Interaction logic for TimerSlot.xaml

@@ -1,6 +1,6 @@
-﻿using focus.lib;
+﻿using FocusTimer.Lib;
 
-namespace focus
+namespace FocusTimer
 {
     internal class Worker
     {

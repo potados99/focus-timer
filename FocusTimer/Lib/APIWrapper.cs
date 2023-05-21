@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace focus.lib
+namespace FocusTimer.Lib
 {
     public static class APIWrapper
     {

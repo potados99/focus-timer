@@ -1,12 +1,12 @@
-﻿using focus.common.component;
-using focus.utils;
+﻿using FocusTimer.Common.Component;
+using FocusTimer.Utility;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace focus.models
+namespace FocusTimer.Models
 {
     public class TimerSlotViewModel : BaseModel
     {

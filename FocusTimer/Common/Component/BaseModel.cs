@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace focus.common.component
+namespace FocusTimer.Common.Component
 {
     public class BaseModel : INotifyPropertyChanged
     {

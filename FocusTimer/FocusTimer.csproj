@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="res\bird.png" />
-    <None Remove="res\digital-7.ttf" />
-    <None Remove="res\locked.png" />
-    <None Remove="res\plus.png" />
-    <None Remove="res\x.png" />
+    <None Remove="Resources\bird.png" />
+    <None Remove="Resources\digital-7.ttf" />
+    <None Remove="Resources\locked.png" />
+    <None Remove="Resources\plus.png" />
+    <None Remove="Resources\x.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,13 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="res\bird.png" />
-    <Resource Include="res\digital-7.ttf">
+    <Resource Include="Resources\bird.png" />
+    <Resource Include="Resources\digital-7.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="res\locked.png" />
-    <Resource Include="res\plus.png" />
-    <Resource Include="res\x.png" />
+    <Resource Include="Resources\locked.png" />
+    <Resource Include="Resources\plus.png" />
+    <Resource Include="Resources\x.png" />
   </ItemGroup>
 
 </Project>

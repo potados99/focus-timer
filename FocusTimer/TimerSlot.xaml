@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="focus.TimerSlot"
+﻿<UserControl x:Class="FocusTimer.TimerSlot"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:models="clr-namespace:focus.models" 
+             xmlns:models="clr-namespace:FocusTimer.Models" 
              d:DataContext="{d:DesignInstance Type=models:TimerSlotViewModel}"
              Loaded="UserControl_Loaded"
              mc:Ignorable="d" 
@@ -30,7 +30,7 @@
             </Label>
             <Label Grid.Column="2" Style="{StaticResource SmallTimerLabel}" Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <Button Grid.Column="3" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" HorizontalContentAlignment="Right" Click="Clear_Click">
-                <Image Source="res/x.png" Style="{StaticResource BitmapImage}" Width="14"/>
+                <Image Source="Resources/x.png" Style="{StaticResource BitmapImage}" Width="14"/>
             </Button>
         </Grid>
 
@@ -48,7 +48,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="res/plus.png" Width="14" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="Resources/plus.png" Width="14" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <Label Grid.Column="1" Content="프로그램 등록" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
         </Button>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace focus.lib
+namespace FocusTimer.Lib
 {
     internal class Settings
     {

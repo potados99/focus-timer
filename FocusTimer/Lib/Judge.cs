@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace focus.lib
+namespace FocusTimer.Lib
 {
     internal class Judge
     {

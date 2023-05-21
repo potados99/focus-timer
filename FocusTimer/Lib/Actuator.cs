@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace focus.lib
+namespace FocusTimer.Lib
 {
     internal class Actuator
     {

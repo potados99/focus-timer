@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace focus
+namespace FocusTimer
 {
     /// <summary>
     /// Interaction logic for App.xaml

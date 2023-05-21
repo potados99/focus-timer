@@ -1,12 +1,12 @@
-﻿using focus.common.component;
-using focus.lib;
-using focus.utils;
+﻿using FocusTimer.Common.Component;
+using FocusTimer.Lib;
+using FocusTimer.Utility;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media;
 
-namespace focus.models
+namespace FocusTimer.Models
 {
     public class TimerApp : BaseModel
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace focus.utils
+namespace FocusTimer.Utility
 {
     public static class ProcessExtensions
     {

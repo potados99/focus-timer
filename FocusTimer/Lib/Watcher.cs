@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
 
-namespace focus.lib
+namespace FocusTimer.Lib
 {
     class Watcher
     {

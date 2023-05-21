@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
-namespace focus
+namespace FocusTimer
 {
 
     /// <summary>
