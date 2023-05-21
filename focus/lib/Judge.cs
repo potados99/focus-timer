@@ -20,20 +20,19 @@ namespace focus.lib
 
         public Result Decide(IntPtr windowHandle)
         {
-            API.GetWindowThreadProcessId(windowHandle, out var processId);
-            string processName = Process.GetProcessById((int)processId).ProcessName;
+            string processName = APIWrapper.GetProcessByWindowHandle(windowHandle).ProcessName;
 
-            Debug.WriteLine($"[{API.GetClassName(windowHandle)}] of [{processName}]");
+            Debug.WriteLine($"[{APIWrapper.GetClassName(windowHandle)}] of [{processName}]");
 
-            if (settings.GetWindowClassAllowList().Contains(API.GetClassName(windowHandle)))
+            if (settings.GetWindowClassAllowList().Contains(APIWrapper.GetClassName(windowHandle)))
             {
-                Debug.WriteLine($"OK, [{API.GetClassName(windowHandle)}] is allowed.");
+                Debug.WriteLine($"OK, [{APIWrapper.GetClassName(windowHandle)}] is allowed.");
 
                 return Result.ALLOW;
             }
             else
             {
-                Debug.WriteLine($"No, [{API.GetClassName(windowHandle)}] is not allowed!");
+                Debug.WriteLine($"No, [{APIWrapper.GetClassName(windowHandle)}] is not allowed!");
 
                 return Result.BLOCK;
             }

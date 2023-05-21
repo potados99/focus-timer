@@ -12,12 +12,13 @@ namespace focus.models
     {
         public TimerApp(IntPtr windowHandle)
         {
-            Process process = API.GetProcessByWindowHandle(windowHandle);
+            Process process = APIWrapper.GetProcessByWindowHandle(windowHandle);
 
             WindowHandle = windowHandle;
             ProcessId = process.Id;
+            ProcessExecutablePath = process.ExecutablePath();
 
-            Image = Icon.ExtractAssociatedIcon(process.ExecutablePath())?.ToImageSource();
+            Image = Icon.ExtractAssociatedIcon(ProcessExecutablePath)?.ToImageSource();
             AppName = process.ExecutableDescription();
         }
 
@@ -30,6 +31,7 @@ namespace focus.models
 
         public IntPtr WindowHandle { get; init; }
         public int ProcessId { get; init; }
+        public string ProcessExecutablePath { get; init; }
 
         public ImageSource? Image { get; init; }
         public string AppName { get; init; }
@@ -45,7 +47,7 @@ namespace focus.models
         {
             get
             {
-                return API.GetForegroundProcess().Id == this.ProcessId;
+                return APIWrapper.GetForegroundProcess().ExecutablePath() == this.ProcessExecutablePath;
             }
         }
 

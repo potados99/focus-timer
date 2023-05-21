@@ -54,7 +54,7 @@ namespace focus
         {
             get
             {
-                return stopWatch.ElapsedString();
+                return ActiveStopwatch.ElapsedString();
             }
         }
 
@@ -209,16 +209,16 @@ namespace focus
 
         #region 타이머와 UI 업데이트
 
-        private Stopwatch stopWatch = new Stopwatch();
-        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        private Stopwatch ActiveStopwatch = new Stopwatch();
+        private DispatcherTimer DispatchTimer = new DispatcherTimer();
 
         public void StartTimer()
         {
-            dispatcherTimer.Tick += (_, _) => RenderAll();
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
-            dispatcherTimer.Start();
+            DispatchTimer.Tick += (_, _) => RenderAll();
+            DispatchTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            DispatchTimer.Start();
 
-            stopWatch.Start();
+            ActiveStopwatch.Start();
         }
 
         public void RenderAll()
@@ -235,11 +235,11 @@ namespace focus
         {
             if (IsAnyAppActive)
             {
-                stopWatch.Start();
+                ActiveStopwatch.Start();
             }
             else
             {
-                stopWatch.Stop();
+                ActiveStopwatch.Stop();
             }
 
             NotifyPropertyChanged(nameof(ElapsedTime));

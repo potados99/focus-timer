@@ -1,35 +1,67 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Threading;
 
 namespace focus.lib
 {
     class Watcher
     {
-        public Watcher()
-        {
-            FocusedWindow = API.GetForegroundWindow();
-        }
-
         public delegate void FocusedEventHandler(IntPtr prev, IntPtr current);
 
         public event FocusedEventHandler? OnFocused;
 
-        public IntPtr FocusedWindow { get; private set; }
+        private readonly DispatcherTimer Timer = new DispatcherTimer();
+
+        private readonly string[] SkipList = new string[] {
+                "TaskListThumbnailWnd", // 윈도우가 여러 개일 때 작업표시줄에 표시되는 작은 썸네일
+                "ForegroundStaging", // Alt + Tab으로 보이는 UI
+                "MultitaskingViewFrame", // Alt + Tab으로 보이는 UI
+                "Windows.UI.Core.CoreWindow" // 시작 버튼 누르면 보이는 UI
+            };
+
+        public IntPtr FocusedWindow { get; private set; } = IntPtr.Zero;
 
         public void StartListening()
         {
-            IntPtr m_hhook = API.SetWinEventHook(API.EVENT_SYSTEM_FOREGROUND, API.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, WinEventProc, 0, 0, API.WINEVENT_OUTOFCONTEXT);
+            Timer.Tick += (_, _) => Tick();
+            Timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+
+            Timer.Start();
         }
 
         public void StopListening()
         {
-
+            Timer.Stop();
         }
 
-        private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) //STATIC
+        private void Tick()
         {
-            OnFocused?.Invoke(FocusedWindow, hwnd);
+            IntPtr nowFocused = APIWrapper.GetForegroundWindow();
 
-            FocusedWindow = hwnd;
+            if (nowFocused == IntPtr.Zero)
+            {
+                // Null 포인터인 핸들은 취급하지 않습니다.
+                return;
+            }
+
+            if (FocusedWindow == nowFocused)
+            {
+                // 변화가 없으면 취급하지 않습니다.
+                return;
+            }
+
+            if (SkipList.Contains(APIWrapper.GetClassName(nowFocused)))
+            {
+                // 특정 시스템 UI는 다루지 않습니다.
+                return;
+            }
+
+            OnFocused?.Invoke(FocusedWindow, nowFocused);
+
+            FocusedWindow = nowFocused;
         }
     }
 }
