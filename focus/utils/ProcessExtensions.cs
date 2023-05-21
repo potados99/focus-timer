@@ -9,8 +9,13 @@ namespace focus.utils
 {
     public static class ProcessExtensions
     {
-        public static string ExecutablePath(this Process process)
+        public static string? ExecutablePath(this Process process)
         {
+            if (process.Id == 0)
+            {
+                return null;
+            }
+
             return process.MainModule.FileName;
         }
 

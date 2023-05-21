@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -34,6 +35,24 @@ namespace focus
                 {
                     FinishRegisteringApp(new TimerApp(current));
                 }
+
+                Debug.WriteLine(APIWrapper.GetClassName(current));
+                
+                if (
+                !IsAnyAppActive && // 아무 앱도 활성화되어있지 않고
+                !Watcher.SkipList.Contains(APIWrapper.GetClassName(current)) && // 현재 윈도우가 스킵의 대상도 아니며
+                !APIWrapper.IsThisProcessForeground() // 그 윈도우가 이 앱도 아니라면
+                )
+                {
+                    // 포커스를 탈환하고 현재 앱을 줄입니다.
+                    Task.Delay(200).ContinueWith(_ =>
+                    {
+                        APIWrapper.MinimizeWindow(current);
+                        APIWrapper.SetForegroundWindow(prev);
+                    });
+                    
+                }
+
 
                 RenderAll();
             };

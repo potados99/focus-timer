@@ -53,6 +53,11 @@ namespace focus.lib
             return GetProcessByWindowHandle(GetForegroundWindow());
         }
 
+        public static bool IsThisProcessForeground()
+        {
+            return GetForegroundProcess().Id == Process.GetCurrentProcess().Id;
+        }
+
         #endregion
     }
 }
