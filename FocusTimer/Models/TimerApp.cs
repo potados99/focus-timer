@@ -10,16 +10,22 @@ namespace FocusTimer.Models
 {
     public class TimerApp : BaseModel
     {
-        public TimerApp(IntPtr windowHandle)
+        public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle).ExecutablePath())
         {
-            Process process = APIWrapper.GetProcessByWindowHandle(windowHandle);
 
-            WindowHandle = windowHandle;
-            ProcessId = process.Id;
-            ProcessExecutablePath = process.ExecutablePath();
+        }
 
-            Image = Icon.ExtractAssociatedIcon(ProcessExecutablePath)?.ToImageSource();
-            AppName = process.ExecutableDescription();
+        public TimerApp(string? executablePath)
+        {
+            if (string.IsNullOrEmpty(executablePath))
+            {
+                throw new Exception("TimerApp의 생성자에 executablePath가 null로 들어왔습니다. 이래서는 안 됩니다!");
+            }
+
+            ProcessExecutablePath = executablePath;
+
+            Image = Icon.ExtractAssociatedIcon(executablePath)?.ToImageSource();
+            AppName = FileVersionInfo.GetVersionInfo(executablePath).FileDescription;
         }
 
         ~TimerApp()
@@ -29,12 +35,10 @@ namespace FocusTimer.Models
 
         private readonly Stopwatch ActiveStopwatch = new();
 
-        public IntPtr WindowHandle { get; init; }
-        public int ProcessId { get; init; }
         public string ProcessExecutablePath { get; init; }
 
         public ImageSource? Image { get; init; }
-        public string AppName { get; init; }
+        public string? AppName { get; init; }
         public string Elapsed
         {
             get

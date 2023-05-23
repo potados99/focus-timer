@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -47,8 +48,8 @@ namespace FocusTimer
 
         public void Loaded()
         {
+            RestoreApps();
             StartTimer();
-
             RenderAll();
         }
 
@@ -101,7 +102,7 @@ namespace FocusTimer
 
         #region 타이머 슬롯의 등록 및 초기화
 
-        public IEnumerable<TimerSlotViewModel> TimerSlots { get; } = new List<TimerSlotViewModel>() {
+        public List<TimerSlotViewModel> TimerSlots { get; } = new List<TimerSlotViewModel>() {
             new TimerSlotViewModel() { SlotNumber = 0 },
             new TimerSlotViewModel() { SlotNumber = 1 },
             new TimerSlotViewModel() { SlotNumber = 2 },
@@ -131,6 +132,7 @@ namespace FocusTimer
         {
             CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(app);
 
+            SaveApps();
             Render();
         }
 
@@ -143,6 +145,7 @@ namespace FocusTimer
 
             slot.ClearRegisteredApp();
 
+            SaveApps();
             Render();
         }
 
@@ -321,6 +324,26 @@ namespace FocusTimer
                 APIWrapper.MinimizeWindow(current);
                 APIWrapper.SetForegroundWindow(prev);
             });
+        }
+
+        #endregion
+
+        #region 저장과 복구
+
+        public void SaveApps()
+        {
+            FocusTimer.Properties.Settings.Default.App1 = TimerSlots[0].GetAppExecutablePath();
+            FocusTimer.Properties.Settings.Default.App2 = TimerSlots[1].GetAppExecutablePath();
+            FocusTimer.Properties.Settings.Default.App3 = TimerSlots[2].GetAppExecutablePath();
+
+            FocusTimer.Properties.Settings.Default.Save();
+        }
+
+        public void RestoreApps()
+        {
+            TimerSlots[0].RestoreApp(FocusTimer.Properties.Settings.Default.App1);
+            TimerSlots[1].RestoreApp(FocusTimer.Properties.Settings.Default.App2);
+            TimerSlots[2].RestoreApp(FocusTimer.Properties.Settings.Default.App3);
         }
 
         #endregion

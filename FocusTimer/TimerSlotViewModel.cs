@@ -3,6 +3,7 @@ using FocusTimer.Utility;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -65,6 +66,21 @@ namespace FocusTimer.Models
         #endregion
 
         #region 외부에 노출하는 제어용 메소드
+
+        public string? GetAppExecutablePath()
+        {
+            return CurrentApp?.ProcessExecutablePath;
+        }
+
+        public void RestoreApp(string? executablePath)
+        {
+            if (string.IsNullOrEmpty(executablePath))
+            {
+                return;
+            }
+
+            StopWaitingAndRegisterApp(new TimerApp(executablePath));
+        }
 
         public void StartWaitingForApp()
         {
