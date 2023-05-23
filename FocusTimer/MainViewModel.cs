@@ -98,6 +98,21 @@ namespace FocusTimer
             }
         }
 
+        public string Concentration
+        {
+            get
+            {
+                if (AlwaysOnStopwatch.ElapsedMilliseconds == 0)
+                {
+                    return "0%";
+                }
+
+                double concentration = 100 * ActiveStopwatch.ElapsedMilliseconds / AlwaysOnStopwatch.ElapsedMilliseconds;
+
+                return concentration + "%";
+            }
+        }
+
         #endregion
 
         #region 타이머 슬롯의 등록 및 초기화
@@ -237,6 +252,8 @@ namespace FocusTimer
         #region 타이머와 UI 업데이트
 
         private Stopwatch ActiveStopwatch = new Stopwatch();
+        private Stopwatch AlwaysOnStopwatch = new Stopwatch();
+
         private DispatcherTimer DispatchTimer = new DispatcherTimer();
 
         public void StartTimer()
@@ -245,6 +262,7 @@ namespace FocusTimer
             DispatchTimer.Interval = new TimeSpan(0, 0, 0, 1);
             DispatchTimer.Start();
 
+            AlwaysOnStopwatch.Start();
             ActiveStopwatch.Start();
         }
 
@@ -276,6 +294,9 @@ namespace FocusTimer
 
             NotifyPropertyChanged(nameof(IsFocusLocked));
             NotifyPropertyChanged(nameof(LockImage));
+
+
+            NotifyPropertyChanged(nameof(Concentration));
         }
 
         #endregion
