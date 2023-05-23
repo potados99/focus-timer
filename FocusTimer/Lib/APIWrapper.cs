@@ -27,6 +27,11 @@ namespace FocusTimer.Lib
             return API.GetForegroundWindow();
         }
 
+        public static string GetForegroundWindowClass()
+        {
+            return GetClassName(GetForegroundWindow());
+        }
+
         public static void SetForegroundWindow(IntPtr windowHandle)
         {
             API.SetForegroundWindow(windowHandle);

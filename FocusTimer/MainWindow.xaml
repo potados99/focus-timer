@@ -19,7 +19,7 @@
 
     <Window.Resources>
 
-
+        
     </Window.Resources>
 
     <Window.ContextMenu>
@@ -39,14 +39,16 @@
                 </Grid.RowDefinitions>
 
                 <!-- 항상 보이는 영역 -->
-                <Grid Grid.Row="0" Margin="8, 0, 8, 0">
+                <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1.2*" />
                         <ColumnDefinition Width="6*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1.2*" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="Resources/locked.png" Width="24" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click">
+                        <Image Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    </Button>
                     <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
 

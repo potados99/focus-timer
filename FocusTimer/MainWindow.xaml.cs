@@ -47,6 +47,11 @@ namespace FocusTimer
                 );
         }
 
+        private void Lock_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ToggleLock();
+        }
+
         #endregion
 
         #region 드래그 오버라이드

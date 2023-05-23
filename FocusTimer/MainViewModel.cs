@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace FocusTimer
@@ -27,7 +28,7 @@ namespace FocusTimer
                 slot.OnClearApplication += () => ClearApplication(slot);
             }
 
-            var watcher = new Watcher();
+            Watcher watcher = new();
 
             watcher.OnFocused += (prev, current) =>
             {
@@ -36,23 +37,7 @@ namespace FocusTimer
                     FinishRegisteringApp(new TimerApp(current));
                 }
 
-                Debug.WriteLine(APIWrapper.GetClassName(current));
-                
-                if (
-                !IsAnyAppActive && // 아무 앱도 활성화되어있지 않고
-                !Watcher.SkipList.Contains(APIWrapper.GetClassName(current)) && // 현재 윈도우가 스킵의 대상도 아니며
-                !APIWrapper.IsThisProcessForeground() // 그 윈도우가 이 앱도 아니라면
-                )
-                {
-                    // 포커스를 탈환하고 현재 앱을 줄입니다.
-                    Task.Delay(200).ContinueWith(_ =>
-                    {
-                        APIWrapper.MinimizeWindow(current);
-                        APIWrapper.SetForegroundWindow(prev);
-                    });
-                    
-                }
-
+                RestoreFocusIfNeeded(prev, current);
 
                 RenderAll();
             };
@@ -67,7 +52,7 @@ namespace FocusTimer
             RenderAll();
         }
 
-        #region 속성들
+        #region UI 속성들
 
         public string ElapsedTime
         {
@@ -96,7 +81,19 @@ namespace FocusTimer
         {
             get
             {
-                return IsAnyAppActive ? Visibility.Hidden : Visibility.Visible;
+                return !IsFocusLocked || IsAnyAppActive ? Visibility.Hidden : Visibility.Visible;
+            }
+        }
+
+        public bool IsFocusLocked { get; set; } = false;
+
+        public DrawingImage? LockImage
+        {
+            get
+            {
+                string resourceName = IsFocusLocked ? "ic_lock" : "ic_lock_open";
+
+                return Application.Current.FindResource(resourceName) as DrawingImage;
             }
         }
 
@@ -274,6 +271,56 @@ namespace FocusTimer
             NotifyPropertyChanged(nameof(BackgroundColor));
             NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 
+            NotifyPropertyChanged(nameof(IsFocusLocked));
+            NotifyPropertyChanged(nameof(LockImage));
+        }
+
+        #endregion
+
+        #region 포커스 잠금 
+
+        public void ToggleLock()
+        {
+            IsFocusLocked = !IsFocusLocked;
+
+            Render();
+        }
+
+        private void RestoreFocusIfNeeded(IntPtr prev, IntPtr current)
+        {
+
+            if (!IsFocusLocked)
+            {
+                // 포커스 잠금이 없으면 아무 것도 하지 않습니다.
+                return;
+            }
+
+            if (IsAnyAppActive)
+            {
+                // 등록된 앱 중 활성화된 앱이 있으면 정상적인 상태입니다.
+                return;
+            }
+
+            if (Watcher.SkipList.Contains(APIWrapper.GetForegroundWindowClass()))
+            {
+                // 현재 포커스가 시스템 UI로 가 있다면 넘어갑니다.
+                return;
+            }
+
+            if (APIWrapper.IsThisProcessForeground())
+            {
+                // 현재 포커스가 이 프로세스라면 넘어갑니다.
+                return;
+            }
+
+            // 위 아무 조건에도 해당하지 않았다면
+            // 포커스를 빼앗아야 할 때입니다.
+            // 포커스를 이전 앱에 주고 현재 앱을 줄입니다.
+            Task.Delay(200).ContinueWith(_ =>
+            {
+                APIWrapper.MinimizeWindow(current);
+                APIWrapper.SetForegroundWindow(prev);
+            });
         }
 
         #endregion

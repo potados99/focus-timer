@@ -55,7 +55,7 @@ namespace FocusTimer.Lib
                 return;
             }
 
-            if (SkipList.Contains(APIWrapper.GetClassName(nowFocused)))
+            if (SkipList.Contains(APIWrapper.GetForegroundWindowClass()))
             {
                 // 특정 시스템 UI는 다루지 않습니다.
                 return;
