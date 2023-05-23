@@ -1,12 +1,11 @@
-﻿using FocusTimer.Common.Component;
-using FocusTimer.Lib;
-using FocusTimer.Utility;
+﻿using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Utility;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media;
 
-namespace FocusTimer.Models
+namespace FocusTimer.Lib.Models
 {
     public class TimerApp : BaseModel
     {
@@ -51,7 +50,7 @@ namespace FocusTimer.Models
         {
             get
             {
-                return APIWrapper.GetForegroundProcess().ExecutablePath() == this.ProcessExecutablePath;
+                return APIWrapper.GetForegroundProcess().ExecutablePath() == ProcessExecutablePath;
             }
         }
 
@@ -60,7 +59,8 @@ namespace FocusTimer.Models
             if (IsAppActive)
             {
                 ActiveStopwatch.Start();
-            } else
+            }
+            else
             {
                 ActiveStopwatch.Stop();
             }

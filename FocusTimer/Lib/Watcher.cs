@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows;
-using System.Windows.Interop;
 using System.Windows.Threading;
 
 namespace FocusTimer.Lib

@@ -1,20 +1,15 @@
-﻿using FocusTimer.Common.Component;
-using FocusTimer.Lib;
+﻿using FocusTimer.Lib;
+using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Models;
+using FocusTimer.Lib.Utility;
 using FocusTimer.Models;
-using FocusTimer.Utility;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace FocusTimer

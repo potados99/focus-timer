@@ -1,11 +1,6 @@
-﻿using FocusTimer.Common.Component;
-using FocusTimer.Utility;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
+﻿using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Models;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FocusTimer.Models
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
@@ -18,9 +17,10 @@ namespace FocusTimer
 
             DataContext = ViewModel;
 
-            var borderWindow = new BorderWindow();
-            borderWindow.DataContext = ViewModel;
-            borderWindow.Show();
+            new BorderWindow
+            {
+                DataContext = ViewModel
+            }.Show();
         }
 
         private readonly MainViewModel ViewModel = new();
