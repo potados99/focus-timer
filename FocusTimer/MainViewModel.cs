@@ -68,7 +68,7 @@ namespace FocusTimer
 
         public SolidColorBrush BackgroundColor { 
             get {
-                Color color = IsAnyAppActive ? Color.FromRgb(0, 0, 0) : Color.FromRgb(255, 128, 0);
+                Color color = IsAnyAppActive ? Color.FromRgb(0, 0, 0) : Color.FromRgb(223, 46, 56);
                 return new SolidColorBrush(color);
             } 
         }
@@ -107,6 +107,8 @@ namespace FocusTimer
                 return concentration + "%";
             }
         }
+
+        public int TimerLockHoldDuration { get; set; } = 30;
 
         #endregion
 

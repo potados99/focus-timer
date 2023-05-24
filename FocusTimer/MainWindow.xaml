@@ -4,6 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FocusTimer"
+        xmlns:component="clr-namespace:FocusTimer.Lib.Component" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
@@ -24,9 +27,41 @@
 
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem x:Name="ExitItem" Header="종료" Click="ExitItem_Click"/>
+            <MenuItem x:Name="ExitItem" Header="종료" Click="ExitItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource ic_exit_to_app}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
-            <MenuItem x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click"/>
+            <MenuItem x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource ic_information}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+
+            <MenuItem>
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource ic_timer_lock}"/>
+                </MenuItem.Icon>
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center">타이머 잠금 시간:</TextBlock>
+                        <xctk:IntegerUpDown
+                            AutoSelectBehavior="Never"
+                            AllowTextInput="True"
+                            MouseWheelActiveTrigger="MouseOver"
+                            x:Name="advert_Time" 
+                            Value="{Binding TimerLockHoldDuration, Mode=TwoWay}" 
+                            Minimum="1"
+                            Maximum="9999"
+                            Width="50" 
+                            Margin="5,0"
+                            />
+                        <TextBlock VerticalAlignment="Center">분</TextBlock>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
         </ContextMenu>
     </Window.ContextMenu>
 
