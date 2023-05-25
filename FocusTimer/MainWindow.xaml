@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FocusTimer"
         xmlns:component="clr-namespace:FocusTimer.Lib.Component" 
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        
+        xmlns:utility="clr-namespace:FocusTimer.Lib.Utility" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
@@ -21,8 +21,29 @@
         Width="230">
 
     <Window.Resources>
+        <Storyboard x:Key="ShakeHorizontalAnimation" Storyboard.TargetName="LockImage">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
+                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="-4,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.1" Value="4,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
 
-        
+        <Storyboard x:Key="LockingAnimation" Storyboard.TargetName="LockImage">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
+                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,4,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.1" Value="0,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="UnlockingAnimation" Storyboard.TargetName="LockImage">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
+                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,-4,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.1" Value="0,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
 
     <Window.ContextMenu>
@@ -52,7 +73,7 @@
                             AllowTextInput="True"
                             MouseWheelActiveTrigger="MouseOver"
                             x:Name="advert_Time" 
-                            Value="{Binding FocusLockDuration, Mode=TwoWay}" 
+                            Value="{Binding FocusLockHoldDuration, Mode=TwoWay}" 
                             Minimum="1"
                             Maximum="9999"
                             Width="50" 
@@ -83,8 +104,28 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click" ToolTip="{Binding LockButtonToolTip}">
-                        <Image Opacity="{Binding LockImageOpacity}" Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click" ToolTip="{Binding LockButtonToolTip}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
+                        <Grid Background="Transparent">
+
+                            <utility:ConditionalEventTrigger.Triggers>
+                                <utility:ConditionalEventTriggerCollection>
+                                    <utility:ConditionalEventTrigger RoutedEvent="Grid.MouseDown" Condition="{Binding IsFocusLockHold}">
+                                        <utility:ConditionalEventTrigger.Actions>
+                                            <BeginStoryboard Storyboard="{StaticResource ShakeHorizontalAnimation}"/>
+                                        </utility:ConditionalEventTrigger.Actions>
+                                    </utility:ConditionalEventTrigger>
+
+                                    <utility:ConditionalEventTrigger RoutedEvent="Grid.MouseDown" Condition="{c:Binding Path=!IsFocusLockHold}">
+                                        <utility:ConditionalEventTrigger.Actions>
+                                            <BeginStoryboard Storyboard="{StaticResource LockingAnimation}"/>
+                                        </utility:ConditionalEventTrigger.Actions>
+                                    </utility:ConditionalEventTrigger>
+
+                                </utility:ConditionalEventTriggerCollection>
+                            </utility:ConditionalEventTrigger.Triggers>
+
+                            <Image x:Name="LockImage" Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Grid>
                     </Button>
                     <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue=White}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 

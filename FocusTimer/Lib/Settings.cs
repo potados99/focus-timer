@@ -28,17 +28,17 @@ namespace FocusTimer.Lib
             Properties.Settings.Default.Save();
         }
 
-        public static int GetFocusLockDuration()
+        public static int GetFocusLockHoldDuration()
         {
-            int got = Properties.Settings.Default.FocusLockDuration;
+            int got = Properties.Settings.Default.FocusLockHoldDuration;
             int fallback = 10;
 
             return got <= 0 ? fallback : got;
         }
 
-        public static void SetFocusLockDuration(int duration)
+        public static void SetFocusLockHoldDuration(int duration)
         {
-            Properties.Settings.Default.FocusLockDuration = duration;
+            Properties.Settings.Default.FocusLockHoldDuration = duration;
 
             Properties.Settings.Default.Save();
         }

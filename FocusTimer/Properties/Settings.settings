@@ -11,7 +11,7 @@
     <Setting Name="App3" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="FocusLockDuration" Type="System.Int32" Scope="User">
+    <Setting Name="FocusLockHoldDuration" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>

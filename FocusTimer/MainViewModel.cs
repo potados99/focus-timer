@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace FocusTimer
@@ -91,17 +92,9 @@ namespace FocusTimer
         {
             get
             {
-                string resourceName = IsFocusLocked ? "ic_lock" : "ic_lock_open";
+                string resourceName = IsFocusLocked ? "ic_lock" : "ic_lock_open_outline";
 
                 return Application.Current.FindResource(resourceName) as DrawingImage;
-            }
-        }
-
-        public double LockImageOpacity
-        {
-            get
-            {
-                return IsFocusLockHold ? 0.7 : 1.0;
             }
         }
 
@@ -120,18 +113,18 @@ namespace FocusTimer
             }
         }
 
-        public int FocusLockDuration
+        public int FocusLockHoldDuration
         {
             get
             {
-                return Settings.GetFocusLockDuration();
+                return Settings.GetFocusLockHoldDuration();
             }
             set
             {
-                Settings.SetFocusLockDuration(value);
+                Settings.SetFocusLockHoldDuration(value);
 
                 // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
-                NotifyPropertyChanged(nameof(FocusLockDuration));
+                NotifyPropertyChanged(nameof(FocusLockHoldDuration));
             }
         }
 
@@ -143,13 +136,14 @@ namespace FocusTimer
             }
         }
 
-        private ToolTip _LockButtonToolTip = new();
-        public ToolTip LockButtonToolTip
+        private readonly ToolTip _LockButtonToolTip = new();
+        public ToolTip? LockButtonToolTip
         {
             get
             {
-                _LockButtonToolTip.Content = IsFocusLockHold ? $"{(int)Math.Ceiling(FocusLockTimeSpan.TotalMinutes)}분 남았습니다." : null;
-                return _LockButtonToolTip;     
+                _LockButtonToolTip.Content = $"{(int)Math.Ceiling(FocusLockTimeSpan.TotalMinutes)}분 남았습니다.";
+
+                return IsFocusLockHold ? _LockButtonToolTip : null;     
             }
         }
 
@@ -335,7 +329,6 @@ namespace FocusTimer
             NotifyPropertyChanged(nameof(IsFocusLocked));
             NotifyPropertyChanged(nameof(IsFocusLockHold));
             NotifyPropertyChanged(nameof(LockImage));
-            NotifyPropertyChanged(nameof(LockImageOpacity));
             NotifyPropertyChanged(nameof(LockButtonToolTip));
 
             NotifyPropertyChanged(nameof(Concentration));
@@ -363,15 +356,14 @@ namespace FocusTimer
 
         private void LockFocus()
         {
-            _LockButtonToolTip.Content = "타이머가 잠겼습니다.";
-
-            FocusLockTimeSpan = new TimeSpan(0, FocusLockDuration, 0);
+            //FocusLockTimeSpan = new TimeSpan(0, FocusLockHoldDuration, 0);
+            FocusLockTimeSpan = new TimeSpan(0, 0, 2);
             FocusLockTimer.Interval = TimeSpan.FromSeconds(1);
             FocusLockTimer.Tick += (_, _) => {
                 if (FocusLockTimeSpan == TimeSpan.Zero || FocusLockTimeSpan.TotalSeconds <= 0)
                 {
-                    _LockButtonToolTip.Content = "타이머 잠금이 해제되었습니다.";
                     FocusLockTimer.Stop();
+                    UnlockFocus();
                 } else
                 {
                     FocusLockTimeSpan = FocusLockTimeSpan.Add(TimeSpan.FromSeconds(-1));
@@ -393,6 +385,9 @@ namespace FocusTimer
             }
 
             IsFocusLocked = false;
+
+            Storyboard? sb = Application.Current.MainWindow.Resources["UnlockingAnimation"] as Storyboard;
+            sb?.Begin();
         }
 
         private void RestoreFocusIfNeeded(IntPtr prev, IntPtr current)
