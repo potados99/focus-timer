@@ -57,7 +57,11 @@
             <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
         </Style>
 
+        <SolidColorBrush x:Key="White" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="Black" Color="#FF000000"/>
+        <SolidColorBrush x:Key="BackgroundBlack" Color="#FF191919"/>
+        <SolidColorBrush x:Key="DimmedGray" Color="#FF808080"/>
+        <SolidColorBrush x:Key="Warning" Color="#FFFFDD00"/>
         <SolidColorBrush x:Key="LightGray" Color="#FFC9C9C9"/>
 
         <DrawingImage x:Key="ic_lock" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">

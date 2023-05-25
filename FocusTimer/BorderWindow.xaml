@@ -12,7 +12,7 @@
         Background="{x:Null}"
         Topmost="True"
         Title="BorderWindow" Height="450" Width="800">
-    <Border BorderThickness="15" BorderBrush="#FFFF8800" Visibility="{Binding IsWarningBorderVisible, FallbackValue=Visible}">
+    <Border BorderThickness="15" BorderBrush="{StaticResource Warning}" Visibility="{Binding IsWarningBorderVisible, FallbackValue=Visible}">
         
     </Border>
 </Window>

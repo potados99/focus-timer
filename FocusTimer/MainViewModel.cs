@@ -66,11 +66,14 @@ namespace FocusTimer
             }
         }
 
-        public SolidColorBrush BackgroundColor { 
-            get {
-                Color color = IsAnyAppActive ? Color.FromRgb(0, 0, 0) : Color.FromRgb(223, 46, 56);
-                return new SolidColorBrush(color);
-            } 
+        public SolidColorBrush? TimerLabelForegroundColor
+        {
+            get
+            {
+                string resourceName = IsAnyAppActive ? "White" : "DimmedGray";
+
+                return Application.Current.FindResource(resourceName) as SolidColorBrush;
+            }
         }
 
         public Visibility IsWarningBorderVisible
@@ -286,7 +289,7 @@ namespace FocusTimer
 
             NotifyPropertyChanged(nameof(ElapsedTime));
             NotifyPropertyChanged(nameof(IsAnyAppActive));
-            NotifyPropertyChanged(nameof(BackgroundColor));
+            NotifyPropertyChanged(nameof(TimerLabelForegroundColor));
             NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 
             NotifyPropertyChanged(nameof(IsFocusLocked));

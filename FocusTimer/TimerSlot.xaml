@@ -28,7 +28,7 @@
             <Label Grid.Column="1" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Left" ToolTip="{Binding CurrentApp.AppName}">
                 <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentApp.AppName, FallbackValue=Chrome}" />
             </Label>
-            <Label Grid.Column="2" Style="{StaticResource SmallTimerLabel}" Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Label Grid.Column="2" Foreground="{Binding TimerLabelForegroundColor, FallbackValue=White}" Style="{StaticResource SmallTimerLabel}" Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <Button Grid.Column="3" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" HorizontalContentAlignment="Right" Click="Clear_Click">
                 <Image Source="Resources/x.png" Style="{StaticResource BitmapImage}" Width="14"/>
             </Button>

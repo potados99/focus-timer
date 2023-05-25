@@ -66,7 +66,7 @@
     </Window.ContextMenu>
 
     <Border CornerRadius="6,6,6,6" Background="{StaticResource LightGray}">
-        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{Binding BackgroundColor, FallbackValue=Black}">
+        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="#FF191919">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{Binding FixedPartLength, FallbackValue=1.4*}" />
@@ -84,7 +84,7 @@
                     <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click">
                         <Image Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     </Button>
-                    <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue=White}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                     <Grid Grid.Column="2" HorizontalAlignment="Left">
                         <Grid.RowDefinitions>

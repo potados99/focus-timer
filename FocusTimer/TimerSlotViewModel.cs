@@ -1,6 +1,7 @@
 ﻿using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Models;
 using System.Windows;
+using System.Windows.Media;
 
 namespace FocusTimer.Models
 {
@@ -58,6 +59,16 @@ namespace FocusTimer.Models
             }
         }
 
+        public SolidColorBrush? TimerLabelForegroundColor
+        {
+            get
+            {
+                string resourceName = IsAppActive ? "White" : "DimmedGray";
+
+                return Application.Current.FindResource(resourceName) as SolidColorBrush;
+            }
+        }
+
         #endregion
 
         #region 외부에 노출하는 제어용 메소드
@@ -109,6 +120,7 @@ namespace FocusTimer.Models
             NotifyPropertyChanged(nameof(IsAppVisible));
             NotifyPropertyChanged(nameof(IsSetButtonVisible));
             NotifyPropertyChanged(nameof(IsWaitLabelVisible));
+            NotifyPropertyChanged(nameof(TimerLabelForegroundColor));
         }
 
         #endregion
