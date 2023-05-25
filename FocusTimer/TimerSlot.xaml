@@ -30,7 +30,7 @@
             </Label>
             <Label Grid.Column="2" Foreground="{Binding TimerLabelForegroundColor, FallbackValue=White}" Style="{StaticResource SmallTimerLabel}" Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <Button Grid.Column="3" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" HorizontalContentAlignment="Right" Click="Clear_Click">
-                <Image Source="Resources/x.png" Style="{StaticResource BitmapImage}" Width="14"/>
+                <Image Source="{StaticResource ic_close_box}" Style="{StaticResource BitmapImage}" Width="14"/>
             </Button>
         </Grid>
 
@@ -48,7 +48,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="Resources/plus.png" Width="14" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="{StaticResource ic_plus_box_outline}" Width="14" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <Label Grid.Column="1" Content="프로그램 등록" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
         </Button>

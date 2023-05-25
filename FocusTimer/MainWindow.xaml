@@ -35,14 +35,14 @@
             <Separator Style="{StaticResource ModernMenuSeparator}"/>
             <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource ic_information}"/>
+                    <Image Source="{StaticResource ic_information_outline}"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator Style="{StaticResource ModernMenuSeparator}"/>
 
             <MenuItem Style="{StaticResource ModernMenuItem}">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource ic_timer_lock}"/>
+                    <Image Source="{StaticResource ic_timer_lock_outline}"/>
                 </MenuItem.Icon>
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -83,8 +83,8 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click">
-                        <Image Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click" ToolTip="{Binding LockButtonToolTip}">
+                        <Image Opacity="{Binding LockImageOpacity}" Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" Style="{StaticResource BitmapImage}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     </Button>
                     <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue=White}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 

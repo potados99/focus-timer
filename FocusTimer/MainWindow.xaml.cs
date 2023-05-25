@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace FocusTimer
@@ -49,7 +50,10 @@ namespace FocusTimer
 
         private void Lock_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ToggleLock();
+            if (((sender as Button).ToolTip as ToolTip) != null) {
+                ((sender as Button).ToolTip as ToolTip).IsOpen = true;
+            }
+            ViewModel.ToggleFocusLock();
         }
 
         #endregion

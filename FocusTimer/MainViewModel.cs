@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -96,6 +97,14 @@ namespace FocusTimer
             }
         }
 
+        public double LockImageOpacity
+        {
+            get
+            {
+                return IsFocusLockHold ? 0.7 : 1.0;
+            }
+        }
+
         public string Concentration
         {
             get
@@ -123,6 +132,24 @@ namespace FocusTimer
 
                 // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
                 NotifyPropertyChanged(nameof(FocusLockDuration));
+            }
+        }
+
+        public bool IsFocusLockHold
+        {
+            get
+            {
+                return FocusLockTimer.IsEnabled;
+            }
+        }
+
+        private ToolTip _LockButtonToolTip = new();
+        public ToolTip LockButtonToolTip
+        {
+            get
+            {
+                _LockButtonToolTip.Content = IsFocusLockHold ? $"{(int)Math.Ceiling(FocusLockTimeSpan.TotalMinutes)}분 남았습니다." : null;
+                return _LockButtonToolTip;     
             }
         }
 
@@ -228,7 +255,7 @@ namespace FocusTimer
             }
             set
             {
-
+                // 왜인지는 모르겠는데 이 WindowHeight은 양방향 바인딩으로 넣어 주어야 잘 돌아갑니다...
             }
         }
 
@@ -306,8 +333,10 @@ namespace FocusTimer
             NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 
             NotifyPropertyChanged(nameof(IsFocusLocked));
+            NotifyPropertyChanged(nameof(IsFocusLockHold));
             NotifyPropertyChanged(nameof(LockImage));
-
+            NotifyPropertyChanged(nameof(LockImageOpacity));
+            NotifyPropertyChanged(nameof(LockButtonToolTip));
 
             NotifyPropertyChanged(nameof(Concentration));
         }
@@ -316,16 +345,58 @@ namespace FocusTimer
 
         #region 포커스 잠금 
 
-        public void ToggleLock()
+        private DispatcherTimer FocusLockTimer = new();
+        private TimeSpan FocusLockTimeSpan = new();
+
+        public void ToggleFocusLock()
         {
-            IsFocusLocked = !IsFocusLocked;
+            if (IsFocusLocked)
+            {
+                UnlockFocus();
+            } else
+            {
+                LockFocus();
+            }
 
             Render();
         }
 
+        private void LockFocus()
+        {
+            _LockButtonToolTip.Content = "타이머가 잠겼습니다.";
+
+            FocusLockTimeSpan = new TimeSpan(0, FocusLockDuration, 0);
+            FocusLockTimer.Interval = TimeSpan.FromSeconds(1);
+            FocusLockTimer.Tick += (_, _) => {
+                if (FocusLockTimeSpan == TimeSpan.Zero || FocusLockTimeSpan.TotalSeconds <= 0)
+                {
+                    _LockButtonToolTip.Content = "타이머 잠금이 해제되었습니다.";
+                    FocusLockTimer.Stop();
+                } else
+                {
+                    FocusLockTimeSpan = FocusLockTimeSpan.Add(TimeSpan.FromSeconds(-1));
+                }
+
+                Render();
+            };
+            FocusLockTimer.Start();
+
+            IsFocusLocked = true;
+        }
+
+        private void UnlockFocus()
+        {
+            if (IsFocusLockHold)
+            {
+                _LockButtonToolTip.IsOpen = true;
+                return;
+            }
+
+            IsFocusLocked = false;
+        }
+
         private void RestoreFocusIfNeeded(IntPtr prev, IntPtr current)
         {
-
             if (!IsFocusLocked)
             {
                 // 포커스 잠금이 없으면 아무 것도 하지 않습니다.
