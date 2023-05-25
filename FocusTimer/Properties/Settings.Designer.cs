@@ -58,5 +58,17 @@ namespace FocusTimer.Properties {
                 this["App3"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FocusLockDuration {
+            get {
+                return ((int)(this["FocusLockDuration"]));
+            }
+            set {
+                this["FocusLockDuration"] = value;
+            }
+        }
     }
 }

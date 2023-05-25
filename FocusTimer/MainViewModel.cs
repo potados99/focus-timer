@@ -70,7 +70,7 @@ namespace FocusTimer
         {
             get
             {
-                string resourceName = IsAnyAppActive ? "White" : "DimmedGray";
+                string resourceName = IsAnyAppActive ? "TextWhite" : "DimmedGray";
 
                 return Application.Current.FindResource(resourceName) as SolidColorBrush;
             }
@@ -111,7 +111,20 @@ namespace FocusTimer
             }
         }
 
-        public int TimerLockHoldDuration { get; set; } = 30;
+        public int FocusLockDuration
+        {
+            get
+            {
+                return Settings.GetFocusLockDuration();
+            }
+            set
+            {
+                Settings.SetFocusLockDuration(value);
+
+                // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
+                NotifyPropertyChanged(nameof(FocusLockDuration));
+            }
+        }
 
         #endregion
 
@@ -353,18 +366,15 @@ namespace FocusTimer
 
         public void SaveApps()
         {
-            FocusTimer.Properties.Settings.Default.App1 = TimerSlots[0].GetAppExecutablePath();
-            FocusTimer.Properties.Settings.Default.App2 = TimerSlots[1].GetAppExecutablePath();
-            FocusTimer.Properties.Settings.Default.App3 = TimerSlots[2].GetAppExecutablePath();
-
-            FocusTimer.Properties.Settings.Default.Save();
+            Settings.SetApps(TimerSlots.Select(s => s.GetAppExecutablePath()).ToList());
         }
 
         public void RestoreApps()
         {
-            TimerSlots[0].RestoreApp(FocusTimer.Properties.Settings.Default.App1);
-            TimerSlots[1].RestoreApp(FocusTimer.Properties.Settings.Default.App2);
-            TimerSlots[2].RestoreApp(FocusTimer.Properties.Settings.Default.App3);
+            foreach (var (app, index) in Settings.GetApps().WithIndex())
+            {
+                TimerSlots[index].RestoreApp(app);
+            }
         }
 
         #endregion

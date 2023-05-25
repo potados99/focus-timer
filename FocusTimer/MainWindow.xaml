@@ -26,21 +26,21 @@
     </Window.Resources>
 
     <Window.ContextMenu>
-        <ContextMenu>
-            <MenuItem x:Name="ExitItem" Header="종료" Click="ExitItem_Click">
+        <ContextMenu Style="{StaticResource ModernMenu}">
+            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="ExitItem" Header="종료" Click="ExitItem_Click">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource ic_exit_to_app}"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator />
-            <MenuItem x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click">
+            <Separator Style="{StaticResource ModernMenuSeparator}"/>
+            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource ic_information}"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator />
+            <Separator Style="{StaticResource ModernMenuSeparator}"/>
 
-            <MenuItem>
+            <MenuItem Style="{StaticResource ModernMenuItem}">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource ic_timer_lock}"/>
                 </MenuItem.Icon>
@@ -52,10 +52,12 @@
                             AllowTextInput="True"
                             MouseWheelActiveTrigger="MouseOver"
                             x:Name="advert_Time" 
-                            Value="{Binding TimerLockHoldDuration, Mode=TwoWay}" 
+                            Value="{Binding FocusLockDuration, Mode=TwoWay}" 
                             Minimum="1"
                             Maximum="9999"
                             Width="50" 
+                            Foreground="{StaticResource TextWhite}"
+                            Background="Transparent"
                             Margin="5,0"
                             />
                         <TextBlock VerticalAlignment="Center">분</TextBlock>
