@@ -99,7 +99,8 @@ namespace FocusTimer
                     },
                     ForceStepToMin = true,
                     MinStep = 1,
-                   
+                    MinLimit = 30,
+                    MaxLimit = 49
                 } 
             };
 

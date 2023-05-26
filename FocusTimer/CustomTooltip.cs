@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -155,17 +156,29 @@ namespace FocusTimer
             if (_seriesVisualsMap.TryGetValue(point.Context.Series, out var visual))
             {
                 if (_chart is null) return visual;
-                visual.LabelVisual.Text = $"총 {point.StackedValue.Total}분";
-                visual.LabelVisual.Invalidate(_chart);
+                visual.TitleLabelVisual.Text = $"총 사용 시간";
+                visual.TitleLabelVisual.Invalidate(_chart);
+                visual.ValueLabelVisual.Text = $"{point.StackedValue.Total}분";
+                visual.ValueLabelVisual.Invalidate(_chart);
                 return visual;
             }
 
             var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniatresSketch();
             var relativePanel = sketch.AsDrawnControl();
 
-            var label = new LabelVisual
+            var titleLabel = new LabelVisual
             {
-                Text = $"총 {point.StackedValue.Total}분",
+                Text = $"총 사용 시간",
+                Paint = FontPaint,
+                TextSize = 12,
+                Padding = new Padding(8, 0, 0, 0),
+                VerticalAlignment = Align.Start,
+                HorizontalAlignment = Align.Start
+            };
+
+            var valueLabel = new LabelVisual
+            {
+                Text = $"{point.StackedValue.Total}분",
                 Paint = FontPaint,
                 TextSize = TextSize,
                 Padding = new Padding(8, 0, 0, 0),
@@ -176,17 +189,18 @@ namespace FocusTimer
             var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(0, 4),
+                Orientation = ContainerOrientation.Vertical,
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
                 Children =
             {
-                relativePanel,
-                label
+                titleLabel,
+                valueLabel
             }
             };
 
              _ = _stackPanel?.Children.Add(sp);
-            var seriesVisual = new SeriesVisual(point.Context.Series, sp, label);
+            var seriesVisual = new SeriesVisual(point.Context.Series, sp, titleLabel, valueLabel);
             _seriesVisualsMap.Add(point.Context.Series, seriesVisual);
 
             return seriesVisual;
@@ -197,18 +211,22 @@ namespace FocusTimer
             public SeriesVisual(
                 ISeries series,
                 StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> stackPanel,
-                LabelVisual label)
+                LabelVisual titleLabelVisual,
+                LabelVisual valueLabelVisual)
             {
                 Series = series;
                 Visual = stackPanel;
-                LabelVisual = label;
+                TitleLabelVisual = titleLabelVisual;
+                ValueLabelVisual = valueLabelVisual;
             }
 
             public ISeries Series { get; }
 
             public StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> Visual { get; }
 
-            public LabelVisual LabelVisual { get; set; }
+            public LabelVisual TitleLabelVisual { get; set; }
+
+            public LabelVisual ValueLabelVisual { get; set; }
         }
     }
 }
