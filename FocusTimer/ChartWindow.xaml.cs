@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiveChartsCore.SkiaSharpView;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,8 @@ namespace FocusTimer
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.Loaded();
+
+            LowerChart.Tooltip = new CustomTooltip();
         }
     }
 }

@@ -14,6 +14,7 @@ using SkiaSharp;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace FocusTimer
 {
@@ -34,14 +35,14 @@ namespace FocusTimer
                    
                 );
 
-            var values1 = new int[7];
-            var values2 = new int[7];
-            var values3 = new int[7];
-            var values4 = new int[7];
-            var values5 = new int[7];
+            var values1 = new int[50];
+            var values2 = new int[50];
+            var values3 = new int[50];
+            var values4 = new int[50];
+            var values5 = new int[50];
             var r = new Random();
 
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < 50; i++)
             {
                 values1[i] = r.Next(50, 80);
                 values2[i] = r.Next(20, 60);
@@ -58,10 +59,10 @@ namespace FocusTimer
                 }
             };
             SeriesCollection2 = new ISeries[] { 
-                new StackedColumnSeries<int> { 
+                new StackedColumnSeries<int> {
                     Name = "Microsoft Visual Studio",
                     Values = values2,
-                    TooltipLabelFormatter = (d) => $"Microsoft Visual Studio {d.PrimaryValue}분"
+                    TooltipLabelFormatter = (d) => $"Microsoft Visual Studio {d.PrimaryValue}분",
                 },
                 new StackedColumnSeries<int> {
                     Name = "Google Chrome",
@@ -77,24 +78,28 @@ namespace FocusTimer
                     Name = "미등록 프로그램",
                     Values = values5,
                     TooltipLabelFormatter = (d) => $"미등록 프로그램 {d.PrimaryValue}분",
-                    Fill = new SolidColorPaint(SKColors.Gray)
+                    Fill = new SolidColorPaint(SKColors.Gray),
                 }
             };
+
+            foreach (StackedColumnSeries<int> s in SeriesCollection2)
+            {
+                s.MaxBarWidth = 16;
+                s.Rx = 5;
+                s.Ry = 5;
+            }
 
             var d = new string[] { "일", "월", "화", "수", "목", "금", "토" };
             // sharing the same instance for both charts will keep the zooming and panning synced 
             SharedXAxis = new Axis[] { 
-                new Axis() { 
-                    Labeler = (i) =>
-                    {
-                        return $"{d[(int)Math.Floor(Math.Abs(i)) % 7]}";
-                    },                     
+                new Axis() {                 
                     LabelsPaint = new SolidColorPaint(SKColors.LightGray)
                     {
                         FontFamily = "맑은 고딕"
                     },
                     ForceStepToMin = true,
-                    MinStep = 1
+                    MinStep = 1,
+                   
                 } 
             };
 
@@ -118,7 +123,6 @@ namespace FocusTimer
 
             // normally you would need measure all the axes involved, and use the greater width to
             // calculate the required margin.
-
 
             NotifyPropertyChanged(nameof(SeriesCollection1));
             NotifyPropertyChanged(nameof(SeriesCollection2));

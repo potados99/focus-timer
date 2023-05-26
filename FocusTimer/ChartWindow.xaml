@@ -28,15 +28,16 @@
             XAxes="{Binding SharedXAxis}"
             TooltipTextPaint="{Binding TooltipPaint}"
             DrawMargin="{Binding DrawMargin}"
-            ZoomMode="None">
+            ZoomMode="X">
         </lvc:CartesianChart>
         
         <lvc:CartesianChart
+            x:Name="LowerChart"
             Grid.Row="1"
             Series="{Binding SeriesCollection2}"
             XAxes="{Binding SharedXAxis}"
             TooltipTextPaint="{Binding TooltipPaint}"
-            ZoomMode="None">
+            ZoomMode="X">
         </lvc:CartesianChart>
     </Grid>
 </Window>
