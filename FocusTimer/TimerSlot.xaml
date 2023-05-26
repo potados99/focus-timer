@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="{Binding CurrentApp.Image}" Width="20" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <Image Grid.Column="0" Style="{StaticResource BitmapImage}" Source="{Binding CurrentApp.Image}" d:Source="{StaticResource ic_chart_bar}" Width="20" VerticalAlignment="Center" HorizontalAlignment="Left" />
             <Label Grid.Column="1" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Left" ToolTip="{Binding CurrentApp.AppName}">
                 <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentApp.AppName, FallbackValue=Chrome}" />
             </Label>

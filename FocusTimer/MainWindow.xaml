@@ -104,28 +104,8 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click" ToolTip="{Binding LockButtonToolTip}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
-                        <Grid Background="Transparent">
-
-                            <utility:ConditionalEventTrigger.Triggers>
-                                <utility:ConditionalEventTriggerCollection>
-                                    <utility:ConditionalEventTrigger RoutedEvent="Grid.MouseDown" Condition="{Binding IsFocusLockHold}">
-                                        <utility:ConditionalEventTrigger.Actions>
-                                            <BeginStoryboard Storyboard="{StaticResource ShakeHorizontalAnimation}"/>
-                                        </utility:ConditionalEventTrigger.Actions>
-                                    </utility:ConditionalEventTrigger>
-
-                                    <utility:ConditionalEventTrigger RoutedEvent="Grid.MouseDown" Condition="{c:Binding Path=!IsFocusLockHold}">
-                                        <utility:ConditionalEventTrigger.Actions>
-                                            <BeginStoryboard Storyboard="{StaticResource LockingAnimation}"/>
-                                        </utility:ConditionalEventTrigger.Actions>
-                                    </utility:ConditionalEventTrigger>
-
-                                </utility:ConditionalEventTriggerCollection>
-                            </utility:ConditionalEventTrigger.Triggers>
-
-                            <Image x:Name="LockImage" Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        </Grid>
+                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click" ToolTip="{Binding LockButtonToolTip}">
+                        <Image x:Name="LockImage" Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </Button>
                     <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue=White}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 

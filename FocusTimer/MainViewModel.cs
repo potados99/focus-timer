@@ -374,6 +374,7 @@ namespace FocusTimer
             FocusLockTimer.Start();
 
             IsFocusLocked = true;
+            StartAnimation("LockingAnimation");
         }
 
         private void UnlockFocus()
@@ -381,12 +382,18 @@ namespace FocusTimer
             if (IsFocusLockHold)
             {
                 _LockButtonToolTip.IsOpen = true;
+                StartAnimation("ShakeHorizontalAnimation");
+
                 return;
             }
 
             IsFocusLocked = false;
+            StartAnimation("UnlockingAnimation");
+        }
 
-            Storyboard? sb = Application.Current.MainWindow.Resources["UnlockingAnimation"] as Storyboard;
+        private void StartAnimation(string name)
+        {
+            Storyboard? sb = Application.Current.MainWindow.Resources[name] as Storyboard;
             sb?.Begin();
         }
 
