@@ -15,6 +15,8 @@ using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.ConditionalDraw;
+using System.Windows.Media;
 
 namespace FocusTimer
 {
@@ -84,6 +86,9 @@ namespace FocusTimer
 
             foreach (StackedColumnSeries<int> s in SeriesCollection2)
             {
+                s.WithConditionalPaint(new SolidColorPaint(SKColors.Black))
+                .When(P => P.TertiaryValue > 0);
+
                 s.MaxBarWidth = 16;
                 s.Rx = 5;
                 s.Ry = 5;

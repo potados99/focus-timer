@@ -46,6 +46,8 @@ namespace FocusTimer
         private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
         private readonly Dictionary<ISeries, SeriesVisual> _seriesVisualsMap = new();
 
+        public IEnumerable<ChartPoint> Points { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
         /// </summary>
@@ -90,6 +92,8 @@ namespace FocusTimer
         /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})"/>
         public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
         {
+            Points = foundPoints;
+
             foundPoints = new List<ChartPoint>() {
                 foundPoints.Last()
             };

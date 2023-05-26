@@ -37,6 +37,7 @@
             Series="{Binding SeriesCollection2}"
             XAxes="{Binding SharedXAxis}"
             TooltipTextPaint="{Binding TooltipPaint}"
+            MouseDown="LowerChart_MouseDown"
             ZoomMode="X">
         </lvc:CartesianChart>
     </Grid>
