@@ -22,6 +22,15 @@ namespace FocusTimer
         public ChartWindow()
         {
             InitializeComponent();
+
+            DataContext = ViewModel;
+        }
+
+        private readonly ChartViewModel ViewModel = new();
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Loaded();
         }
     }
 }

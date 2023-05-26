@@ -4,9 +4,38 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FocusTimer"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
-        Title="ChartWindow" Height="450" Width="800">
+        d:DataContext="{d:DesignInstance Type=local:ChartViewModel}"
+        Title="ChartWindow" Height="450" Width="800"
+        Loaded="Window_Loaded"
+        Background="{StaticResource BackgroundBlack}"
+        >
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--
+          Notice we are binding the XAxes to the same instance, this way we are sharing both charts zooming and panning
+          no matter in which chart you zoom, the other chart will share the view.
+        -->
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            Series="{Binding SeriesCollection1}"
+            XAxes="{Binding SharedXAxis}"
+            DrawMargin="{Binding DrawMargin}"
+            ZoomMode="None">
+        </lvc:CartesianChart>
         
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Series="{Binding SeriesCollection2}"
+            XAxes="{Binding SharedXAxis}"
+            DrawMargin="{Binding DrawMargin}"
+            ZoomMode="None">
+        </lvc:CartesianChart>
     </Grid>
 </Window>
