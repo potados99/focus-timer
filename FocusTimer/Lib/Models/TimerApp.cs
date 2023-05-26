@@ -34,10 +34,10 @@ namespace FocusTimer.Lib.Models
 
         private readonly Stopwatch ActiveStopwatch = new();
 
-        public string ProcessExecutablePath { get; init; }
+        public string ProcessExecutablePath { get; set; }
 
-        public ImageSource? Image { get; init; }
-        public string? AppName { get; init; }
+        public ImageSource? Image { get; set; }
+        public string? AppName { get; set; }
         public string Elapsed
         {
             get

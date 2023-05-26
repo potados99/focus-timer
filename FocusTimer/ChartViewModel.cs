@@ -24,6 +24,8 @@ namespace FocusTimer
                     // select a theme, default is Light
                     // OPTIONAL
                     .AddDarkTheme()
+
+                   
                 );
 
             var values1 = new int[7];
@@ -45,7 +47,7 @@ namespace FocusTimer
             SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
 
             // sharing the same instance for both charts will keep the zooming and panning synced 
-            SharedXAxis = new Axis[] { new Axis() { Labeler = (i) => $"Day {i}" } };
+            SharedXAxis = new Axis[] { new Axis() { Labeler = (i) => $"Day {i}월" } };
 
             // Force the chart to use 70px margin on the left, this way we can align both charts. 
             DrawMargin = new Margin(70, Margin.Auto, Margin.Auto, Margin.Auto);
