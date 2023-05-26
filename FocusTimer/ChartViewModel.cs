@@ -54,7 +54,7 @@ namespace FocusTimer
                 new LineSeries<int> { 
                     Name = "집중도",
                     Values = values1,
-                    TooltipLabelFormatter = (d) => $"집중도 {d.PrimaryValue}%"
+                    TooltipLabelFormatter = (d) => $"집중도 {d.PrimaryValue}%",
                 }
             };
             SeriesCollection2 = new ISeries[] { 

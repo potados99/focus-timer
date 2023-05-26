@@ -68,7 +68,7 @@
                 </MenuItem.Icon>
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center">타이머 잠금 시간:</TextBlock>
+                        <TextBlock VerticalAlignment="Center">화면 강제 잠금:</TextBlock>
                         <xctk:IntegerUpDown
                             AutoSelectBehavior="Never"
                             AllowTextInput="True"
