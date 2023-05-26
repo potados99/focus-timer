@@ -48,17 +48,18 @@
 
     <Window.ContextMenu>
         <ContextMenu Style="{StaticResource ModernMenu}">
+            
             <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="ExitItem" Header="종료" Click="ExitItem_Click">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource ic_exit_to_app}"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator Style="{StaticResource ModernMenuSeparator}"/>
-            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click">
+            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="ChartItem" Header="통계 대시보드" Click="ChartItem_Click">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource ic_information_outline}"/>
+                    <Image Source="{StaticResource ic_chart_bar}"/>
                 </MenuItem.Icon>
             </MenuItem>
+
             <Separator Style="{StaticResource ModernMenuSeparator}"/>
 
             <MenuItem Style="{StaticResource ModernMenuItem}">
@@ -85,6 +86,15 @@
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
+
+            <Separator Style="{StaticResource ModernMenuSeparator}"/>
+
+            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource ic_information_outline}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            
         </ContextMenu>
     </Window.ContextMenu>
 

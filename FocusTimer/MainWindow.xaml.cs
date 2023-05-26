@@ -38,9 +38,14 @@ namespace FocusTimer
             App.Current.Shutdown();
         }
 
+        private void ChartItem_Click(object sender, RoutedEventArgs e)
+        {
+            new ChartWindow().Show();
+        }
+
         private void InfoItem_Click(object sender, RoutedEventArgs e)
         {
-            var ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string? ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
             MessageBox.Show(
                 "Focus Timer\n" +
@@ -50,9 +55,11 @@ namespace FocusTimer
 
         private void Lock_Click(object sender, RoutedEventArgs e)
         {
-            if (((sender as Button).ToolTip as ToolTip) != null) {
-                ((sender as Button).ToolTip as ToolTip).IsOpen = true;
+            if (sender is Button { ToolTip: ToolTip toolTip })
+            {
+                toolTip.IsOpen = true;
             }
+
             ViewModel.ToggleFocusLock();
         }
 
