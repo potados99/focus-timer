@@ -26,7 +26,8 @@
             Grid.Row="0"
             Series="{Binding SeriesCollection1}"
             XAxes="{Binding SharedXAxis}"
-            DrawMargin="{Binding DrawMargin}"            
+            TooltipTextPaint="{Binding TooltipPaint}"
+            DrawMargin="{Binding DrawMargin}"
             ZoomMode="None">
         </lvc:CartesianChart>
         
@@ -34,7 +35,7 @@
             Grid.Row="1"
             Series="{Binding SeriesCollection2}"
             XAxes="{Binding SharedXAxis}"
-            DrawMargin="{Binding DrawMargin}"
+            TooltipTextPaint="{Binding TooltipPaint}"
             ZoomMode="None">
         </lvc:CartesianChart>
     </Grid>

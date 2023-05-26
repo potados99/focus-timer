@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 using FocusTimer.Lib.Component;
 using System.Windows.Media.TextFormatting;
 using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView.WPF;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
+using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace FocusTimer
 {
@@ -30,27 +36,70 @@ namespace FocusTimer
 
             var values1 = new int[7];
             var values2 = new int[7];
+            var values3 = new int[7];
+            var values4 = new int[7];
+            var values5 = new int[7];
             var r = new Random();
-            var t = 0;
-            var t2 = 0;
 
             for (var i = 0; i < 7; i++)
             {
-                t = r.Next(20, 300);
-                values1[i] = t;
-
-                t2 = r.Next(50, 80);
-                values2[i] = t2;
+                values1[i] = r.Next(50, 80);
+                values2[i] = r.Next(20, 60);
+                values3[i] = r.Next(10, 20);
+                values4[i] = r.Next(5, 10);
+                values5[i] = r.Next(10, 25);
             }
 
-            SeriesCollection1 = new ISeries[] { new LineSeries<int> { Values = values1 } };
-            SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
+            SeriesCollection1 = new ISeries[] { 
+                new LineSeries<int> { 
+                    Name = "집중도",
+                    Values = values1,
+                    TooltipLabelFormatter = (d) => $"집중도 {d.PrimaryValue}%"
+                }
+            };
+            SeriesCollection2 = new ISeries[] { 
+                new StackedColumnSeries<int> { 
+                    Name = "Microsoft Visual Studio",
+                    Values = values2,
+                    TooltipLabelFormatter = (d) => $"Microsoft Visual Studio {d.PrimaryValue}분"
+                },
+                new StackedColumnSeries<int> {
+                    Name = "Google Chrome",
+                    Values = values3,
+                    TooltipLabelFormatter = (d) => $"Google Chrome {d.PrimaryValue}분"
+                },
+                new StackedColumnSeries<int> {
+                    Name = "Windows Explorer",
+                    Values = values4,
+                    TooltipLabelFormatter = (d) => $"Windows Explorer {d.PrimaryValue}분"
+                },
+                new StackedColumnSeries<int> {
+                    Name = "미등록 프로그램",
+                    Values = values5,
+                    TooltipLabelFormatter = (d) => $"미등록 프로그램 {d.PrimaryValue}분",
+                    Fill = new SolidColorPaint(SKColors.Gray)
+                }
+            };
 
+            var d = new string[] { "일", "월", "화", "수", "목", "금", "토" };
             // sharing the same instance for both charts will keep the zooming and panning synced 
-            SharedXAxis = new Axis[] { new Axis() { Labeler = (i) => $"Day {i}월" } };
+            SharedXAxis = new Axis[] { 
+                new Axis() { 
+                    Labeler = (i) =>
+                    {
+                        return $"{d[(int)Math.Floor(Math.Abs(i)) % 7]}";
+                    },                     
+                    LabelsPaint = new SolidColorPaint(SKColors.LightGray)
+                    {
+                        FontFamily = "맑은 고딕"
+                    },
+                    ForceStepToMin = true,
+                    MinStep = 1
+                } 
+            };
 
             // Force the chart to use 70px margin on the left, this way we can align both charts. 
-            DrawMargin = new Margin(70, Margin.Auto, Margin.Auto, Margin.Auto);
+            DrawMargin = new Margin(20, Margin.Auto, 20, Margin.Auto);
             // and thats it!
 
             // Advanced alternative:
@@ -81,5 +130,10 @@ namespace FocusTimer
         public ISeries[] SeriesCollection2 { get; set; }
         public Axis[] SharedXAxis { get; set; }
         public Margin DrawMargin { get; set; }
+
+        public IPaint<SkiaSharpDrawingContext> TooltipPaint { get; set; } = new SolidColorPaint(new SKColor(28, 49, 58))
+        {
+            FontFamily = "맑은 고딕"
+        };
     }
 }
