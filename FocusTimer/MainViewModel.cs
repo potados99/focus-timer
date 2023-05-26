@@ -50,155 +50,39 @@ namespace FocusTimer
             RenderAll();
         }
 
-        #region UI 속성들
-
-        public string ElapsedTime
+        public void RenderAll()
         {
-            get
-            {
-                return ActiveStopwatch.ElapsedString();
-            }
-        }
-
-        public bool IsAnyAppActive
-        {
-            get
-            {
-                return TimerSlots.Any(s => s.IsAppActive);
-            }
-        }
-
-        public SolidColorBrush? TimerLabelForegroundColor
-        {
-            get
-            {
-                string resourceName = IsAnyAppActive ? "TextWhite" : "DimmedGray";
-
-                return Application.Current.FindResource(resourceName) as SolidColorBrush;
-            }
-        }
-
-        public Visibility IsWarningBorderVisible
-        {
-            get
-            {
-                return !IsFocusLocked || IsAnyAppActive ? Visibility.Hidden : Visibility.Visible;
-            }
-        }
-
-        public bool IsFocusLocked { get; set; } = false;
-
-        public DrawingImage? LockImage
-        {
-            get
-            {
-                string resourceName = IsFocusLocked ? "ic_lock" : "ic_lock_open_outline";
-
-                return Application.Current.FindResource(resourceName) as DrawingImage;
-            }
-        }
-
-        public string Concentration
-        {
-            get
-            {
-                if (AlwaysOnStopwatch.ElapsedMilliseconds == 0)
-                {
-                    return "0%";
-                }
-
-                double concentration = 100 * ActiveStopwatch.ElapsedMilliseconds / AlwaysOnStopwatch.ElapsedMilliseconds;
-
-                return concentration + "%";
-            }
-        }
-
-        public int FocusLockHoldDuration
-        {
-            get
-            {
-                return Settings.GetFocusLockHoldDuration();
-            }
-            set
-            {
-                Settings.SetFocusLockHoldDuration(value);
-
-                // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
-                NotifyPropertyChanged(nameof(FocusLockHoldDuration));
-            }
-        }
-
-        public bool IsFocusLockHold
-        {
-            get
-            {
-                return FocusLockTimer.IsEnabled;
-            }
-        }
-
-        private readonly ToolTip _LockButtonToolTip = new();
-        public ToolTip? LockButtonToolTip
-        {
-            get
-            {
-                _LockButtonToolTip.Content = $"{(int)Math.Ceiling(FocusLockTimeSpan.TotalMinutes)}분 남았습니다.";
-
-                return IsFocusLockHold ? _LockButtonToolTip : null;     
-            }
-        }
-
-        #endregion
-
-        #region 타이머 슬롯의 등록 및 초기화
-
-        public List<TimerSlotViewModel> TimerSlots { get; } = new List<TimerSlotViewModel>() {
-            new TimerSlotViewModel() { SlotNumber = 0 },
-            new TimerSlotViewModel() { SlotNumber = 1 },
-            new TimerSlotViewModel() { SlotNumber = 2 },
-        };
-
-        private TimerSlotViewModel? CurrentRegisteringTimerSlot
-        {
-            get
-            {
-                return TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
-            }
-        }
-
-        private void StartRegisteringApplication(TimerSlotViewModel slot)
-        {
-            if (CurrentRegisteringTimerSlot != null)
-            {
-                return;
-            }
-
-            slot.StartWaitingForApp();
-
             Render();
-        }
 
-        private void FinishRegisteringApp(TimerApp app)
-        {
-            CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(app);
-
-            SaveApps();
-            Render();
-        }
-
-        private void ClearApplication(TimerSlotViewModel slot)
-        {
-            if (CurrentRegisteringTimerSlot != null)
+            foreach (var slot in TimerSlots)
             {
-                return;
+                slot.Render();
+            }
+        }
+
+        public void Render()
+        {
+            if (IsAnyAppActive)
+            {
+                ActiveStopwatch.Start();
+            }
+            else
+            {
+                ActiveStopwatch.Stop();
             }
 
-            slot.ClearRegisteredApp();
+            NotifyPropertyChanged(nameof(ElapsedTime));
+            NotifyPropertyChanged(nameof(IsAnyAppActive));
+            NotifyPropertyChanged(nameof(TimerLabelForegroundColor));
+            NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 
-            SaveApps();
-            Render();
+            NotifyPropertyChanged(nameof(IsFocusLocked));
+            NotifyPropertyChanged(nameof(IsFocusLockHold));
+            NotifyPropertyChanged(nameof(LockImage));
+            NotifyPropertyChanged(nameof(LockButtonToolTip));
+
+            NotifyPropertyChanged(nameof(Concentration));
         }
-
-        #endregion
 
         #region Main Window의 확장 및 축소
 
@@ -283,70 +167,123 @@ namespace FocusTimer
 
         #endregion
 
-        #region 타이머와 UI 업데이트
+        #region 스탑워치와 글로벌 틱 타이머
 
-        private Stopwatch ActiveStopwatch = new Stopwatch();
-        private Stopwatch AlwaysOnStopwatch = new Stopwatch();
+        private readonly Stopwatch ActiveStopwatch = new();
+        private readonly Stopwatch AlwaysOnStopwatch = new();
+        private readonly DispatcherTimer OneSecTickTimer = new();
 
-        private DispatcherTimer DispatchTimer = new DispatcherTimer();
+        public string ElapsedTime
+        {
+            get
+            {
+                return ActiveStopwatch.ElapsedString();
+            }
+        }
+
+        public string Concentration
+        {
+            get
+            {
+                if (AlwaysOnStopwatch.ElapsedMilliseconds == 0)
+                {
+                    return "0%";
+                }
+
+                double concentration = 100 * ActiveStopwatch.ElapsedMilliseconds / AlwaysOnStopwatch.ElapsedMilliseconds;
+
+                return concentration + "%";
+            }
+        }
+
+        public SolidColorBrush? TimerLabelForegroundColor
+        {
+            get
+            {
+                string resourceName = IsAnyAppActive ? "TextWhite" : "DimmedGray";
+
+                return Application.Current.FindResource(resourceName) as SolidColorBrush;
+            }
+        }
 
         public void StartTimer()
         {
-            DispatchTimer.Tick += (_, _) => RenderAll();
-            DispatchTimer.Interval = new TimeSpan(0, 0, 0, 1);
-            DispatchTimer.Start();
+            OneSecTickTimer.Tick += (_, _) => RenderAll();
+            OneSecTickTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            OneSecTickTimer.Start();
 
             AlwaysOnStopwatch.Start();
             ActiveStopwatch.Start();
         }
 
-        public void RenderAll()
-        {
-            Render();
-
-            foreach (var slot in TimerSlots)
-            {
-                slot.Render();
-            }
-        }
-
-        public void Render()
-        {
-            if (IsAnyAppActive)
-            {
-                ActiveStopwatch.Start();
-            }
-            else
-            {
-                ActiveStopwatch.Stop();
-            }
-
-            NotifyPropertyChanged(nameof(ElapsedTime));
-            NotifyPropertyChanged(nameof(IsAnyAppActive));
-            NotifyPropertyChanged(nameof(TimerLabelForegroundColor));
-            NotifyPropertyChanged(nameof(IsWarningBorderVisible));
-
-            NotifyPropertyChanged(nameof(IsFocusLocked));
-            NotifyPropertyChanged(nameof(IsFocusLockHold));
-            NotifyPropertyChanged(nameof(LockImage));
-            NotifyPropertyChanged(nameof(LockButtonToolTip));
-
-            NotifyPropertyChanged(nameof(Concentration));
-        }
-
         #endregion
 
-        #region 포커스 잠금 
+        #region 포커스 잠금과 홀드 타이머
 
-        private DispatcherTimer FocusLockTimer = new();
+        private readonly DispatcherTimer FocusLockTimer = new();
         private TimeSpan FocusLockTimeSpan = new();
+
+        public bool IsFocusLocked { get; set; } = false;
+
+        public bool IsFocusLockHold
+        {
+            get
+            {
+                return FocusLockTimer.IsEnabled;
+            }
+        }
+
+        public int FocusLockHoldDuration
+        {
+            get
+            {
+                return Settings.GetFocusLockHoldDuration();
+            }
+            set
+            {
+                Settings.SetFocusLockHoldDuration(value);
+
+                // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
+                NotifyPropertyChanged(nameof(FocusLockHoldDuration));
+            }
+        }
+
+        public Visibility IsWarningBorderVisible
+        {
+            get
+            {
+                return !IsFocusLocked || IsAnyAppActive ? Visibility.Hidden : Visibility.Visible;
+            }
+        }
+
+        public DrawingImage? LockImage
+        {
+            get
+            {
+                string resourceName = IsFocusLocked ? "ic_lock" : "ic_lock_open_outline";
+
+                return Application.Current.FindResource(resourceName) as DrawingImage;
+            }
+        }
+
+        private readonly ToolTip _LockButtonToolTip = new();
+        public ToolTip? LockButtonToolTip
+        {
+            get
+            {
+                _LockButtonToolTip.Content = $"{(int)Math.Ceiling(FocusLockTimeSpan.TotalMinutes)}분 남았습니다.";
+
+                return IsFocusLockHold ? _LockButtonToolTip : null;
+            }
+        }
 
         public void ToggleFocusLock()
         {
             if (IsFocusLocked)
             {
                 UnlockFocus();
-            } else
+            }
+            else
             {
                 LockFocus();
             }
@@ -356,15 +293,16 @@ namespace FocusTimer
 
         private void LockFocus()
         {
-            //FocusLockTimeSpan = new TimeSpan(0, FocusLockHoldDuration, 0);
-            FocusLockTimeSpan = new TimeSpan(0, 0, 2);
+            FocusLockTimeSpan = new TimeSpan(0, FocusLockHoldDuration, 0);
             FocusLockTimer.Interval = TimeSpan.FromSeconds(1);
-            FocusLockTimer.Tick += (_, _) => {
+            FocusLockTimer.Tick += (_, _) =>
+            {
                 if (FocusLockTimeSpan == TimeSpan.Zero || FocusLockTimeSpan.TotalSeconds <= 0)
                 {
                     FocusLockTimer.Stop();
                     UnlockFocus();
-                } else
+                }
+                else
                 {
                     FocusLockTimeSpan = FocusLockTimeSpan.Add(TimeSpan.FromSeconds(-1));
                 }
@@ -391,11 +329,6 @@ namespace FocusTimer
             StartAnimation("UnlockingAnimation");
         }
 
-        private void StartAnimation(string name)
-        {
-            Storyboard? sb = Application.Current.MainWindow.Resources[name] as Storyboard;
-            sb?.Begin();
-        }
 
         private void RestoreFocusIfNeeded(IntPtr prev, IntPtr current)
         {
@@ -435,7 +368,66 @@ namespace FocusTimer
 
         #endregion
 
-        #region 저장과 복구
+        #region 타이머 슬롯의 등록, 초기화 및 상태
+
+        public List<TimerSlotViewModel> TimerSlots { get; } = new List<TimerSlotViewModel>() {
+            new TimerSlotViewModel() { SlotNumber = 0 },
+            new TimerSlotViewModel() { SlotNumber = 1 },
+            new TimerSlotViewModel() { SlotNumber = 2 },
+        };
+
+        private TimerSlotViewModel? CurrentRegisteringTimerSlot
+        {
+            get
+            {
+                return TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
+            }
+        }
+
+        public bool IsAnyAppActive
+        {
+            get
+            {
+                return TimerSlots.Any(s => s.IsAppActive);
+            }
+        }
+
+        private void StartRegisteringApplication(TimerSlotViewModel slot)
+        {
+            if (CurrentRegisteringTimerSlot != null)
+            {
+                return;
+            }
+
+            slot.StartWaitingForApp();
+
+            Render();
+        }
+
+        private void FinishRegisteringApp(TimerApp app)
+        {
+            CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(app);
+
+            SaveApps();
+            Render();
+        }
+
+        private void ClearApplication(TimerSlotViewModel slot)
+        {
+            if (CurrentRegisteringTimerSlot != null)
+            {
+                return;
+            }
+
+            slot.ClearRegisteredApp();
+
+            SaveApps();
+            Render();
+        }
+
+        #endregion
+
+        #region 타이머 슬롯의 저장 및 복구
 
         public void SaveApps()
         {
@@ -448,6 +440,16 @@ namespace FocusTimer
             {
                 TimerSlots[index].RestoreApp(app);
             }
+        }
+
+        #endregion
+
+        #region 기타 UI
+
+        private void StartAnimation(string name)
+        {
+            Storyboard? sb = Application.Current.MainWindow.Resources[name] as Storyboard;
+            sb?.Begin();
         }
 
         #endregion
