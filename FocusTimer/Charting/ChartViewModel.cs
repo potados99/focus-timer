@@ -132,37 +132,14 @@ namespace FocusTimer
                 }
             };
 
-            // Force the chart to use 70px margin on the left, this way we can align both charts. 
-            DrawMargin = new Margin(20, Margin.Auto, 20, Margin.Auto);
-            // and thats it!
-
-            // Advanced alternative:
-            // you can also ask an axis its posible dimensions to determine the margin you need.
-
-            // First you need to get a chart from the UI
-            // in this sample we use the in-memory chart provided by the library.
-
-            // var cartesianChart = new SKCartesianChart();
-            // var axis = cartesianChart.YAxes.First() as Axis;
-            // var size = axis.GetPossibleSize(cartesianChart.Core);
-
-            // finally instead of using the static 70px, we can use the actual width of the axis.
-
-            // DrawMargin = new Margin(size.Width, Margin.Auto, Margin.Auto, Margin.Auto);
-
-            // normally you would need measure all the axes involved, and use the greater width to
-            // calculate the required margin.
-
             NotifyPropertyChanged(nameof(SeriesCollection1));
             NotifyPropertyChanged(nameof(SeriesCollection2));
             NotifyPropertyChanged(nameof(SharedXAxis));
-            NotifyPropertyChanged(nameof(DrawMargin));
         }
 
         public ObservableCollection<ISeries> SeriesCollection1 { get; set; }
         public ObservableCollection<ISeries> SeriesCollection2 { get; set; }
         public Axis[] SharedXAxis { get; set; }
-        public Margin DrawMargin { get; set; }
 
         public IPaint<SkiaSharpDrawingContext> TooltipPaint { get; set; } = new SolidColorPaint(new SKColor(28, 49, 58))
         {
