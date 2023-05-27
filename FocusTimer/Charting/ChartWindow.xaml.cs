@@ -1,4 +1,7 @@
-﻿using LiveChartsCore.SkiaSharpView;
+﻿using FocusTimer.Charting;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.WPF;
 using System;
 using System.Collections.Generic;
@@ -40,17 +43,30 @@ namespace FocusTimer
 
         private void LowerChart_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
-            var chart = sender as CartesianChart;
-            Debug.WriteLine("!!");
-
-            var tooltip = chart.Tooltip as CustomTooltip;
-            var points = tooltip.Points;
-
-            foreach (var p in points)
+            return;
+            try
             {
-                p.TertiaryValue = 99;
+                var chart = sender as CartesianChart;
+                Debug.WriteLine("!!");
+
+                var tooltip = chart.Tooltip as CustomTooltip;
+                var points = tooltip.Points;
+
+                foreach (var p in points)
+                {
+                    foreach (var p2 in p.Context.Series.ActivePoints)
+                    {
+                        (p2.Context.DataSource as DataPoint).IsSelected = false;
+                    }
+
+                    (p.Context.DataSource as DataPoint).IsSelected = true;
+                }
+
+            } catch (Exception)
+            {
+                throw;
             }
+
         }
     }
 }

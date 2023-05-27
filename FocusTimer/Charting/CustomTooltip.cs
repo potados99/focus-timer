@@ -53,7 +53,10 @@ namespace FocusTimer
         /// </summary>
         public CustomTooltip()
         {
-            FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
+            FontPaint = new SolidColorPaint(new SKColor(28, 49, 58))
+            {
+                FontFamily = "맑은 고딕"
+            };
             BackgroundPaint = new SolidColorPaint(new SKColor(240, 240, 240))
             {
                 ImageFilter = new DropShadow(2, 2, 2, 2, new SKColor(30, 30, 30, 60))
