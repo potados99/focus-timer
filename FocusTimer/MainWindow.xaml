@@ -147,7 +147,7 @@
                         </Grid.ContextMenu>
 
                         <Label Grid.Row="0" Content="집중도" Style="{StaticResource WhiteTextLabel}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                        <Label Grid.Row="1" Content="{Binding Concentration, FallbackValue=92%}" Style="{StaticResource WhiteTextLabel}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <Label Grid.Row="1" Content="{Binding Concentration, FallbackValue=92%}" Style="{StaticResource WhiteTextLabel}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue={StaticResource TextWhite}}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                     </Grid>
                     
                 </Grid>
