@@ -125,6 +125,27 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <Grid.ContextMenu>
+                            <ContextMenu ItemsSource="{Binding ConcentrationContextMenu}">
+                                <ContextMenu.Style>
+                                    <Style TargetType="ContextMenu" BasedOn="{StaticResource ModernMenu}">
+                                        <Setter Property="ItemContainerStyle">
+                                            <Setter.Value>
+                                                <Style TargetType="MenuItem" BasedOn="{StaticResource ModernMenuItem}">
+                                                    <Setter Property="IsCheckable" Value="{Binding Path=IsCheckable}" />
+                                                    <Setter Property="IsChecked" Value="{Binding Path=IsChecked, Mode=TwoWay}" />
+                                                    <Setter Property="Icon" Value="{Binding Path=Icon}" />
+                                                    <Setter Property="Header" Value="{Binding Path=Header}" />
+                                                    <Setter Property="ItemsSource" Value="{Binding Path=Children}" />
+                                                </Style>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                    
+                                </ContextMenu.Style>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+
                         <Label Grid.Row="0" Content="집중도" Style="{StaticResource WhiteTextLabel}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                         <Label Grid.Row="1" Content="{Binding Concentration, FallbackValue=92%}" Style="{StaticResource WhiteTextLabel}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                     </Grid>

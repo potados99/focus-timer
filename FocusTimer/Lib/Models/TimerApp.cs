@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace FocusTimer.Lib.Models
 {
-    public class TimerApp : BaseModel
+    public class TimerApp
     {
         public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle).ExecutablePath())
         {
@@ -38,11 +38,22 @@ namespace FocusTimer.Lib.Models
 
         public ImageSource? Image { get; set; }
         public string? AppName { get; set; }
+
+        public bool IsCountedOnConcentrationCalculation { get; set; } = true;
+
         public string Elapsed
         {
             get
             {
                 return ActiveStopwatch.ElapsedString();
+            }
+        }
+
+        public long ElapsedMilliseconds
+        {
+            get
+            {
+                return ActiveStopwatch.ElapsedMilliseconds;
             }
         }
 
