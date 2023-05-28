@@ -5,6 +5,12 @@ VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocusTimer", "FocusTimer\FocusTimer.csproj", "{A15ABA87-CAFE-4A41-8E39-423D48FFF18F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "LiveChartsCore\LiveChartsCore.csproj", "{BAE40207-B929-419E-A5C9-F40F8A46B35F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.WPF", "skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj", "{63255D20-312D-4B07-97BD-6EFAF5CD61DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView", "skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj", "{5FF470DB-1E9C-4FD4-9684-4BF354473614}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{A15ABA87-CAFE-4A41-8E39-423D48FFF18F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A15ABA87-CAFE-4A41-8E39-423D48FFF18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A15ABA87-CAFE-4A41-8E39-423D48FFF18F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAE40207-B929-419E-A5C9-F40F8A46B35F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAE40207-B929-419E-A5C9-F40F8A46B35F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAE40207-B929-419E-A5C9-F40F8A46B35F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAE40207-B929-419E-A5C9-F40F8A46B35F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63255D20-312D-4B07-97BD-6EFAF5CD61DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63255D20-312D-4B07-97BD-6EFAF5CD61DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63255D20-312D-4B07-97BD-6EFAF5CD61DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63255D20-312D-4B07-97BD-6EFAF5CD61DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FF470DB-1E9C-4FD4-9684-4BF354473614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF470DB-1E9C-4FD4-9684-4BF354473614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FF470DB-1E9C-4FD4-9684-4BF354473614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FF470DB-1E9C-4FD4-9684-4BF354473614}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

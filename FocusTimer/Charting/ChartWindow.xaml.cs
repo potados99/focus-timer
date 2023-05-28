@@ -27,6 +27,7 @@ namespace FocusTimer
     {
         public ChartWindow()
         {
+
             InitializeComponent();
 
             DataContext = ViewModel;

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using FocusTimer.Lib.Component;
 using System.Windows.Media.TextFormatting;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.WPF;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using LiveChartsCore.SkiaSharpView.SKCharts;
