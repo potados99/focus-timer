@@ -108,6 +108,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -680,5 +681,22 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             Next = AfterNext;
             AfterNext = point;
         }
+    }
+
+    protected override void OnHighlightPoint(ChartPoint point)
+    {
+        base.OnHighlightPoint(point);
+
+        var visual = point.Context.Visual as TVisualPoint;
+
+        visual.Bezier.Yi -= 10;
+        visual.Bezier.Yj -= 10;
+        visual.Bezier.Ym -= 10;
+        visual.Geometry.Y -= 10;
+    }
+
+    protected override void OnUnHighlightPoint(ChartPoint point)
+    {
+        base.OnUnHighlightPoint(point);
     }
 }

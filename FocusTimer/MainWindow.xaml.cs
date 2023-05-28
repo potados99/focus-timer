@@ -22,6 +22,8 @@ namespace FocusTimer
             {
                 DataContext = ViewModel
             }.Show();
+
+            new ChartWindow().Show();
         }
 
         private readonly MainViewModel ViewModel = new();

@@ -58,10 +58,11 @@ namespace FocusTimer
             }
 
             SeriesCollection1 = new ObservableCollection<ISeries> { 
-                new LineSeries<DataPoint> { 
+                new ColumnSeries<DataPoint> { 
                     Name = "집중도",
                     Values = values1,
                     TooltipLabelFormatter = (d) => $"집중도 {d.PrimaryValue}%",
+                    Fill = new SolidColorPaint(SKColors.Orange),
                 }
             };
             SeriesCollection2 = new ObservableCollection<ISeries> { 
@@ -84,8 +85,11 @@ namespace FocusTimer
                 }
             };
 
-            foreach (LineSeries<DataPoint> s in SeriesCollection1)
+            foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
             {
+                s.MaxBarWidth = 12;
+                s.Rx = 5;
+                s.Ry = 5;
             }
 
             foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
@@ -95,7 +99,7 @@ namespace FocusTimer
                 s.Ry = 5;
             }
 
-            (SeriesCollection1.Last() as LineSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
+            (SeriesCollection1.Last() as ColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
             {
                 DateSelected(b.Model.DateTime);
             };
@@ -117,7 +121,7 @@ namespace FocusTimer
                     {
                         var date = new DateTime((long)value);
 
-                        return date.ToString(date.Day == 1 ? "M월 d일" : "d일");
+                        return date.ToString(date.Day == 1 ? "M월 d" : "dd");
                     },
                     UnitWidth = TimeSpan.FromDays(1).Ticks,
                     MinStep = TimeSpan.FromDays(1).Ticks,
@@ -141,47 +145,47 @@ namespace FocusTimer
             FontFamily = "맑은 고딕"
         };
 
-        public string SelectedDate { get; set; }
+        public DateTime SelectedDate { get; set; }      
+        public string SelectedDateString
+        {
+            get
+            {
+                if (SelectedDate == DateTime.MinValue)
+                {
+                    return "지난 14일";
+                }
+                return SelectedDate.ToString("yyyy.MM.dd");
+            }
+        }
 
         public void DateSelected(DateTime date)
         {
-            foreach (LineSeries<DataPoint> s in SeriesCollection1)
+
+            if (SelectedDate == date)
             {
-                foreach (var p in s.ActivePoints)
+                foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
                 {
-                    var point = p.Context.DataSource as DataPoint;
-                    var visual = p.Context.Visual as BezierPoint<LiveChartsCore.SkiaSharpView.Drawing.Geometries.CircleGeometry>;
-
-                    if (point.DateTime == date)
-                    {
-                        visual.Bezier.Yi -= 5;
-                        visual.Bezier.Yj -= 5;
-                        visual.Bezier.Ym -= 5;
-
-                        visual.Geometry.Y -= 5;
-                    }
+                    s.ClearSelection();
                 }
+                foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
+                {
+                    s.ClearSelection();
+                }
+                SelectedDate = DateTime.MinValue;
             }
-
-            foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
+            else
             {
-                foreach (var p in s.ActivePoints)
+                foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
                 {
-                    var point = p.Context.DataSource as DataPoint;
-                    var visual = p.Context.Visual as LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry;
-
-                    if (point.DateTime == date)
-                    {
-                        visual.MainGeometry.ScaleTransform = new LvcPoint(1.6, 1);
-                    } else
-                    {
-                        visual.MainGeometry.ScaleTransform = new LvcPoint(1, 1);
-                    }
+                    s.SelectPoints(s.ActivePoints.Where(p => (p.Context.DataSource as DataPoint).DateTime == date));
                 }
-            }
-
-            SelectedDate = date.ToString("M월 d일");
-            NotifyPropertyChanged(nameof(SelectedDate));
+                foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
+                {
+                    s.SelectPoints(s.ActivePoints.Where(p => (p.Context.DataSource as DataPoint).DateTime == date));
+                }           
+                SelectedDate = date;
+            }               
+            NotifyPropertyChanged(nameof(SelectedDateString));
         }
     }
 }

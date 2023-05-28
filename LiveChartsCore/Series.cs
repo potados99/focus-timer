@@ -85,6 +85,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected IPaint<TDrawingContext>? hoverPaint;
 
     /// <summary>
+    /// The dim paint.
+    /// </summary>
+    protected IPaint<TDrawingContext>? dimPaint;
+
+    /// <summary>
     /// Indicates whether the custom measure handler was requested already.
     /// </summary>
     protected bool _requestedCustomMeasureHandler = false;
@@ -330,6 +335,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.OnDataPointerDown(IChartView, IEnumerable{ChartPoint}, LvcPoint)"/>
     protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
+        // SelectPoints(points);
+
         DataPointerDown?.Invoke(chart, points.Select(point => new ChartPoint<TModel, TVisual, TLabel>(point)));
         ChartPointPointerDown?.Invoke(chart, new ChartPoint<TModel, TVisual, TLabel>(points.FindClosestTo<TModel, TVisual, TLabel>(pointer)!));
     }
@@ -483,31 +490,111 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         VisibilityChanged?.Invoke(this);
     }
 
+    private IPaint<TDrawingContext> ApplyPaint(ChartPoint point, IPaint<TDrawingContext>? paint, LvcColor color)
+    {
+        var chartView = (IChartView<TDrawingContext>)point.Context.Chart;
+
+        if (paint is null)
+        {
+            var coreChart = (Chart<TDrawingContext>)chartView.CoreChart;
+
+            paint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>()
+                .GetSolidColorPaint(color);
+            paint.ZIndex = 10049;
+            paint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
+        }
+
+        chartView.CoreCanvas.AddDrawableTask(paint);
+
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null || visual.MainGeometry is null) return paint;
+
+        paint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.MainGeometry);
+
+        return paint;
+    }
+
+    private void UnApplyPaint(ChartPoint point, IPaint<TDrawingContext>? paint)
+    {
+        if (paint is null) return;
+
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null || visual.MainGeometry is null) return;
+
+        paint.RemoveGeometryFromPainTask(
+            (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
+            visual.MainGeometry);
+    }
+
+    protected void DimPoint(ChartPoint point)
+    {
+        dimPaint = ApplyPaint(point, dimPaint, new LvcColor(0, 0, 0, 150));
+    }
+    protected void UnDimPoint(ChartPoint point)
+    {
+        UnApplyPaint(point, dimPaint);
+    }
+
+    protected void TransformBig(ChartPoint point)
+    {
+        var visual = point.Context.Visual as IGeometry<TDrawingContext>;
+
+        visual.ScaleTransform = new LvcPoint(1.6, 1);
+    }
+    protected void TransformRestore(ChartPoint point)
+    {
+        var visual = point.Context.Visual as IGeometry<TDrawingContext>;
+
+        visual.ScaleTransform = new LvcPoint(1, 1);
+    }
+
+    public void SelectPoints(IEnumerable<ChartPoint> points)
+    {
+        foreach (var p in ActivePoints)
+        {
+            p.IsSelected = false;
+            OnUnHighlightPoint(p);
+        }
+
+        foreach (var p in points)
+        {
+            p.IsSelected = true;
+            OnHighlightPoint(p);
+        }
+    }
+
+    public void ClearSelection()
+    {
+        foreach (var p in ActivePoints)
+        {
+            p.IsSelected = false;
+            OnClearPoint(p);
+        }
+    }
+
+    protected virtual void OnHighlightPoint(ChartPoint point)
+    {
+
+    }
+
+    protected virtual void OnUnHighlightPoint(ChartPoint point)
+    {
+
+    }
+
+    protected virtual void OnClearPoint(ChartPoint point)
+    {
+
+    }
+
     /// <summary>
     /// Called when the pointer enters a point.
     /// </summary>
     /// /// <param name="point">The chart point.</param>
     protected virtual void WhenPointerEnters(ChartPoint point)
     {
-        var chartView = (IChartView<TDrawingContext>)point.Context.Chart;
-
-        if (hoverPaint is null)
-        {
-            var coreChart = (Chart<TDrawingContext>)chartView.CoreChart;
-
-            hoverPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>()
-                .GetSolidColorPaint(new LvcColor(255, 255, 255, 100));
-            hoverPaint.ZIndex = 10049;
-            hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
-        }
-
-        chartView.CoreCanvas.AddDrawableTask(hoverPaint);
-
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
-
-        hoverPaint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.MainGeometry);
-
+        hoverPaint = ApplyPaint(point, hoverPaint, new LvcColor(255, 255, 255, 100));
+        
         DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
@@ -518,14 +605,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// /// <param name="point">The chart point.</param>
     protected virtual void WhenPointerLeaves(ChartPoint point)
     {
-        if (hoverPaint is null) return;
-
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
-
-        hoverPaint.RemoveGeometryFromPainTask(
-            (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
-            visual.MainGeometry);
+        UnApplyPaint(point, hoverPaint);
 
         DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));

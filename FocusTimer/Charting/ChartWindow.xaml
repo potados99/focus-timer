@@ -23,7 +23,7 @@
           no matter in which chart you zoom, the other chart will share the view.
         -->
 
-        <Label Content="{Binding SelectedDate}" Foreground="{StaticResource TextWhite}" />
+        <Label Content="{Binding SelectedDateString}" Foreground="{StaticResource TextWhite}" />
 
         <lvc:CartesianChart
             x:Name="UpperChart"

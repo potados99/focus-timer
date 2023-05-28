@@ -205,6 +205,17 @@ public interface ISeries
     /// Deletes the series from the user interface.
     /// </summary>
     void SoftDeleteOrDispose(IChartView chart);
+
+    /// <summary>
+    /// Programmatically select given points.
+    /// </summary>
+    /// <param name="points"></param>
+    void SelectPoints(IEnumerable<ChartPoint> points);
+
+    /// <summary>
+    /// Programmatically clear points selection.
+    /// </summary>
+    void ClearSelection();
 }
 
 /// <summary>

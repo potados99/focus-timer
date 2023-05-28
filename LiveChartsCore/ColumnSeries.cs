@@ -317,4 +317,25 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
     }
+
+    protected override void OnHighlightPoint(ChartPoint point)
+    {
+        base.OnHighlightPoint(point);
+        UnDimPoint(point);
+        TransformBig(point);
+    }
+
+    protected override void OnUnHighlightPoint(ChartPoint point)
+    {
+        base.OnUnHighlightPoint(point);
+        DimPoint(point);
+        TransformRestore(point);
+    }
+
+    protected override void OnClearPoint(ChartPoint point)
+    {
+        base.OnClearPoint(point);
+        UnDimPoint(point);
+        TransformRestore(point);
+    }
 }
