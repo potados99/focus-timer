@@ -88,15 +88,15 @@ namespace FocusTimer
             foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
             {
                 s.MaxBarWidth = 20;
-                s.Rx = 5;
-                s.Ry = 5;
+                s.Rx = 4;
+                s.Ry = 4;
             }
 
             foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
             {
                 s.MaxBarWidth = 20;
-                s.Rx = 5;
-                s.Ry = 5;
+                s.Rx = 4;
+                s.Ry = 4;
             }
 
             (SeriesCollection1.Last() as ColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>

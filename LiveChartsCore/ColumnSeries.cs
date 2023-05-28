@@ -200,7 +200,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             visual.X = x;
             visual.Y = cy;
             visual.Width = helper.uw;
-            visual.Height = b;
+            visual.Height = b - 2;
 
             if (_isRounded)
             {
@@ -318,24 +318,24 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         label.RemoveOnCompleted = true;
     }
 
-    protected override void OnHighlightPoint(ChartPoint point)
+        protected override void OnHighlightPoint(ChartPoint point)
     {
         base.OnHighlightPoint(point);
         UnDimPoint(point);
-        TransformBig(point);
+        //TransformBig(point);
     }
 
     protected override void OnUnHighlightPoint(ChartPoint point)
     {
         base.OnUnHighlightPoint(point);
         DimPoint(point);
-        TransformRestore(point);
+        //TransformRestore(point);
     }
 
     protected override void OnClearPoint(ChartPoint point)
     {
         base.OnClearPoint(point);
         UnDimPoint(point);
-        TransformRestore(point);
+        //TransformRestore(point);
     }
 }
