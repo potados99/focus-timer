@@ -44,6 +44,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="LiveChartsCore">
+      <HintPath>..\LiveChartsCore\bin\Debug\net472\LiveChartsCore.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveChartsCore.SkiaSharpView">
+      <HintPath>..\skiasharp\LiveChartsCore.SkiaSharp\bin\Debug\net472\LiveChartsCore.SkiaSharpView.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveChartsCore.SkiaSharpView.WPF">
+      <HintPath>..\skiasharp\LiveChartsCore.SkiaSharp.WPF\bin\Debug\net472\LiveChartsCore.SkiaSharpView.WPF.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\bird.png" />
     <Resource Include="Resources\digital-7.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
