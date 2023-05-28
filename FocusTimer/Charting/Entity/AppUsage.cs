@@ -9,17 +9,17 @@ namespace FocusTimer.Charting.Entity
     public class AppUsage
     {
         public long Id { get; set; }
+
         public string AppName { get; set; }
 
-        public DateTime StartedAt { get; set; }
-        public DateTime FinishedAt { get; set; }
+        public DateTime RegisteredAt { get; set; }
 
-        public TimeSpan Duration
-        {
-            get
-            {
-                return FinishedAt - StartedAt;
-            }
-        }
+        public DateTime UpdatedAt { get; set; }
+
+        public long Usage { get; set; }
+
+        public bool IsConcentrated { get; set; }
+
+
     }
 }

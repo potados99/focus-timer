@@ -87,14 +87,14 @@ namespace FocusTimer
 
             foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
             {
-                s.MaxBarWidth = 12;
+                s.MaxBarWidth = 20;
                 s.Rx = 5;
                 s.Ry = 5;
             }
 
             foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
             {
-                s.MaxBarWidth = 12;
+                s.MaxBarWidth = 20;
                 s.Rx = 5;
                 s.Ry = 5;
             }
@@ -184,7 +184,8 @@ namespace FocusTimer
                     s.SelectPoints(s.ActivePoints.Where(p => (p.Context.DataSource as DataPoint).DateTime == date));
                 }           
                 SelectedDate = date;
-            }               
+            }   
+            
             NotifyPropertyChanged(nameof(SelectedDateString));
         }
     }
