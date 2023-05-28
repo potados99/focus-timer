@@ -42,32 +42,6 @@ namespace FocusTimer
             LowerChart.Tooltip = new CustomTooltip();
         }
 
-        private void LowerChart_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            return;
-            try
-            {
-                var chart = sender as CartesianChart;
-                Debug.WriteLine("!!");
-
-                var tooltip = chart.Tooltip as CustomTooltip;
-                var points = tooltip.Points;
-
-                foreach (var p in points)
-                {
-                    foreach (var p2 in p.Context.Series.ActivePoints)
-                    {
-                        (p2.Context.DataSource as DataPoint).IsSelected = false;
-                    }
-
-                    (p.Context.DataSource as DataPoint).IsSelected = true;
-                }
-
-            } catch (Exception)
-            {
-                throw;
-            }
-
-        }
+     
     }
 }
