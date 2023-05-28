@@ -20,6 +20,7 @@ using System.Diagnostics;
 using FocusTimer.Charting;
 using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
+using LiveChartsCore.Kernel;
 
 namespace FocusTimer
 {
@@ -85,16 +86,11 @@ namespace FocusTimer
 
             foreach (LineSeries<DataPoint> s in SeriesCollection1)
             {
-                s.WithConditionalPaint(new SolidColorPaint(SKColors.Black))
-                .When(P => P.Model?.IsSelected ?? false);
             }
 
             foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
             {
-                s.WithConditionalPaint(new SolidColorPaint(SKColors.Black))
-                .When(P => P.Model?.IsSelected ?? false);
-
-                s.MaxBarWidth = 16;
+                s.MaxBarWidth = 12;
                 s.Rx = 5;
                 s.Ry = 5;
             }
@@ -165,9 +161,6 @@ namespace FocusTimer
                         visual.Geometry.Y -= 5;
                     }
                 }
-
-                SelectedDate = date.ToString("M월 d일");
-                NotifyPropertyChanged(nameof(SelectedDate));
             }
 
             foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
@@ -179,12 +172,16 @@ namespace FocusTimer
 
                     if (point.DateTime == date)
                     {
-                        visual.X -= 5;
-                        visual.Width += 10;
+                        visual.MainGeometry.ScaleTransform = new LvcPoint(1.6, 1);
+                    } else
+                    {
+                        visual.MainGeometry.ScaleTransform = new LvcPoint(1, 1);
                     }
-                    // point.IsSelected = point.DateTime == date;
                 }
             }
+
+            SelectedDate = date.ToString("M월 d일");
+            NotifyPropertyChanged(nameof(SelectedDate));
         }
     }
 }

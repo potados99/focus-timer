@@ -348,10 +348,20 @@ public abstract class Chart<TDrawingContext> : IChart
         // fire the series event.
         foreach (var series in ChartSeries)
         {
-            if (!series.RequiresFindClosestOnPointerDown) continue;
+            // if (!series.RequiresFindClosestOnPointerDown) continue;
 
             var points = series.FindHitPoints(this, point, strategy);
             if (!points.Any()) continue;
+
+            foreach (var p in series.ActivePoints)
+            {
+                p.IsSelected = false;
+            }
+
+            foreach (var p in points)
+            {
+                p.IsSelected = true;
+            }
 
             series.OnDataPointerDown(View, points, point);
         }

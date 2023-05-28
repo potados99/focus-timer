@@ -39,6 +39,11 @@ public class ChartPoint
     protected bool IsLocalEmpty;
 
     /// <summary>
+    ///  TODO
+    /// </summary>
+    public bool IsSelected;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ChartPoint"/> class.
     /// </summary>
     /// <param name="chart">The chart.</param>

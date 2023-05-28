@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 

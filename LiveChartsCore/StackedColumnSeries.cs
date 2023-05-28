@@ -21,7 +21,10 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore;
 

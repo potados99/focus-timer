@@ -276,7 +276,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 nameof(visual.X),
                 nameof(visual.Width),
                 nameof(visual.Y),
-                nameof(visual.Height))
+                nameof(visual.Height),
+                nameof(visual.ScaleTransform))
             .WithAnimation(animation =>
                 animation
                     .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
