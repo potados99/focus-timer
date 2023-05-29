@@ -74,10 +74,9 @@ namespace FocusTimer.Charting.Processing
                         DateTime = u.Date,
                         Value = Math.Ceiling(new TimeSpan(u.Usages.Sum(uu => uu.Usage)).TotalMinutes)
                     }).ToArray(),
-                    TooltipLabelFormatter = (d) => $"{thisAppUsage.AppPath} {d.PrimaryValue}%",
                     MaxBarWidth = 16,
-                    Rx = 5,
-                    Ry = 5,
+                    Rx = 4,
+                    Ry = 4,
                 });
             }
 
@@ -98,10 +97,9 @@ namespace FocusTimer.Charting.Processing
                     DateTime = u.Date,
                     Value = u.IdleMinutes
                 }).ToArray(),
-                TooltipLabelFormatter = (d) => $"미등록 프로그램 {d.PrimaryValue}%",
                 MaxBarWidth = 16,
-                Rx = 5,
-                Ry = 5,
+                Rx = 4,
+                Ry = 4,
                 Fill = new SolidColorPaint(SKColors.Gray)
             });
 

@@ -70,7 +70,6 @@ namespace FocusTimer.Charting
                     {
                         FontFamily = "맑은 고딕"
                     },
-
                     Labeler = (value) =>
                     {
                         var date = new DateTime((long)value);
@@ -82,7 +81,7 @@ namespace FocusTimer.Charting
                     ForceStepToMin = true,
                     SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
                     {
-                        StrokeThickness = 2,
+                        StrokeThickness = 1,
                         PathEffect = new DashEffect(new float[] { 3, 3 })
                     },
                 }
@@ -90,10 +89,8 @@ namespace FocusTimer.Charting
 
             YAxis = new Axis[] {
                 new Axis() {
+                    IsVisible = false,
                     SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-                    {
-                        
-                    }
                 }
             };
 
