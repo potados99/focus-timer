@@ -40,9 +40,13 @@ namespace FocusTimer
         {
             ViewModel.Loaded();
 
-            LowerChart.Tooltip = new CustomTooltip();    
-        }
+            LowerChart.Tooltip = new CustomTooltip();
 
-     
+            ViewModel.OnChartNeedsUpdate += () =>
+            {
+                UpperChart.CoreChart.Update();
+                LowerChart.CoreChart.Update();
+            };
+        }
     }
 }

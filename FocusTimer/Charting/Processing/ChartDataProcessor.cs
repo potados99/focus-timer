@@ -16,7 +16,7 @@ namespace FocusTimer.Charting.Processing
 {
     public static class ChartDataProcessor
     {
-        internal static ObservableCollection<ColumnSeries<DataPoint>> GetUpperChartSeries(
+        internal static ObservableCollection<ISeries> GetUpperChartSeries(
             IEnumerable<AppUsage> appUsages,
             IEnumerable<TimerUsage> timerUsages
             )
@@ -34,7 +34,7 @@ namespace FocusTimer.Charting.Processing
                 Value = 100 * u.AppUsages.Where(au => au.IsConcentrated).Sum(au => au.Usage) / u.TimerUsages.Sum(tu => tu.Usage)
             });
 
-            return new ObservableCollection<ColumnSeries<DataPoint>> {
+            return new ObservableCollection<ISeries> {
                 new ColumnSeries<DataPoint>
                 {
                     Name = "집중도",
@@ -48,12 +48,12 @@ namespace FocusTimer.Charting.Processing
             };
         }
 
-        internal static ObservableCollection<StackedColumnSeries<DataPoint>> GetLowerChartSeries(
+        internal static ObservableCollection<ISeries> GetLowerChartSeries(
             IEnumerable<AppUsage> appUsages,
             IEnumerable<TimerUsage> timerUsages
             )
         {
-            var series = new ObservableCollection<StackedColumnSeries<DataPoint>>();
+            var series = new ObservableCollection<ISeries>();
 
             var usagesPerApp = appUsages.Select(u => u.AppPath).Distinct().Select(path => new {
                 AppPath = path,

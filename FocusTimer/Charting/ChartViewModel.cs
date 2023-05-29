@@ -29,6 +29,9 @@ namespace FocusTimer.Charting
 {
     internal class ChartViewModel : BaseModel
     {
+        public delegate void ChartNeedsUpdateEventHandler();
+        public event ChartNeedsUpdateEventHandler OnChartNeedsUpdate;
+
         public void Loaded()
         {
             LiveCharts.Configure(config =>
@@ -51,12 +54,12 @@ namespace FocusTimer.Charting
                 UsageRepository.GetTimerUsages()
             );
 
-            SeriesCollection1.Last().ChartPointPointerDown += (a, b) =>
+            (SeriesCollection1.Last() as ColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
             {
                 DateSelected(b.Model.DateTime);
             };
 
-            SeriesCollection2.Last().ChartPointPointerDown += (a, b) =>
+            (SeriesCollection2.Last() as StackedColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
             {
                 DateSelected(b.Model.DateTime);
             };
@@ -100,8 +103,8 @@ namespace FocusTimer.Charting
             NotifyPropertyChanged(nameof(YAxis));
         }
 
-        public ObservableCollection<ColumnSeries<DataPoint>> SeriesCollection1 { get; set; }
-        public ObservableCollection<StackedColumnSeries<DataPoint>> SeriesCollection2 { get; set; }
+        public ObservableCollection<ISeries> SeriesCollection1 { get; set; }
+        public ObservableCollection<ISeries> SeriesCollection2 { get; set; }
         public Axis[] SharedXAxis { get; set; }
 
         public Axis[] YAxis { get; set; }
@@ -151,6 +154,8 @@ namespace FocusTimer.Charting
                 }           
                 SelectedDate = date;
             }
+
+            OnChartNeedsUpdate?.Invoke();
 
             NotifyPropertyChanged(nameof(SelectedDateString));
             NotifyPropertyChanged(nameof(SelectedDateUsages));
