@@ -22,7 +22,6 @@ namespace FocusTimer.Lib.Utility
             get { return _IsChecked; }
             set
             {
-                Debug.WriteLine("!!&&@");
                 _IsChecked = value;
                 OnCheck?.Invoke(value);
             }
