@@ -36,6 +36,8 @@ namespace FocusTimer.Charting
             }
         }
 
+        public string UsageString { get; set; }
+
         public IEnumerable<UsageByTimeItem> UsagesByTime { get; set; }
     }
 }

@@ -118,15 +118,14 @@ namespace FocusTimer.Charting
             {
                 if (SelectedDate == DateTime.MinValue)
                 {
-                    return "지난 14일";
+                    return "지난 21일";
                 }
-                return SelectedDate.ToString("yyyy.MM.dd");
+                return SelectedDate.ToString("yyyy. MM. dd");
             }
         }
 
         public void DateSelected(DateTime date)
         {
-
             if (SelectedDate == date)
             {
                 foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
@@ -162,19 +161,51 @@ namespace FocusTimer.Charting
         {
             get
             {
-                var usages = UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date);
-
-                return usages.Select(u => new AppUsageItem
+                if (SelectedDate == DateTime.MinValue)
                 {
-                    Date = u.RegisteredAt.Date,
-                    AppPath = u.AppPath,
-                    UsagesByTime = usages.Where(au => au.AppPath == u.AppPath).Select(au => new UsageByTimeItem
+                    var usages = UsageRepository.GetAppUsages();
+
+                    return usages.GroupBy(u => u.AppPath).Select(thisAppGroup => new AppUsageItem
                     {
-                        Start = au.RegisteredAt,
-                        End = au.UpdatedAt,
-                        UsageMinutes = (int)Math.Ceiling(new TimeSpan(u.Usage).TotalMinutes)
-                    }),
-                });
+                        AppPath = thisAppGroup.Key,
+                        UsageString =  TickToMinutes(thisAppGroup.Sum(g => g.Usage)),
+                        UsagesByTime = thisAppGroup.GroupBy(thisApp => thisApp.RegisteredAt.Date).Select(thisAppToday => new UsageByTimeItem
+                        {
+                            TimeString = thisAppToday.Key.ToString("yyyy. MM. dd"),
+                            UsageString = TickToMinutes(thisAppToday.Sum(u => u.Usage))
+                        })
+                    });
+                }
+                else
+                {
+                    var usages = UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date);
+
+                    return usages.Select(u => new AppUsageItem
+                    {
+                        Date = u.RegisteredAt.Date,
+                        AppPath = u.AppPath,
+                        UsageString = TickToMinutes(usages.Where(au => au.AppPath == u.AppPath).Sum(au => au.Usage)),
+                        UsagesByTime = usages.Where(au => au.AppPath == u.AppPath).Select(au => new UsageByTimeItem
+                        {
+                            TimeString = $"{au.RegisteredAt:HH:mm} ~ {au.UpdatedAt:HH:mm}",
+                            UsageString = TickToMinutes(u.Usage)
+                        }),
+                    });
+                }
+            }
+        }
+
+        private string TickToMinutes(long ticks)
+        {
+            var minutes = (int)Math.Ceiling(new TimeSpan(ticks).TotalMinutes);
+
+            if (minutes >= 60)
+            {
+                return $"{minutes / 60}시간 {minutes % 60}분";
+            } 
+            else
+            {
+                return $"{minutes % 60}분";
             }
         }
     }

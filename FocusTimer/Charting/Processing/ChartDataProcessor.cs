@@ -164,7 +164,7 @@ namespace FocusTimer.Charting.Processing
 
     public class Context
     {
-        private DateTime CurrentDateTime = DateTime.Now.Subtract(new TimeSpan(14, 0, 0, 0));
+        private DateTime CurrentDateTime = DateTime.Now.Subtract(new TimeSpan(21, 0, 0, 0));
         private DateTime UntilNow = DateTime.Now;
         
         private string[] AppPaths = new string[]
@@ -172,6 +172,7 @@ namespace FocusTimer.Charting.Processing
                 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
                 "C:\\Program Files (x86)\\Kakao\\KakaoTalk\\KakaoTalk.exe",
                 "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+                "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
                 "C:\\Windows\\explorer.exe"
             };
 
@@ -340,7 +341,7 @@ namespace FocusTimer.Charting.Processing
         {
             TakeARestUntil = null;
             FocusOnUntil = CurrentDateTime.AddMinutes(r.Next(1, 60));
-            CurrentAppPath = AppPaths[r.Next(0, AppPaths.Length - 1)];
+            CurrentAppPath = AppPaths[r.Next(0, AppPaths.Length)];
         }
 
         public void StartResting()

@@ -8,25 +8,8 @@ namespace FocusTimer.Charting
 {
     public class UsageByTimeItem
     {
-        public DateTime Start { get; set; }
+        public string TimeString { get; set; }
 
-        public DateTime End { get; set; }
-
-        public string TimeString
-        {
-            get
-            {
-                return Start.ToString("H시 m분") + " ~ " + End.ToString("H시 m분");
-            }
-        }
-
-        public int UsageMinutes { get; set; }
-        public string UsageMinutesString
-        {
-            get
-            {
-                return UsageMinutes.ToString() + "분";
-            }
-        }
+        public string UsageString { get; set; }
     }
 }

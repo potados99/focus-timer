@@ -318,7 +318,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         label.RemoveOnCompleted = true;
     }
 
-        protected override void OnHighlightPoint(ChartPoint point)
+    protected override void OnHighlightPoint(ChartPoint point)
     {
         base.OnHighlightPoint(point);
         UnDimPoint(point);

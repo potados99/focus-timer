@@ -10,10 +10,10 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
         <Label Grid.Column="0" Style="{StaticResource WhiteTextLabel}" Content="{Binding TimeString, FallbackValue=언제언제}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <Label Grid.Column="1" Style="{StaticResource WhiteTextLabel}" Content="{Binding UsageMinutesString, FallbackValue=10분}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <Label Grid.Column="1" Style="{StaticResource WhiteTextLabel}" Content="{Binding UsageString, FallbackValue=10분}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>
