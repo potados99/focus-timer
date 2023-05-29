@@ -40,10 +40,7 @@ namespace FocusTimer
         {
             ViewModel.Loaded();
 
-            LowerChart.Tooltip = new CustomTooltip();
-
-            
-                
+            LowerChart.Tooltip = new CustomTooltip();    
         }
 
      

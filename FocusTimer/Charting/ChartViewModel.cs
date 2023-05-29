@@ -23,8 +23,9 @@ using System.Collections.ObjectModel;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using FocusTimer.Charting.Processing;
+using FocusTimer.Charting.Repository;
 
-namespace FocusTimer
+namespace FocusTimer.Charting
 {
     internal class ChartViewModel : BaseModel
     {
@@ -41,10 +42,14 @@ namespace FocusTimer
                     .AddDarkTheme()
                     );
 
-            var dummy = ChartDataProcessor.GenerateDummy();
-
-            SeriesCollection1 = ChartDataProcessor.GetUpperChartSeries(dummy.AppUsages, dummy.TimerUsages);
-            SeriesCollection2 = ChartDataProcessor.GetLowerChartSeries(dummy.AppUsages, dummy.TimerUsages);
+            SeriesCollection1 = ChartDataProcessor.GetUpperChartSeries(
+                UsageRepository.GetAppUsages(),
+                UsageRepository.GetTimerUsages()
+            );
+            SeriesCollection2 = ChartDataProcessor.GetLowerChartSeries(
+                UsageRepository.GetAppUsages(),
+                UsageRepository.GetTimerUsages()
+            );
 
             SeriesCollection1.Last().ChartPointPointerDown += (a, b) =>
             {
@@ -56,7 +61,6 @@ namespace FocusTimer
                 DateSelected(b.Model.DateTime);
             };
 
-            // sharing the same instance for both charts will keep the zooming and panning synced 
             SharedXAxis = new Axis[] {
                 new Axis() {
                     LabelsPaint = new SolidColorPaint(SKColors.LightGray)
@@ -146,9 +150,30 @@ namespace FocusTimer
                     s.SelectPoints(s.ActivePoints.Where(p => (p.Context.DataSource as DataPoint).DateTime == date));
                 }           
                 SelectedDate = date;
-            }   
-            
+            }
+
             NotifyPropertyChanged(nameof(SelectedDateString));
+            NotifyPropertyChanged(nameof(SelectedDateUsages));
+        }
+
+        public IEnumerable<AppUsageItem> SelectedDateUsages
+        {
+            get
+            {
+                var usages = UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date);
+
+                return usages.Select(u => new AppUsageItem
+                {
+                    Date = u.RegisteredAt.Date,
+                    AppPath = u.AppPath,
+                    UsagesByTime = usages.Where(au => au.AppPath == u.AppPath).Select(au => new UsageByTimeItem
+                    {
+                        Start = au.RegisteredAt,
+                        End = au.UpdatedAt,
+                        UsageMinutes = (int)Math.Ceiling(new TimeSpan(u.Usage).TotalMinutes)
+                    }),
+                });
+            }
         }
     }
 }

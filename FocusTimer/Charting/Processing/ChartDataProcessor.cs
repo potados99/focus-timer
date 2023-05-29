@@ -55,12 +55,12 @@ namespace FocusTimer.Charting.Processing
         {
             var series = new ObservableCollection<StackedColumnSeries<DataPoint>>();
 
-            var usagesPerApp = appUsages.Select(u => u.AppName).Distinct().Select(name => new {
-                AppName = name,
+            var usagesPerApp = appUsages.Select(u => u.AppPath).Distinct().Select(path => new {
+                AppPath = path,
                 AppUsagesPerDay = timerUsages.Select(tu => tu.StartedAt.Date).Select(d => new
                 {
                     Date = d,
-                    Usages = appUsages.Where(au => au.RegisteredAt.Date == d && au.AppName == name)
+                    Usages = appUsages.Where(au => au.RegisteredAt.Date == d && au.AppPath == path)
                 })
             });
 
@@ -68,13 +68,13 @@ namespace FocusTimer.Charting.Processing
             {
                 series.Add(new StackedColumnSeries<DataPoint>
                 {
-                    Name = thisAppUsage.AppName,
+                    Name = thisAppUsage.AppPath,
                     Values = thisAppUsage.AppUsagesPerDay.Select(u => new DataPoint
                     {
                         DateTime = u.Date,
                         Value = Math.Ceiling(new TimeSpan(u.Usages.Sum(uu => uu.Usage)).TotalMinutes)
                     }).ToArray(),
-                    TooltipLabelFormatter = (d) => $"{thisAppUsage.AppName} {d.PrimaryValue}%",
+                    TooltipLabelFormatter = (d) => $"{thisAppUsage.AppPath} {d.PrimaryValue}%",
                     MaxBarWidth = 16,
                     Rx = 5,
                     Ry = 5,
@@ -169,12 +169,12 @@ namespace FocusTimer.Charting.Processing
         private DateTime CurrentDateTime = DateTime.Now.Subtract(new TimeSpan(14, 0, 0, 0));
         private DateTime UntilNow = DateTime.Now;
         
-        private string[] AppNames = new string[]
+        private string[] AppPaths = new string[]
             {
-                "AppOne",
-                "AppTwo",
-                "AppThree",
-                "AppFour"
+                "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
+                "C:\\Program Files (x86)\\Kakao\\KakaoTalk\\KakaoTalk.exe",
+                "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+                "C:\\Windows\\explorer.exe"
             };
 
         public DateTime? FocusOnUntil { get; set; }
@@ -184,7 +184,7 @@ namespace FocusTimer.Charting.Processing
         private int WorkingHourEnd = 18;
 
         private Random r = new Random();
-        public string? CurrentAppName { get; set; } = null;
+        public string? CurrentAppPath { get; set; } = null;
 
         public List<AppUsage> AppUsages = new();
         public List<TimerUsage> TimerUsages = new();
@@ -263,7 +263,7 @@ namespace FocusTimer.Charting.Processing
                 AppUsages.AddRange(
                     usagesOfYesterday.Select(u => new AppUsage
                     {
-                        AppName = u.AppName,
+                        AppPath = u.AppPath,
                         Usage = 0,
                         RegisteredAt = new DateTime(CurrentDateTime.Ticks),
                         UpdatedAt = new DateTime(CurrentDateTime.Ticks),
@@ -300,13 +300,13 @@ namespace FocusTimer.Charting.Processing
 
         public AppUsage GetOrCreateCurrentAppUsage()
         {
-            var u = AppUsages.LastOrDefault(u => u.AppName == CurrentAppName && u.RegisteredAt.Date == CurrentDateTime.Date);
+            var u = AppUsages.LastOrDefault(u => u.AppPath == CurrentAppPath && u.RegisteredAt.Date == CurrentDateTime.Date);
 
             if (u == null)
             {
                 u = new AppUsage
                 {
-                    AppName = CurrentAppName,
+                    AppPath = CurrentAppPath,
                     Usage = 0,
                     RegisteredAt = new DateTime(CurrentDateTime.Ticks),
                     UpdatedAt = new DateTime(CurrentDateTime.Ticks),
@@ -342,14 +342,14 @@ namespace FocusTimer.Charting.Processing
         {
             TakeARestUntil = null;
             FocusOnUntil = CurrentDateTime.AddMinutes(r.Next(1, 60));
-            CurrentAppName = AppNames[r.Next(0, AppNames.Length - 1)];
+            CurrentAppPath = AppPaths[r.Next(0, AppPaths.Length - 1)];
         }
 
         public void StartResting()
         {
             FocusOnUntil = null;
             TakeARestUntil = CurrentDateTime.AddMinutes(r.Next(10, 100));
-            CurrentAppName = null;
+            CurrentAppPath = null;
         }
     }
 }

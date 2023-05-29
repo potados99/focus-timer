@@ -10,7 +10,7 @@ namespace FocusTimer.Charting.Entity
     {
         public long Id { get; set; }
 
-        public string AppName { get; set; }
+        public string AppPath { get; set; }
 
         public DateTime RegisteredAt { get; set; }
 
