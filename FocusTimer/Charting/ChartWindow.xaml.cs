@@ -1,6 +1,7 @@
 ﻿using FocusTimer.Charting;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.WPF;
 using System;
@@ -40,6 +41,9 @@ namespace FocusTimer
             ViewModel.Loaded();
 
             LowerChart.Tooltip = new CustomTooltip();
+
+            
+                
         }
 
      

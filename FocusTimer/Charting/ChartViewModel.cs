@@ -21,6 +21,8 @@ using FocusTimer.Charting;
 using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using FocusTimer.Charting.Processing;
 
 namespace FocusTimer
 {
@@ -39,72 +41,17 @@ namespace FocusTimer
                     .AddDarkTheme()
                     );
 
-            var values1 = new DataPoint[50];
-            var values2 = new DataPoint[50];
-            var values3 = new DataPoint[50];
-            var values4 = new DataPoint[50];
-            var values5 = new DataPoint[50];
-            var r = new Random();
+            var dummy = ChartDataProcessor.GenerateDummy();
 
-            for (var i = 0; i < 50; i++)
-            {
-                var date = new DateTime(2023, 04, 27).Add(new TimeSpan(i, 0, 0, 0));
+            SeriesCollection1 = ChartDataProcessor.GetUpperChartSeries(dummy.AppUsages, dummy.TimerUsages);
+            SeriesCollection2 = ChartDataProcessor.GetLowerChartSeries(dummy.AppUsages, dummy.TimerUsages);
 
-                values2[i] = new DataPoint { DateTime = date, Value = r.Next(20, 60) };
-                values1[i] = new DataPoint { DateTime = date, Value = r.Next(50, 80) };
-                values3[i] = new DataPoint { DateTime = date, Value = r.Next(10, 20) };
-                values4[i] = new DataPoint { DateTime = date, Value = r.Next(5, 10) };
-                values5[i] = new DataPoint { DateTime = date, Value = r.Next(10, 25) };
-            }
-
-            SeriesCollection1 = new ObservableCollection<ISeries> { 
-                new ColumnSeries<DataPoint> { 
-                    Name = "집중도",
-                    Values = values1,
-                    TooltipLabelFormatter = (d) => $"집중도 {d.PrimaryValue}%",
-                    Fill = new SolidColorPaint(SKColors.Orange),
-                }
-            };
-            SeriesCollection2 = new ObservableCollection<ISeries> { 
-                new StackedColumnSeries<DataPoint> {
-                    Name = "Microsoft Visual Studio",
-                    Values = values2,
-                },
-                new StackedColumnSeries<DataPoint> {
-                    Name = "Google Chrome",
-                    Values = values3,
-                },
-                new StackedColumnSeries<DataPoint> {
-                    Name = "Windows Explorer",
-                    Values = values4,
-                },
-                new StackedColumnSeries<DataPoint> {
-                    Name = "미등록 프로그램",
-                    Values = values5,
-                    Fill = new SolidColorPaint(SKColors.Gray),
-                }
-            };
-
-            foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
-            {
-                s.MaxBarWidth = 20;
-                s.Rx = 4;
-                s.Ry = 4;
-            }
-
-            foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
-            {
-                s.MaxBarWidth = 20;
-                s.Rx = 4;
-                s.Ry = 4;
-            }
-
-            (SeriesCollection1.Last() as ColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
+            SeriesCollection1.Last().ChartPointPointerDown += (a, b) =>
             {
                 DateSelected(b.Model.DateTime);
             };
 
-            (SeriesCollection2.Last() as StackedColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
+            SeriesCollection2.Last().ChartPointPointerDown += (a, b) =>
             {
                 DateSelected(b.Model.DateTime);
             };
@@ -125,20 +72,35 @@ namespace FocusTimer
                     },
                     UnitWidth = TimeSpan.FromDays(1).Ticks,
                     MinStep = TimeSpan.FromDays(1).Ticks,
-                    MinLimit = values1[36].DateTime.Ticks,
-                    MaxLimit = values1[49].DateTime.Ticks,
-                    ForceStepToMin = true
+                    ForceStepToMin = true,
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
+                    {
+                        StrokeThickness = 2,
+                        PathEffect = new DashEffect(new float[] { 3, 3 })
+                    },
+                }
+            };
+
+            YAxis = new Axis[] {
+                new Axis() {
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
+                    {
+                        
+                    }
                 }
             };
 
             NotifyPropertyChanged(nameof(SeriesCollection1));
             NotifyPropertyChanged(nameof(SeriesCollection2));
             NotifyPropertyChanged(nameof(SharedXAxis));
+            NotifyPropertyChanged(nameof(YAxis));
         }
 
-        public ObservableCollection<ISeries> SeriesCollection1 { get; set; }
-        public ObservableCollection<ISeries> SeriesCollection2 { get; set; }
+        public ObservableCollection<ColumnSeries<DataPoint>> SeriesCollection1 { get; set; }
+        public ObservableCollection<StackedColumnSeries<DataPoint>> SeriesCollection2 { get; set; }
         public Axis[] SharedXAxis { get; set; }
+
+        public Axis[] YAxis { get; set; }
 
         public IPaint<SkiaSharpDrawingContext> TooltipPaint { get; set; } = new SolidColorPaint(new SKColor(28, 49, 58))
         {
