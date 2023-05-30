@@ -155,6 +155,46 @@ namespace FocusTimer.Charting
 
             NotifyPropertyChanged(nameof(SelectedDateString));
             NotifyPropertyChanged(nameof(SelectedDateUsages));
+            NotifyPropertyChanged(nameof(PrimaryMetrics));
+        }
+
+        public IEnumerable<PrimaryMetricItem> PrimaryMetrics
+        {
+            get
+            {
+                if (SelectedDate == DateTime.MinValue)
+                {
+                    var usages = UsageRepository.GetAppUsages();
+
+                    return new PrimaryMetricItem[]
+                    {
+                        new PrimaryMetricItem {
+                            Name = "Avg. 타이머 가동",
+                            Value = TickToMinutes((long)UsageRepository.GetTimerUsages().GroupBy(u => u.StartedAt.Date).Average(g => g.Sum(u => u.Usage)))
+                        },
+                        new PrimaryMetricItem
+                        {
+                            Name = "Avg. 집중",
+                            Value = $"{100 * UsageRepository.GetAppUsages().Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Sum(u => u.Usage):00}%"
+                        }
+                    };
+                }
+                else
+                {
+                    return new PrimaryMetricItem[]
+                    {
+                        new PrimaryMetricItem {
+                            Name = "타이머 가동",
+                            Value = TickToMinutes((long)UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage))
+                        },
+                        new PrimaryMetricItem
+                        {
+                            Name = "집중",
+                            Value = $"{100 * UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage):00}%"
+                        }
+                    };
+                }
+            }
         }
 
         public IEnumerable<AppUsageItem> SelectedDateUsages
@@ -169,11 +209,19 @@ namespace FocusTimer.Charting
                     {
                         AppPath = thisAppGroup.Key,
                         UsageString =  TickToMinutes(thisAppGroup.Sum(g => g.Usage)),
-                        UsagesByTime = thisAppGroup.GroupBy(thisApp => thisApp.RegisteredAt.Date).Select(thisAppToday => new UsageByTimeItem
+                        UsagesByTime = new UsageByTimeItem[]
                         {
-                            TimeString = thisAppToday.Key.ToString("yyyy. MM. dd"),
-                            UsageString = TickToMinutes(thisAppToday.Sum(u => u.Usage))
-                        })
+                            new UsageByTimeItem
+                            {
+                                TimeString = "Avg. 사용 시간",
+                                UsageString = TickToMinutes((long)thisAppGroup.GroupBy(u => u.RegisteredAt.Date).Average(g => g.Sum(u => u.Usage)))
+                            },
+                            new UsageByTimeItem
+                            {
+                                TimeString = "Avg. 비활성 시간",
+                                UsageString = TickToMinutes((long)thisAppGroup.GroupBy(u => u.RegisteredAt.Date).Average(g => g.Sum(u => (u.UpdatedAt - u.RegisteredAt).Ticks - u.Usage)))
+                            },
+                        }
                     });
                 }
                 else

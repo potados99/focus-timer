@@ -17,6 +17,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="1.2*"/>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
@@ -39,7 +40,21 @@
             YAxes="{Binding YAxis}">
         </lvc:CartesianChart>
 
-        <ItemsControl Grid.Row="3" ItemsSource="{Binding SelectedDateUsages}" Margin="18">
+        <ItemsControl Grid.Row="3" ItemsSource="{Binding PrimaryMetrics}" Margin="18, 0, 18, 0">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="4" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:PrimaryMetricView/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <ItemsControl Grid.Row="4" ItemsSource="{Binding SelectedDateUsages}" Margin="18">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="4" />

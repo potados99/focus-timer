@@ -114,44 +114,59 @@ namespace FocusTimer.Charting.Processing
             {
                 if (c.OutOfWorkingHour)
                 {
+                    // 타이머가 켜져 있지 않으면
                     // 아무것도 안 해요
-                }
-                else if (c.IsFocusing)
-                {
-                    var app = c.GetOrCreateCurrentAppUsage();
-
-                    app.Usage += new TimeSpan(0, 1, 0).Ticks;
-                } 
-                else if (c.IsFocusingFinished)
-                {
-                    if (c.WithHalfChance)
-                    {
-                        // 절반 확률로 쉬거나
-                        c.StartResting();
-                    } else
-                    {
-                        // 바로 다른거 하러 갑니다.
-                        c.StartFocusing();
-                    }
-                }
-                else if (c.IsResting)
-                {
-                    // 놀 때에는 아무 것도 안 해요
-                } 
-                else if (c.IsRestingFinished)
-                {
-                    // 다 쉬었으면 바로 다른거 하러 갑니다.
-                    c.StartFocusing();
                 }
                 else
                 {
-                    // 집중하지도 놀지도 않고 있을 때에는
-                    // 바로 집중 시작합니다.
-                    c.StartFocusing();
-                }
+                    if (c.IsFocusing)
+                    {
+                        // 앱을 사용 중이라면
+                        // 그 앱의 사용 시간을 늘립니다.
+                        var app = c.GetOrCreateCurrentAppUsage();
 
-                // 타이머는 켜져 있고,
-                c.GetOrCreateTimerUsage().Usage += new TimeSpan(0, 1, 0).Ticks;
+                        app.Usage += new TimeSpan(0, 1, 0).Ticks;
+                    } 
+                    else if (c.IsFocusingFinished)
+                    {
+                        // 앱 사용이 끝났으면
+                        if (c.WithHalfChance)
+                        {
+                            // 절반 확률로 쉬거나
+                            c.StartResting();
+                        } else
+                        {
+                            // 바로 다른거 하러 갑니다.
+                            c.StartFocusing();
+                        }
+                    }
+                    else if (c.IsResting)
+                    {
+                        // 놀 때에는 아무 것도 안 해요
+                    } 
+                    else if (c.IsRestingFinished)
+                    {
+                        // 휴식이 끝났으면
+                        if (c.WithHalfChance)
+                        {
+                            // 절반 확률로 쉬거나
+                            c.StartResting();
+                        }
+                        else
+                        {
+                            // 바로 다른거 하러 갑니다.
+                            c.StartFocusing();
+                        }
+                    }
+                    else
+                    {
+                        // 집중하지도 놀지도 않고 있을 때에는
+                        // 바로 집중 시작합니다.
+                        c.StartFocusing();
+                    }
+
+                    c.GetOrCreateTimerUsage().Usage += new TimeSpan(0, 1, 0).Ticks;
+                }
 
                 // 암튼 시간은 흐릅니다.
                 c.TimeGoes();
@@ -179,8 +194,8 @@ namespace FocusTimer.Charting.Processing
         public DateTime? FocusOnUntil { get; set; }
         public DateTime? TakeARestUntil { get; set; }
 
-        private int WorkingHourBegin = 7;
-        private int WorkingHourEnd = 18;
+        private TimeSpan WorkingHourBegin = new TimeSpan(7, 0, 0);
+        private TimeSpan WorkingHourEnd = new TimeSpan(18, 0, 0);
 
         private Random r = new Random();
         public string? CurrentAppPath { get; set; } = null;
@@ -192,7 +207,9 @@ namespace FocusTimer.Charting.Processing
         {
             get
             {
-                return CurrentDateTime.Hour > WorkingHourEnd || CurrentDateTime.Hour < WorkingHourBegin;
+                var timeElapsedToday = (CurrentDateTime - CurrentDateTime.Date);
+
+                return timeElapsedToday > WorkingHourEnd || timeElapsedToday < WorkingHourBegin;
             }
         }
 
@@ -200,7 +217,7 @@ namespace FocusTimer.Charting.Processing
         {
             get
             {
-                return r.Next(0, 1) > 0;
+                return r.Next(0, 10) >= 5;
             }
         }
 
@@ -254,47 +271,60 @@ namespace FocusTimer.Charting.Processing
 
         public void TimeGoes()
         {
-            if (IsItZeroOClock)
+            if (OutOfWorkingHour)
             {
-                var yesterday = CurrentDateTime.Date.Subtract(new TimeSpan(1, 0, 0, 0));
-                var usagesOfYesterday = AppUsages.Where(u => u.RegisteredAt.Date == yesterday);
-
-                AppUsages.AddRange(
-                    usagesOfYesterday.Select(u => new AppUsage
-                    {
-                        AppPath = u.AppPath,
-                        Usage = 0,
-                        RegisteredAt = new DateTime(CurrentDateTime.Ticks),
-                        UpdatedAt = new DateTime(CurrentDateTime.Ticks),
-                        IsConcentrated = true
-                    }).ToList());
-
-                TimerUsages.Add(new TimerUsage
+                if (IsItZeroOClock)
                 {
-                    Usage = 0,
-                    StartedAt = new DateTime(CurrentDateTime.Ticks),
-                    UpdatedAt = new DateTime(CurrentDateTime.Ticks),
-                });
+                    WorkingHourBegin = new TimeSpan(r.Next(6, 12), r.Next(0, 60), 0);
+                    WorkingHourEnd = new TimeSpan(r.Next(14, 22), r.Next(0, 60), 0);
+                }
 
-                WorkingHourBegin = r.Next(6, 12);
-                WorkingHourEnd = r.Next(14, 22);
+                CurrentDateTime = CurrentDateTime.AddMinutes(1);
             }
-
-            var appUsagesOfToday = AppUsages.Where(u => u.RegisteredAt.Date == CurrentDateTime.Date);
-
-            foreach (var usage in appUsagesOfToday)
+            else
             {
-                usage.UpdatedAt = new DateTime(CurrentDateTime.Ticks);
-            }
+                if (IsItZeroOClock)
+                {
+                    var yesterday = CurrentDateTime.Date.Subtract(new TimeSpan(1, 0, 0, 0));
+                    var usagesOfYesterday = AppUsages.Where(u => u.RegisteredAt.Date == yesterday);
 
-            var timerUsagesOfToday = TimerUsages.Where(u => u.StartedAt.Date == CurrentDateTime.Date);
+                    AppUsages.AddRange(
+                        usagesOfYesterday.Select(u => new AppUsage
+                        {
+                            AppPath = u.AppPath,
+                            Usage = 0,
+                            RegisteredAt = new DateTime(CurrentDateTime.Ticks),
+                            UpdatedAt = new DateTime(CurrentDateTime.Ticks),
+                            IsConcentrated = true
+                        }).ToList());
 
-            foreach (var usage in timerUsagesOfToday)
-            {
-                usage.UpdatedAt = new DateTime(CurrentDateTime.Ticks);
+                    TimerUsages.Add(new TimerUsage
+                    {
+                        Usage = 0,
+                        StartedAt = new DateTime(CurrentDateTime.Ticks),
+                        UpdatedAt = new DateTime(CurrentDateTime.Ticks),
+                    });
+
+                    WorkingHourBegin = new TimeSpan(r.Next(6, 12), r.Next(0, 60), 0);
+                    WorkingHourEnd = new TimeSpan(r.Next(14, 22), r.Next(0, 60), 0);
+                }
+
+                var appUsagesOfToday = AppUsages.Where(u => u.RegisteredAt.Date == CurrentDateTime.Date);
+
+                foreach (var usage in appUsagesOfToday)
+                {
+                    usage.UpdatedAt = new DateTime(CurrentDateTime.Ticks);
+                }
+
+                var timerUsagesOfToday = TimerUsages.Where(u => u.StartedAt.Date == CurrentDateTime.Date);
+
+                foreach (var usage in timerUsagesOfToday)
+                {
+                    usage.UpdatedAt = new DateTime(CurrentDateTime.Ticks);
+                }
+
+                CurrentDateTime = CurrentDateTime.AddMinutes(1);
             }
-               
-            CurrentDateTime = CurrentDateTime.AddMinutes(1);
         }
 
         public AppUsage GetOrCreateCurrentAppUsage()
@@ -347,7 +377,7 @@ namespace FocusTimer.Charting.Processing
         public void StartResting()
         {
             FocusOnUntil = null;
-            TakeARestUntil = CurrentDateTime.AddMinutes(r.Next(10, 100));
+            TakeARestUntil = CurrentDateTime.AddMinutes(r.Next(5, 24));
             CurrentAppPath = null;
         }
     }
