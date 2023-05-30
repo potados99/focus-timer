@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MColor = System.Windows.Media.Color;
+using DColor = System.Drawing.Color;
 
 namespace FocusTimer.Lib.Utility
 {
@@ -19,19 +21,27 @@ namespace FocusTimer.Lib.Utility
             return imageSource;
         }
 
-        public static System.Windows.Media.Color ToColor(this Icon icon)
+        public static MColor ToColor(this Icon icon)
         {
             var bitmap = icon.ToBitmap();
-            var p = bitmap.GetPixel(bitmap.Size.Width / 2, bitmap.Size.Height / 2);
+            var x = bitmap.Size.Width / 2;
+            var y = bitmap.Size.Height / 2;
 
-            return System.Windows.Media.Color.FromRgb(p.R, p.G, p.B);
+            DColor p = bitmap.GetPixel(x, y);
+
+            while (p.A != 255)
+            {
+                p = bitmap.GetPixel(++x, y);
+            }
+
+            return MColor.FromRgb(p.R, p.G, p.B);
         }
 
         public static SKColor ToSKColor(this Icon icon)
         {
-            var bitmap = icon.ToBitmap();
+            var color = icon.ToColor();
 
-            return new SKColor(0, 0, 0);
+            return new SKColor(color.R, color.G, color.B);
         }
     }
 }

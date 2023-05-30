@@ -77,6 +77,7 @@ namespace FocusTimer.Charting.Processing
                         DateTime = u.Date,
                         Value = Math.Ceiling(new TimeSpan(u.Usages.Sum(uu => uu.Usage)).TotalMinutes)
                     }).ToArray(),
+                    Fill = new SolidColorPaint(thisAppUsage.FillColor),
                     MaxBarWidth = 16,
                     Rx = 4,
                     Ry = 4,
