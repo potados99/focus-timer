@@ -201,10 +201,10 @@ namespace FocusTimer
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
                 Children =
-            {
-                titleLabel,
-                valueLabel
-            }
+                {
+                    titleLabel,
+                    valueLabel
+                }
             };
 
              _ = _stackPanel?.Children.Add(sp);

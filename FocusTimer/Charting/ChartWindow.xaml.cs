@@ -34,6 +34,28 @@ namespace FocusTimer
             DataContext = ViewModel;
         }
 
+        private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void OnMaximizeRestoreButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void OnCloseButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
         private readonly ChartViewModel ViewModel = new();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
