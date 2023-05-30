@@ -174,7 +174,7 @@ namespace FocusTimer.Charting
                         },
                         new PrimaryMetricItem
                         {
-                            Name = "Avg. 집중",
+                            Name = "Avg. 집중도",
                             Value = $"{100 * UsageRepository.GetAppUsages().Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Sum(u => u.Usage):00}%"
                         }
                     };
@@ -187,9 +187,13 @@ namespace FocusTimer.Charting
                             Name = "타이머 가동",
                             Value = TickToMinutes((long)UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage))
                         },
+                        new PrimaryMetricItem {
+                            Name = "실제 사용",
+                            Value = TickToMinutes((long)UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage))
+                        },
                         new PrimaryMetricItem
                         {
-                            Name = "집중",
+                            Name = "집중도",
                             Value = $"{100 * UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage):00}%"
                         }
                     };

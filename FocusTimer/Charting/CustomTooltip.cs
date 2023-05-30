@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
@@ -165,7 +166,7 @@ namespace FocusTimer
                 if (_chart is null) return visual;
                 visual.TitleLabelVisual.Text = $"총 사용 시간";
                 visual.TitleLabelVisual.Invalidate(_chart);
-                visual.ValueLabelVisual.Text = $"{point.StackedValue.Total}분";
+                visual.ValueLabelVisual.Text = PointToValueString(point);
                 visual.ValueLabelVisual.Invalidate(_chart);
                 return visual;
             }
@@ -185,7 +186,7 @@ namespace FocusTimer
 
             var valueLabel = new LabelVisual
             {
-                Text = $"{point.StackedValue.Total}분",
+                Text = PointToValueString(point),
                 Paint = FontPaint,
                 TextSize = TextSize,
                 Padding = new Padding(8, 0, 0, 0),
@@ -211,6 +212,21 @@ namespace FocusTimer
             _seriesVisualsMap.Add(point.Context.Series, seriesVisual);
 
             return seriesVisual;
+        }
+
+        private string PointToValueString(ChartPoint point)
+        {
+            var ts = new TimeSpan(0, (int)point.StackedValue.Total, 0);
+            var dt = new DateTime(ts.Ticks);
+
+            if (ts.TotalMinutes >= 60)
+            {
+                return dt.ToString("H시간 m분");
+            }
+            else
+            {
+                return dt.ToString("m분");
+            }
         }
 
         private class SeriesVisual
