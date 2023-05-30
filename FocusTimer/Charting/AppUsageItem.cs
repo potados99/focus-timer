@@ -36,6 +36,14 @@ namespace FocusTimer.Charting
             }
         }
 
+        public System.Windows.Media.Brush AppColor
+        {
+            get
+            {
+                return new SolidColorBrush(Icon.ExtractAssociatedIcon(AppPath).ToColor());
+            }
+        }
+
         public string UsageString { get; set; }
 
         public IEnumerable<UsageByTimeItem> UsagesByTime { get; set; }

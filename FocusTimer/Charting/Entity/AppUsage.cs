@@ -19,7 +19,5 @@ namespace FocusTimer.Charting.Entity
         public long Usage { get; set; }
 
         public bool IsConcentrated { get; set; }
-
-
     }
 }

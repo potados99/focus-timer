@@ -11,6 +11,34 @@
         <SolidColorBrush x:Key="BackgroundBlack" Color="#FF191919"/>
         <SolidColorBrush x:Key="DimmedGray" Color="#87222b"/>
         <SolidColorBrush x:Key="Warning" Color="#FFFFDD00"/>
+
+        <Style x:Key="RoundProgressBarStyle" TargetType="{x:Type ProgressBar}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Grid x:Name="TemplateRoot">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="2"/>
+                            <Rectangle x:Name="PART_Track" />
+                            <Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
+                                <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}" RadiusX="2" RadiusY="2"/>
+                                <Rectangle x:Name="Animation" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5" RadiusX="2" RadiusY="2">
+                                    <Rectangle.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
         <SolidColorBrush x:Key="LightGray" Color="#FFC9C9C9"/>
 
         <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">

@@ -7,7 +7,7 @@
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:ChartViewModel}"
-        Title="ChartWindow" Height="600" Width="1000"
+        Title="ChartWindow" Height="700" Width="1000"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
         Topmost="True"
@@ -64,7 +64,7 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:AppUsageView Margin="24, 0, 24, 0" MinHeight="150"/>
+                    <local:AppUsageView Margin="24, 0, 24, 18"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

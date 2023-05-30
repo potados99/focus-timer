@@ -1,4 +1,5 @@
 ﻿using FocusTimer.Charting.Entity;
+using FocusTimer.Lib.Utility;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -7,6 +8,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -57,6 +59,7 @@ namespace FocusTimer.Charting.Processing
 
             var usagesPerApp = appUsages.Select(u => u.AppPath).Distinct().Select(path => new {
                 AppPath = path,
+                FillColor = Icon.ExtractAssociatedIcon(path).ToSKColor(),
                 AppUsagesPerDay = timerUsages.Select(tu => tu.StartedAt.Date).Select(d => new
                 {
                     Date = d,
