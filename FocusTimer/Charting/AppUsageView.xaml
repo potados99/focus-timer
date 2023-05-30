@@ -15,14 +15,14 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="22" />
+                <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Width="16" Source="{Binding AppIcon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBlock Foreground="{StaticResource TextWhite}" Grid.Column="1" Text="{Binding AppName, FallbackValue=Chrome}" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-            <Label Style="{StaticResource WhiteTextLabel}" Grid.Column="2" Content="{Binding UsageString, FallbackValue=30분}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <Image Grid.Column="0" Width="20" Source="{Binding AppIcon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" FontSize="14" Foreground="{StaticResource TextWhite}" Text="{Binding AppName, FallbackValue=Chrome}" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            <Label Grid.Column="2" FontSize="14" Style="{StaticResource WhiteTextLabel}" Content="{Binding UsageString, FallbackValue=30분}" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="8, 0, 0, 0" />
         </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">

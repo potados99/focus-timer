@@ -10,18 +10,19 @@
         Title="ChartWindow" Height="600" Width="1000"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
+        Topmost="True"
         Background="{StaticResource BackgroundBlack}"
         >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="1.2*"/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <Label Content="{Binding SelectedDateString}" Foreground="{StaticResource TextWhite}" />
+        <Label Grid.Row="0" Foreground="{StaticResource TextWhite}" FontSize="16" FontWeight="Bold" Content="{Binding SelectedDateString, FallbackValue='지난 21일'}" Padding="18"/>
 
         <lvc:CartesianChart
             x:Name="UpperChart"
@@ -40,7 +41,7 @@
             YAxes="{Binding YAxis}">
         </lvc:CartesianChart>
 
-        <ItemsControl Grid.Row="3" ItemsSource="{Binding PrimaryMetrics}" Margin="18, 0, 18, 0">
+        <ItemsControl Grid.Row="3" ItemsSource="{Binding PrimaryMetrics}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="4" />
@@ -49,12 +50,12 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:PrimaryMetricView/>
+                    <local:PrimaryMetricView Margin="24, 0, 24, 0"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         
-        <ItemsControl Grid.Row="4" ItemsSource="{Binding SelectedDateUsages}" Margin="18">
+        <ItemsControl Grid.Row="4" ItemsSource="{Binding SelectedDateUsages}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="4" />
@@ -63,7 +64,7 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:AppUsageView Margin="16, 0, 16, 0" MinHeight="150"/>
+                    <local:AppUsageView Margin="24, 0, 24, 0" MinHeight="150"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

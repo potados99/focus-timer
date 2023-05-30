@@ -12,7 +12,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Foreground="{StaticResource TextWhite}" FontSize="16" Content="{Binding Name, FallbackValue='타이머 가동 시간'}" />
-        <Label Grid.Row="1" Foreground="{StaticResource TextWhite}" FontSize="32" Content="{Binding Value, FallbackValue='2시간 14분'}" />
+        <Label Grid.Row="0" Foreground="{StaticResource TextWhite}" FontSize="14" Content="{Binding Name, FallbackValue='타이머 가동 시간'}" Padding="0, 12, 0, 2" />
+        <Label Grid.Row="1" Foreground="{StaticResource TextWhite}" FontSize="24" Content="{Binding Value, FallbackValue='2시간 14분'}" Padding="0, 2, 0, 12"/>
     </Grid>
 </UserControl>

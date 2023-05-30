@@ -6,6 +6,7 @@
     <Application.Resources>
         <SolidColorBrush x:Key="White" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="TextWhite" Color="#FFEAEAEA"/>
+        <SolidColorBrush x:Key="TextDimmedWhite" Color="#FFD0D0D0"/>
         <SolidColorBrush x:Key="Black" Color="#FF000000"/>
         <SolidColorBrush x:Key="BackgroundBlack" Color="#FF191919"/>
         <SolidColorBrush x:Key="DimmedGray" Color="#87222b"/>
@@ -46,6 +47,11 @@
             <Setter Property="Padding" Value="0" />
         </Style>
 
+        <Style x:Key="DimmedWhiteTextLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource TextDimmedWhite}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        
         <Style x:Key="PrimaryTextLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
             <Setter Property="FontSize" Value="14" />
         </Style>
