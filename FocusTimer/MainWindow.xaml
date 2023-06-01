@@ -99,7 +99,7 @@
     </Window.ContextMenu>
 
     <Border CornerRadius="6,6,6,6" Background="{StaticResource LightGray}">
-        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="#FF191919">
+        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{StaticResource BackgroundBlack}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{Binding FixedPartLength, FallbackValue=1.4*}" />

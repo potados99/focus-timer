@@ -63,7 +63,7 @@ namespace FocusTimer.Models
         {
             get
             {
-                string resourceName = IsAppActive ? "White" : "DimmedGray";
+                string resourceName = IsAppActive ? "White" : "DisabledTimer";
 
                 return Application.Current.FindResource(resourceName) as SolidColorBrush;
             }

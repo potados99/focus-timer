@@ -157,6 +157,7 @@
         <lvc:CartesianChart
             x:Name="UpperChart"
             Grid.Row="2"
+            Background="{x:Null}"
             Series="{Binding SeriesCollection1}"
             XAxes="{Binding SharedXAxis}"
             YAxes="{Binding YAxis}"
