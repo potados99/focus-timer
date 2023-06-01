@@ -36,6 +36,14 @@ namespace FocusTimer.Features.Timer
             ViewModel.Loaded();
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                ViewModel.CancelRegisteringApp();
+            }
+        }
+
         private void ExitItem_Click(object sender, RoutedEventArgs e)
         {
             App.Current.Shutdown();

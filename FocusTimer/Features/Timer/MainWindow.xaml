@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FocusTimer.Features.Timer"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
@@ -15,6 +15,7 @@
         Background="{x:Null}"
         AllowsTransparency="True"
         Title="MainWindow" 
+        KeyDown="Window_KeyDown"
         Height="{Binding Path=WindowHeight, FallbackValue=160, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
         Width="230">
 
@@ -47,7 +48,7 @@
     <Window.ContextMenu>
         <ContextMenu Style="{StaticResource ModernMenu}">
             
-            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="ExitItem" Header="종료" Click="ExitItem_Click">
+            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="ExitItem" Header="종료" Click="ExitItem_Click" IsEnabled="{c:Binding Path=!IsFocusLockHold}">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource ic_exit_to_app}"/>
                 </MenuItem.Icon>

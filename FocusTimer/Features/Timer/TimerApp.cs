@@ -8,6 +8,10 @@ using System.Windows.Media;
 
 namespace FocusTimer.Features.Timer
 {
+    /// <summary>
+    /// 타이머 슬롯에 등록되는 앱을 나타냅니다.
+    /// 타이머 슬롯에는 앱이 등록되어 있을 수도, 그렇지 않을 수도 있습니다.
+    /// </summary>
     public class TimerApp
     {
         public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle).ExecutablePath())

@@ -54,7 +54,7 @@
         </Button>
 
         <!-- 앱이 정해지는 중일 때 -->
-        <Label d:Visibility="Hidden" Visibility="{Binding IsWaitLabelVisible}" Style="{StaticResource PrimaryTextLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" Content="창을 클릭해주세요"/>
+        <Label d:Visibility="Hidden" Visibility="{Binding IsWaitLabelVisible}" Style="{StaticResource PrimaryTextLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding WindowSelectPrompt}"/>
 
     </Grid>
 </UserControl>

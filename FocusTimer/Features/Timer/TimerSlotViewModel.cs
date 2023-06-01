@@ -57,6 +57,7 @@ namespace FocusTimer.Features.Timer
                 return CurrentApp != null && CurrentApp.IsAppActive;
             }
         }
+        public string WindowSelectPrompt { get; set; } = "창을 클릭해주세요";
 
         #endregion
 
@@ -81,6 +82,7 @@ namespace FocusTimer.Features.Timer
         {
             CurrentApp = null;
             IsWaitingForApp = true;
+            WindowSelectPrompt = "창을 클릭해주세요";
 
             Render();
         }
@@ -88,6 +90,20 @@ namespace FocusTimer.Features.Timer
         public void StopWaitingAndRegisterApp(TimerApp app)
         {
             CurrentApp = app;
+            IsWaitingForApp = false;
+
+            Render();
+        }
+
+        public void UnableToHandleRegistering(string reason)
+        {
+            WindowSelectPrompt = reason;
+
+            Render();
+        }
+
+        public void CancelRegisteringApp()
+        {
             IsWaitingForApp = false;
 
             Render();
@@ -111,6 +127,8 @@ namespace FocusTimer.Features.Timer
             NotifyPropertyChanged(nameof(IsWaitLabelVisible));
 
             NotifyPropertyChanged(nameof(IsAppActive));
+
+            NotifyPropertyChanged(nameof(WindowSelectPrompt));
         }
 
         #endregion

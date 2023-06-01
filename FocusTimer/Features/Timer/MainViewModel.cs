@@ -4,7 +4,9 @@ using FocusTimer.Lib.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -292,6 +294,10 @@ namespace FocusTimer.Features.Timer
             if (IsFocusLockHold)
             {
                 _LockButtonToolTip.IsOpen = true;
+                Task.Delay(700).ContinueWith(_ => Application.Current.Dispatcher.Invoke(new Action(() => {
+                    _LockButtonToolTip.IsOpen = false;
+                })));
+
                 StartAnimation("ShakeHorizontalAnimation");
 
                 return;
@@ -378,12 +384,32 @@ namespace FocusTimer.Features.Timer
 
         private void FinishRegisteringApp(TimerApp app)
         {
+            if (TimerSlots.Select(s => s.CurrentApp?.ProcessExecutablePath).Contains(app.ProcessExecutablePath))
+            {
+                UnableToRegisterApp("이미 등록된 프로그램이에요.");
+                return;
+            }
+
             CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(app);
 
             SaveApps();
             Render();
 
             NotifyPropertyChanged(nameof(ConcentrationContextMenu));
+        }
+
+        private void UnableToRegisterApp(string reason)
+        {
+            CurrentRegisteringTimerSlot?.UnableToHandleRegistering(reason);
+
+            Render();
+        }
+
+        public void CancelRegisteringApp()
+        {
+            CurrentRegisteringTimerSlot?.CancelRegisteringApp();
+
+            Render();
         }
 
         private void ClearApplication(TimerSlotViewModel slot)
@@ -445,7 +471,7 @@ namespace FocusTimer.Features.Timer
         {
             IsCheckable = false,
             IsChecked = false,
-            Icon = new Image() { Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage },
+            Icon = new System.Windows.Controls.Image() { Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage },
             Header = "집중도 계산에 포함할 프로그램",
         };
 
