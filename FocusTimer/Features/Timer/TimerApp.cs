@@ -1,11 +1,12 @@
-﻿using FocusTimer.Lib.Component;
+﻿using FocusTimer.Lib;
+using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media;
 
-namespace FocusTimer.Lib.Models
+namespace FocusTimer.Features.Timer
 {
     public class TimerApp
     {

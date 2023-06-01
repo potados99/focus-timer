@@ -17,15 +17,14 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.ConditionalDraw;
 using System.Windows.Media;
 using System.Diagnostics;
-using FocusTimer.Charting;
 using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
-using FocusTimer.Charting.Processing;
-using FocusTimer.Charting.Repository;
+using FocusTimer.Features.Charting.Processing;
+using FocusTimer.Features.Charting.Repository;
 
-namespace FocusTimer.Charting
+namespace FocusTimer.Features.Charting
 {
     internal class ChartViewModel : BaseModel
     {
@@ -111,7 +110,7 @@ namespace FocusTimer.Charting
             FontFamily = "맑은 고딕"
         };
 
-        public DateTime SelectedDate { get; set; }      
+        public DateTime SelectedDate { get; set; }
         public string SelectedDateString
         {
             get
@@ -147,7 +146,7 @@ namespace FocusTimer.Charting
                 foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
                 {
                     s.SelectPoints(s.ActivePoints.Where(p => (p.Context.DataSource as DataPoint).DateTime == date));
-                }           
+                }
                 SelectedDate = date;
             }
 
@@ -185,11 +184,11 @@ namespace FocusTimer.Charting
                     {
                         new PrimaryMetricItem {
                             Name = "타이머 가동",
-                            Value = TickToMinutes((long)UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage))
+                            Value = TickToMinutes(UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage))
                         },
                         new PrimaryMetricItem {
                             Name = "실제 사용",
-                            Value = TickToMinutes((long)UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage))
+                            Value = TickToMinutes(UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage))
                         },
                         new PrimaryMetricItem
                         {
@@ -212,7 +211,7 @@ namespace FocusTimer.Charting
                     return usages.GroupBy(u => u.AppPath).Select(thisAppGroup => new AppUsageItem
                     {
                         AppPath = thisAppGroup.Key,
-                        UsageString =  TickToMinutes(thisAppGroup.Sum(g => g.Usage)),
+                        UsageString = TickToMinutes(thisAppGroup.Sum(g => g.Usage)),
                         UsagesByTime = new UsageByTimeItem[]
                         {
                             new UsageByTimeItem
@@ -254,7 +253,7 @@ namespace FocusTimer.Charting
             if (minutes >= 60)
             {
                 return $"{minutes / 60}시간 {minutes % 60}분";
-            } 
+            }
             else
             {
                 return $"{minutes % 60}분";

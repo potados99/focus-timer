@@ -3,8 +3,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using FocusTimer.Features.Timer;
 
-namespace FocusTimer
+namespace FocusTimer.Features.Timer
 {
 
     /// <summary>

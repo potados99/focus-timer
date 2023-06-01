@@ -1,9 +1,8 @@
 ﻿using FocusTimer.Lib.Component;
-using FocusTimer.Lib.Models;
 using System.Windows;
 using System.Windows.Media;
 
-namespace FocusTimer.Models
+namespace FocusTimer.Features.Timer
 {
     public class TimerSlotViewModel : BaseModel
     {

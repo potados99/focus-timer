@@ -36,7 +36,7 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
-namespace FocusTimer
+namespace FocusTimer.Features.Charting
 {
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageControl
@@ -101,7 +101,7 @@ namespace FocusTimer
             foundPoints = new List<ChartPoint>() {
                 foundPoints.Last()
             };
-           
+
 
             _chart = chart;
 
@@ -207,7 +207,7 @@ namespace FocusTimer
                 }
             };
 
-             _ = _stackPanel?.Children.Add(sp);
+            _ = _stackPanel?.Children.Add(sp);
             var seriesVisual = new SeriesVisual(point.Context.Series, sp, titleLabel, valueLabel);
             _seriesVisualsMap.Add(point.Context.Series, seriesVisual);
 

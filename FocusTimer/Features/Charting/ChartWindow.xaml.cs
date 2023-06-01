@@ -1,4 +1,4 @@
-﻿using FocusTimer.Charting;
+﻿using FocusTimer.Features.Charting;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;

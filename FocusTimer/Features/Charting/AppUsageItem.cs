@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace FocusTimer.Charting
+namespace FocusTimer.Features.Charting
 {
     public class AppUsageItem
     {
@@ -22,7 +22,8 @@ namespace FocusTimer.Charting
         }
 
         public string AppPath { get; set; }
-        public ImageSource? AppIcon { 
+        public ImageSource? AppIcon
+        {
             get
             {
                 return Icon.ExtractAssociatedIcon(AppPath)?.ToImageSource();

@@ -1,4 +1,5 @@
-﻿using FocusTimer.Charting.Entity;
+﻿using FocusTimer.Features.Charting;
+using FocusTimer.Features.Charting.Entity;
 using FocusTimer.Lib.Utility;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -14,7 +15,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FocusTimer.Charting.Processing
+namespace FocusTimer.Features.Charting.Processing
 {
     public static class ChartDataProcessor
     {
@@ -31,7 +32,8 @@ namespace FocusTimer.Charting.Processing
                 TimerUsages = g
             });
 
-            var values = usagesPerDay.Select(u => new DataPoint { 
+            var values = usagesPerDay.Select(u => new DataPoint
+            {
                 DateTime = u.Date,
                 Value = 100 * u.AppUsages.Where(au => au.IsConcentrated).Sum(au => au.Usage) / u.TimerUsages.Sum(tu => tu.Usage)
             });
@@ -57,7 +59,8 @@ namespace FocusTimer.Charting.Processing
         {
             var series = new ObservableCollection<ISeries>();
 
-            var usagesPerApp = appUsages.Select(u => u.AppPath).Distinct().Select(path => new {
+            var usagesPerApp = appUsages.Select(u => u.AppPath).Distinct().Select(path => new
+            {
                 AppPath = path,
                 FillColor = Icon.ExtractAssociatedIcon(path).ToSKColor(),
                 AppUsagesPerDay = timerUsages.Select(tu => tu.StartedAt.Date).Select(d => new
@@ -130,7 +133,7 @@ namespace FocusTimer.Charting.Processing
                         var app = c.GetOrCreateCurrentAppUsage();
 
                         app.Usage += new TimeSpan(0, 1, 0).Ticks;
-                    } 
+                    }
                     else if (c.IsFocusingFinished)
                     {
                         // 앱 사용이 끝났으면
@@ -138,7 +141,8 @@ namespace FocusTimer.Charting.Processing
                         {
                             // 절반 확률로 쉬거나
                             c.StartResting();
-                        } else
+                        }
+                        else
                         {
                             // 바로 다른거 하러 갑니다.
                             c.StartFocusing();
@@ -147,7 +151,7 @@ namespace FocusTimer.Charting.Processing
                     else if (c.IsResting)
                     {
                         // 놀 때에는 아무 것도 안 해요
-                    } 
+                    }
                     else if (c.IsRestingFinished)
                     {
                         // 휴식이 끝났으면
@@ -185,7 +189,7 @@ namespace FocusTimer.Charting.Processing
     {
         private DateTime CurrentDateTime = DateTime.Now.Subtract(new TimeSpan(21, 0, 0, 0));
         private DateTime UntilNow = DateTime.Now;
-        
+
         private string[] AppPaths = new string[]
             {
                 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
@@ -211,7 +215,7 @@ namespace FocusTimer.Charting.Processing
         {
             get
             {
-                var timeElapsedToday = (CurrentDateTime - CurrentDateTime.Date);
+                var timeElapsedToday = CurrentDateTime - CurrentDateTime.Date;
 
                 return timeElapsedToday > WorkingHourEnd || timeElapsedToday < WorkingHourBegin;
             }

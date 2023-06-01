@@ -1,9 +1,8 @@
-﻿using FocusTimer.Models;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FocusTimer
+namespace FocusTimer.Features.Timer
 {
     /// <summary>
     /// Interaction logic for TimerSlot.xaml

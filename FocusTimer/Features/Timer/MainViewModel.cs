@@ -1,8 +1,6 @@
 ﻿using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
-using FocusTimer.Lib.Models;
 using FocusTimer.Lib.Utility;
-using FocusTimer.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
-namespace FocusTimer
+namespace FocusTimer.Features.Timer
 {
     internal class MainViewModel : BaseModel
     {
@@ -126,7 +124,7 @@ namespace FocusTimer
                     int separatorThickness = 1;
                     double contentGridRowLengthStar = fixedPartLength.Value;
                     double expandableGridRowLengthStar = expadedLength.Value;
-                    double expandableGridRowLength = (double)windowHeight / (contentGridRowLengthStar + expandableGridRowLengthStar) * contentGridRowLengthStar;
+                    double expandableGridRowLength = windowHeight / (contentGridRowLengthStar + expandableGridRowLengthStar) * contentGridRowLengthStar;
                     return (int)expandableGridRowLength + borderThickness + separatorThickness;
                 }
             }
@@ -476,7 +474,7 @@ namespace FocusTimer
                         return item;
                     })
                     .ToArray();
-                    
+
                 return new BindableMenuItem[] { WhichAppToIncludeMenuItem };
             }
         }

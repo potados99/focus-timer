@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FocusTimer.Charting
+namespace FocusTimer.Features.Charting
 {
     public class PrimaryMetricItem
     {

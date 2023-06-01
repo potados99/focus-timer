@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="FocusTimer.TimerSlot"
+﻿<UserControl x:Class="FocusTimer.Features.Timer.TimerSlot"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:models="clr-namespace:FocusTimer.Models" 
-             d:DataContext="{d:DesignInstance Type=models:TimerSlotViewModel}"
+             xmlns:timer="clr-namespace:FocusTimer.Features.Timer" 
+             d:DataContext="{d:DesignInstance Type=timer:TimerSlotViewModel}"
              Loaded="UserControl_Loaded"
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="180">

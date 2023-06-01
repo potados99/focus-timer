@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace FocusTimer
+namespace FocusTimer.Features.Timer
 {
     /// <summary>
     /// Interaction logic for BorderWindow.xaml

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FocusTimer.Charting.Entity
+namespace FocusTimer.Features.Charting.Entity
 {
     public class AppUsage
     {
