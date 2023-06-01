@@ -1,9 +1,9 @@
-﻿using System;
+﻿using FocusTimer.Features.Charting;
+using System;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using FocusTimer.Features.Timer;
 
 namespace FocusTimer.Features.Timer
 {

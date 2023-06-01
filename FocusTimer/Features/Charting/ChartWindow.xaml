@@ -1,46 +1,59 @@
-﻿<Window x:Class="FocusTimer.ChartWindow"
+﻿<Window x:Class="FocusTimer.Features.Charting.ChartWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FocusTimer.Charting"
+        xmlns:local="clr-namespace:FocusTimer.Features.Charting"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:ChartViewModel}"
-        Title="ChartWindow" Height="700" Width="1000"
+        Title="ChartWindow"
+        Height="700"
+        Width="1000"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
-        Background="{StaticResource Window.Background}"
-        >
+        Topmost="True"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="{StaticResource Window.Background}">
 
     <Window.Resources>
-        <Style x:Key="TitleBarButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource Text.Primary.Foreground}" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
-            <Setter Property="IsTabStop" Value="False" />
+        <Style x:Key="TitleBarButtonStyle"
+               TargetType="Button">
+            <Setter Property="Foreground"
+                    Value="{StaticResource Text.Primary.Foreground}" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome"
+                    Value="True" />
+            <Setter Property="IsTabStop"
+                    Value="False" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border
-					x:Name="border"
-					Background="Transparent"
-					BorderThickness="0"
-					SnapsToDevicePixels="true">
-                            <ContentPresenter
-						x:Name="contentPresenter"
-						Margin="0"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						Focusable="False"
-						RecognizesAccessKey="True" />
+                        <Border x:Name="border"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter"
+                                              Margin="0"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Focusable="False"
+                                              RecognizesAccessKey="True" />
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource MouseOverOverlayBackgroundBrush}" />
+                            <Trigger Property="IsMouseOver"
+                                     Value="true">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#FF404040" />
                             </Trigger>
-                            <Trigger Property="IsPressed" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource PressedOverlayBackgroundBrush}" />
+                            <Trigger Property="IsPressed"
+                                     Value="true">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#FF393939" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -48,35 +61,42 @@
             </Setter>
         </Style>
 
-        <Style x:Key="TitleBarCloseButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource Text.Primary.Foreground}" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
-            <Setter Property="IsTabStop" Value="False" />
+        <Style x:Key="TitleBarCloseButtonStyle"
+               TargetType="Button">
+            <Setter Property="Foreground"
+                    Value="{StaticResource Text.Primary.Foreground}" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome"
+                    Value="True" />
+            <Setter Property="IsTabStop"
+                    Value="False" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border
-					x:Name="border"
-					Background="Transparent"
-					BorderThickness="0"
-					SnapsToDevicePixels="true">
-                            <ContentPresenter
-						x:Name="contentPresenter"
-						Margin="0"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						Focusable="False"
-						RecognizesAccessKey="True" />
+                        <Border x:Name="border"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter"
+                                              Margin="0"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Focusable="False"
+                                              RecognizesAccessKey="True" />
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource MouseOverWindowCloseButtonBackgroundBrush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource MouseOverWindowCloseButtonForegroundBrush}" />
+                            <Trigger Property="IsMouseOver"
+                                     Value="true">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#FF404040" />
                             </Trigger>
-                            <Trigger Property="IsPressed" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource PressedWindowCloseButtonBackgroundBrush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource MouseOverWindowCloseButtonForegroundBrush}" />
+                            <Trigger Property="IsPressed"
+                                     Value="true">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#FF393939" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -85,118 +105,119 @@
         </Style>
 
     </Window.Resources>
-    
+
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="32" ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}" />
+        <WindowChrome CaptionHeight="32"
+                      ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}" />
     </WindowChrome.WindowChrome>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="1.2*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
+    <Border BorderBrush="{StaticResource Window.Border.Brush}" BorderThickness="0.5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="1.2*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Image
-		Grid.Column="0"
-		Width="20"
-		Height="20"
-		Margin="8"
-		Source="{StaticResource ic_chart_bar}" />
-            <TextBlock
-		Grid.Column="1"
-		Margin="4 0 0 0"
-		VerticalAlignment="Center"
-		FontSize="14"
-                Foreground="{StaticResource Text.Primary.Foreground}"
-		Text="통계 대시보드">
-               
-            </TextBlock>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0"
+                       Width="16"
+                       Height="18"
+                       Margin="12 8 12 8"
+                       Source="{StaticResource ic_chart_bar}" />
+                <TextBlock Grid.Column="1"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           Foreground="{StaticResource Text.Primary.Foreground}"
+                           Text="통계 대시보드">
 
-            <Button
-		Grid.Column="2"
-		Click="OnMinimizeButtonClick"
-		RenderOptions.EdgeMode="Aliased"
-		Style="{StaticResource TitleBarButtonStyle}">
-                <Path
-			Width="46"
-			Height="32"
-			Data="M 18,15 H 28"
-			Stroke="{Binding Path=Foreground,
+                </TextBlock>
+
+                <Button Grid.Column="2"
+                        Click="OnMinimizeButtonClick"
+                        RenderOptions.EdgeMode="Aliased"
+                        Style="{StaticResource TitleBarButtonStyle}">
+                    <Path Width="46"
+                          Height="32"
+                          Data="M 18,15 H 28"
+                          Stroke="{Binding Path=Foreground,
 							 RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-			StrokeThickness="1" />
-            </Button>
+                          StrokeThickness="1" />
+                </Button>
 
-            <Button
-		Grid.Column="4"
-		Click="OnCloseButtonClick"
-		Style="{StaticResource TitleBarCloseButtonStyle}">
-                <Path
-			Width="46"
-			Height="32"
-			Data="M 18,11 27,20 M 18,20 27,11"
-			Stroke="{Binding Path=Foreground,
+                <Button Grid.Column="4"
+                        Click="OnCloseButtonClick"
+                        Style="{StaticResource TitleBarCloseButtonStyle}">
+                    <Path Width="46"
+                          Height="32"
+                          Data="M 18,11 27,20 M 18,20 27,11"
+                          Stroke="{Binding Path=Foreground,
 							 RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-			StrokeThickness="1" />
-            </Button>
+                          StrokeThickness="1" />
+                </Button>
+            </Grid>
+
+            <Label Grid.Row="1"
+                   Foreground="{StaticResource Text.Primary.Foreground}"
+                   FontSize="16"
+                   FontWeight="Bold"
+                   Content="{Binding SelectedDateString, FallbackValue='지난 21일'}"
+                   Padding="12, 6, 12, 12" />
+
+            <lvc:CartesianChart x:Name="UpperChart"
+                                Grid.Row="2"
+                                Series="{Binding SeriesCollection1}"
+                                XAxes="{Binding SharedXAxis}"
+                                YAxes="{Binding YAxis}"
+                                TooltipTextPaint="{Binding TooltipPaint}">
+            </lvc:CartesianChart>
+
+            <lvc:CartesianChart x:Name="LowerChart"
+                                Grid.Row="3"
+                                Series="{Binding SeriesCollection2}"
+                                XAxes="{Binding SharedXAxis}"
+                                YAxes="{Binding YAxis}">
+            </lvc:CartesianChart>
+
+            <ItemsControl Grid.Row="4"
+                          ItemsSource="{Binding PrimaryMetrics}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="4" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:PrimaryMetricView Margin="14, 0, 14, 0" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl Grid.Row="5"
+                          ItemsSource="{Binding SelectedDateUsages}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="4" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:AppUsageView Margin="14, 0, 14, 18" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
-
-        <Label Grid.Row="1" Foreground="{StaticResource Text.Primary.Foreground}" FontSize="16" FontWeight="Bold" Content="{Binding SelectedDateString, FallbackValue='지난 21일'}" Padding="18, 6, 18, 12"/>
-
-        <lvc:CartesianChart
-            x:Name="UpperChart"
-            Grid.Row="2"
-            Series="{Binding SeriesCollection1}"
-            XAxes="{Binding SharedXAxis}"
-            YAxes="{Binding YAxis}"
-            TooltipTextPaint="{Binding TooltipPaint}">
-        </lvc:CartesianChart>
-
-        <lvc:CartesianChart
-            x:Name="LowerChart"
-            Grid.Row="3"
-            Series="{Binding SeriesCollection2}"
-            XAxes="{Binding SharedXAxis}"
-            YAxes="{Binding YAxis}">
-        </lvc:CartesianChart>
-
-        <ItemsControl Grid.Row="4" ItemsSource="{Binding PrimaryMetrics}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="4" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:PrimaryMetricView Margin="24, 0, 24, 0"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        
-        <ItemsControl Grid.Row="5" ItemsSource="{Binding SelectedDateUsages}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="4" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:AppUsageView Margin="24, 0, 24, 18"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+    </Border>
 </Window>
