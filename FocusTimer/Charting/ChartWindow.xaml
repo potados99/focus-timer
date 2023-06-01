@@ -10,12 +10,12 @@
         Title="ChartWindow" Height="700" Width="1000"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
-        Background="{StaticResource BackgroundBlack}"
+        Background="{StaticResource Window.Background}"
         >
 
     <Window.Resources>
         <Style x:Key="TitleBarButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource TextWhite}" />
+            <Setter Property="Foreground" Value="{StaticResource Text.Primary.Foreground}" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
             <Setter Property="IsTabStop" Value="False" />
@@ -49,7 +49,7 @@
         </Style>
 
         <Style x:Key="TitleBarCloseButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource TextWhite}" />
+            <Setter Property="Foreground" Value="{StaticResource Text.Primary.Foreground}" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
             <Setter Property="IsTabStop" Value="False" />
@@ -119,7 +119,7 @@
 		Margin="4 0 0 0"
 		VerticalAlignment="Center"
 		FontSize="14"
-                Foreground="{StaticResource TextWhite}"
+                Foreground="{StaticResource Text.Primary.Foreground}"
 		Text="통계 대시보드">
                
             </TextBlock>
@@ -152,7 +152,7 @@
             </Button>
         </Grid>
 
-        <Label Grid.Row="1" Foreground="{StaticResource TextWhite}" FontSize="16" FontWeight="Bold" Content="{Binding SelectedDateString, FallbackValue='지난 21일'}" Padding="18, 6, 18, 12"/>
+        <Label Grid.Row="1" Foreground="{StaticResource Text.Primary.Foreground}" FontSize="16" FontWeight="Bold" Content="{Binding SelectedDateString, FallbackValue='지난 21일'}" Padding="18, 6, 18, 12"/>
 
         <lvc:CartesianChart
             x:Name="UpperChart"

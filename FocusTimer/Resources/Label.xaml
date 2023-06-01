@@ -1,0 +1,43 @@
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+
+    <Style x:Key="WhiteTextLabel" TargetType="Label">
+        <Setter Property="Foreground" Value="{StaticResource Text.Primary.Foreground}" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style x:Key="DimmedWhiteTextLabel" TargetType="Label">
+        <Setter Property="Foreground" Value="{StaticResource Text.Secondary.Foreground}" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style x:Key="PrimaryTextLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="BigTimerLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
+        <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground}" />
+        <Setter Property="FontSize" Value="38" />
+        <Setter Property="FontFamily" Value="{StaticResource digital-7}" />
+
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground.Disabled}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SmallTimerLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
+        <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground}" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontFamily" Value="{StaticResource digital-7}" />
+
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground.Disabled}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

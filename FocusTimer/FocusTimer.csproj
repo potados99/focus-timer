@@ -15,11 +15,7 @@
     <None Remove="Costura32\libSkiaSharp.dll" />
 	<None Remove="Costura64\libHarfBuzzSharp.dll" />
 	<None Remove="Costura64\libSkiaSharp.dll" />
-    <None Remove="Resources\bird.png" />
     <None Remove="Resources\digital-7.ttf" />
-    <None Remove="Resources\locked.png" />
-    <None Remove="Resources\plus.png" />
-    <None Remove="Resources\x.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,13 +52,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\bird.png" />
     <Resource Include="Resources\digital-7.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\locked.png" />
-    <Resource Include="Resources\plus.png" />
-    <Resource Include="Resources\x.png" />
   </ItemGroup>
 
   <ItemGroup>

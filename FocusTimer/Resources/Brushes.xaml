@@ -1,0 +1,24 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+
+    <!-- 윈도우 -->
+    <SolidColorBrush x:Key="Window.Background" Color="#FF222425" />
+    <SolidColorBrush x:Key="Window.Background.Warning" Color="#FFFFDD00" />
+    <SolidColorBrush x:Key="Window.Border.Brush" Color="#FFC9C9C9"/>
+
+    <!-- 텍스트 -->
+    <SolidColorBrush x:Key="Text.Primary.Foreground" Color="#FFEAEAEA" />
+    <SolidColorBrush x:Key="Text.Secondary.Foreground" Color="#FFD0D0D0" />
+    <SolidColorBrush x:Key="Text.Timer.Foreground" Color="#FFEAEAEA" />
+    <SolidColorBrush x:Key="Text.Timer.Foreground.Disabled" Color="#FFFF4264" />
+
+    <!-- 컨텍스트 메뉴 -->
+    <SolidColorBrush x:Key="Menu.Background" Color="#FF292A2C"/>
+    <SolidColorBrush x:Key="Menu.Border.Brush" Color="#FFC9C9C9"/>
+    <SolidColorBrush x:Key="MenuItem.Background.Highlighted" Color="#FF404244" />
+    
+    <!-- Separator -->
+    <SolidColorBrush x:Key="Separator.Background" Color="#FF505050" />
+
+</ResourceDictionary>

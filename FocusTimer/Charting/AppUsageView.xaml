@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
 
             <Image Grid.Column="0" Width="20" Source="{Binding AppIcon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1" FontSize="14" Foreground="{StaticResource TextWhite}" Text="{Binding AppName, FallbackValue=Chrome}" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            <TextBlock Grid.Column="1" FontSize="14" Foreground="{StaticResource Text.Primary.Foreground}" Text="{Binding AppName, FallbackValue=Chrome}" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             <Label Grid.Column="2" FontSize="14" Style="{StaticResource WhiteTextLabel}" Content="{Binding UsageString, FallbackValue=30분}" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="8, 0, 0, 0" />
         </Grid>
 

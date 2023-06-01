@@ -78,7 +78,7 @@
                             Minimum="1"
                             Maximum="9999"
                             Width="50" 
-                            Foreground="{StaticResource TextWhite}"
+                            Foreground="{StaticResource Text.Primary.Foreground}"
                             Background="Transparent"
                             Margin="5,0"
                             />
@@ -98,8 +98,8 @@
         </ContextMenu>
     </Window.ContextMenu>
 
-    <Border CornerRadius="6,6,6,6" Background="{StaticResource LightGray}">
-        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{StaticResource BackgroundBlack}">
+    <Border CornerRadius="6,6,6,6" Background="{StaticResource Window.Border.Brush}">
+        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{StaticResource Window.Background}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{Binding FixedPartLength, FallbackValue=1.4*}" />
@@ -117,7 +117,7 @@
                     <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click" ToolTip="{Binding LockButtonToolTip}">
                         <Image x:Name="LockImage" Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </Button>
-                    <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue=White}" Style="{StaticResource BigTimerLabel}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Style="{StaticResource BigTimerLabel}" IsEnabled="{Binding IsAnyAppActive}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                     <Grid Grid.Column="2" HorizontalAlignment="Left">
                         <Grid.RowDefinitions>
@@ -147,7 +147,7 @@
                         </Grid.ContextMenu>
 
                         <Label Grid.Row="0" Content="집중도" Style="{StaticResource WhiteTextLabel}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                        <Label Grid.Row="1" Content="{Binding Concentration, FallbackValue=92%}" Style="{StaticResource WhiteTextLabel}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue={StaticResource TextWhite}}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <Label Grid.Row="1" Content="{Binding Concentration, FallbackValue=92%}" Style="{StaticResource WhiteTextLabel}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue={StaticResource Text.Primary.Foreground}}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                     </Grid>
                     
                 </Grid>
@@ -159,7 +159,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Separator Grid.Row="0" Background="{StaticResource LightGray}" Margin="0"/>
+                    <Separator Grid.Row="0" Background="{StaticResource Separator.Background}" Margin="0"/>
 
                     <Grid Grid.Row="1" Margin="0, 4, 0, 4">
                         <Grid.RowDefinitions>

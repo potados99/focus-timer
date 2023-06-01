@@ -73,7 +73,6 @@ namespace FocusTimer
 
             NotifyPropertyChanged(nameof(ElapsedTime));
             NotifyPropertyChanged(nameof(IsAnyAppActive));
-            NotifyPropertyChanged(nameof(TimerLabelForegroundColor));
             NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 
             NotifyPropertyChanged(nameof(IsFocusLocked));
@@ -178,16 +177,6 @@ namespace FocusTimer
             get
             {
                 return ActiveStopwatch.ElapsedString();
-            }
-        }
-
-        public SolidColorBrush? TimerLabelForegroundColor
-        {
-            get
-            {
-                string resourceName = IsAnyAppActive ? "TextWhite" : "DisabledTimer";
-
-                return Application.Current.FindResource(resourceName) as SolidColorBrush;
             }
         }
 

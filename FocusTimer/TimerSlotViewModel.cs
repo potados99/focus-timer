@@ -59,16 +59,6 @@ namespace FocusTimer.Models
             }
         }
 
-        public SolidColorBrush? TimerLabelForegroundColor
-        {
-            get
-            {
-                string resourceName = IsAppActive ? "White" : "DisabledTimer";
-
-                return Application.Current.FindResource(resourceName) as SolidColorBrush;
-            }
-        }
-
         #endregion
 
         #region 외부에 노출하는 제어용 메소드
@@ -120,7 +110,8 @@ namespace FocusTimer.Models
             NotifyPropertyChanged(nameof(IsAppVisible));
             NotifyPropertyChanged(nameof(IsSetButtonVisible));
             NotifyPropertyChanged(nameof(IsWaitLabelVisible));
-            NotifyPropertyChanged(nameof(TimerLabelForegroundColor));
+
+            NotifyPropertyChanged(nameof(IsAppActive));
         }
 
         #endregion
