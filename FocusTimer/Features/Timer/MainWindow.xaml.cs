@@ -23,11 +23,11 @@ namespace FocusTimer.Features.Timer
             {
                 DataContext = ViewModel
             }.Show();
-
-            new ChartWindow().Show();
         }
 
         private readonly MainViewModel ViewModel = new();
+
+        private ChartWindow? OpenedChartWindow = null;
 
         #region 이벤트 핸들러
 
@@ -51,7 +51,14 @@ namespace FocusTimer.Features.Timer
 
         private void ChartItem_Click(object sender, RoutedEventArgs e)
         {
-            new ChartWindow().Show();
+            if (OpenedChartWindow == null)
+            {
+                OpenedChartWindow = new ChartWindow();
+                OpenedChartWindow.Closed += (_, _) => { OpenedChartWindow = null; };
+            }
+
+            OpenedChartWindow.Show();
+            OpenedChartWindow.Activate();
         }
 
         private void InfoItem_Click(object sender, RoutedEventArgs e)

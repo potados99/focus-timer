@@ -28,32 +28,9 @@ namespace FocusTimer
     {
         public ChartWindow()
         {
-
             InitializeComponent();
 
             DataContext = ViewModel;
-        }
-
-        private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
-
-        private void OnMaximizeRestoreButtonClick(object sender, RoutedEventArgs e)
-        {
-            if (this.WindowState == WindowState.Maximized)
-            {
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this.WindowState = WindowState.Maximized;
-            }
-        }
-
-        private void OnCloseButtonClick(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private readonly ChartViewModel ViewModel = new();
@@ -69,6 +46,16 @@ namespace FocusTimer
                 UpperChart.CoreChart.Update();
                 LowerChart.CoreChart.Update();
             };
+        }
+
+        private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void OnCloseButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

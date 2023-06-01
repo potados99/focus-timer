@@ -17,6 +17,7 @@
         Title="MainWindow" 
         KeyDown="Window_KeyDown"
         Height="{Binding Path=WindowHeight, FallbackValue=160, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        ShowInTaskbar="False"
         Width="230">
 
     <Window.Resources>
