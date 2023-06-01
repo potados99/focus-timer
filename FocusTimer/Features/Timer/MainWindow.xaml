@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FocusTimer.Features.Timer"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
@@ -14,92 +15,118 @@
         ResizeMode="NoResize"
         Background="{x:Null}"
         AllowsTransparency="True"
-        Title="MainWindow" 
+        Title="MainWindow"
         KeyDown="Window_KeyDown"
         Height="{Binding Path=WindowHeight, FallbackValue=160, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
         ShowInTaskbar="False"
         Width="230">
 
     <Window.Resources>
-        <Storyboard x:Key="ShakeHorizontalAnimation" Storyboard.TargetName="LockImage">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
-                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="-4,0,0,0" />
-                <SplineThicknessKeyFrame KeyTime="00:00:00.1" Value="4,0,0,0" />
-                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0,0,0,0" />
+        <Storyboard x:Key="ShakeHorizontalAnimation"
+                    Storyboard.TargetName="LockImage">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin"
+                                              BeginTime="00:00:00">
+                <SplineThicknessKeyFrame KeyTime="00:00:00"
+                                         Value="-4,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.1"
+                                         Value="4,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.2"
+                                         Value="0,0,0,0" />
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
 
-        <Storyboard x:Key="LockingAnimation" Storyboard.TargetName="LockImage">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
-                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,4,0,0" />
-                <SplineThicknessKeyFrame KeyTime="00:00:00.1" Value="0,0,0,0" />
-                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0,0,0,0" />
+        <Storyboard x:Key="LockingAnimation"
+                    Storyboard.TargetName="LockImage">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin"
+                                              BeginTime="00:00:00">
+                <SplineThicknessKeyFrame KeyTime="00:00:00"
+                                         Value="0,4,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.1"
+                                         Value="0,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.2"
+                                         Value="0,0,0,0" />
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
 
-        <Storyboard x:Key="UnlockingAnimation" Storyboard.TargetName="LockImage">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
-                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,-4,0,0" />
-                <SplineThicknessKeyFrame KeyTime="00:00:00.1" Value="0,0,0,0" />
-                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0,0,0,0" />
+        <Storyboard x:Key="UnlockingAnimation"
+                    Storyboard.TargetName="LockImage">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin"
+                                              BeginTime="00:00:00">
+                <SplineThicknessKeyFrame KeyTime="00:00:00"
+                                         Value="0,-4,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.1"
+                                         Value="0,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:00.2"
+                                         Value="0,0,0,0" />
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
 
     <Window.ContextMenu>
         <ContextMenu Style="{StaticResource ModernMenu}">
-            
-            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="ExitItem" Header="종료" Click="ExitItem_Click" IsEnabled="{c:Binding Path=!IsFocusLockHold}">
+
+            <MenuItem Style="{StaticResource ModernMenuItem}"
+                      x:Name="ExitItem"
+                      Header="종료"
+                      Click="ExitItem_Click"
+                      IsEnabled="{c:Binding Path=!IsFocusLockHold}">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource ic_exit_to_app}"/>
+                    <Image Source="{StaticResource ic_exit_to_app}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="ChartItem" Header="통계 대시보드" Click="ChartItem_Click">
+            <MenuItem Style="{StaticResource ModernMenuItem}"
+                      x:Name="ChartItem"
+                      Header="통계 대시보드"
+                      Click="ChartItem_Click">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource ic_chart_bar}"/>
+                    <Image Source="{StaticResource ic_chart_bar}" />
                 </MenuItem.Icon>
             </MenuItem>
 
-            <Separator Style="{StaticResource ModernMenuSeparator}"/>
+            <Separator Style="{StaticResource ModernMenuSeparator}" />
 
             <MenuItem Style="{StaticResource ModernMenuItem}">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource ic_timer_lock_outline}"/>
+                    <Image Source="{StaticResource ic_timer_lock_outline}" />
                 </MenuItem.Icon>
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center">화면 강제 잠금:</TextBlock>
-                        <xctk:IntegerUpDown
-                            AutoSelectBehavior="Never"
-                            AllowTextInput="True"
-                            MouseWheelActiveTrigger="MouseOver"
-                            x:Name="advert_Time" 
-                            Value="{Binding FocusLockHoldDuration, Mode=TwoWay}" 
-                            Minimum="1"
-                            Maximum="9999"
-                            Width="50" 
-                            Foreground="{StaticResource Text.Primary.Foreground}"
-                            Background="Transparent"
-                            Margin="5,0"
-                            />
+                        <xctk:IntegerUpDown AutoSelectBehavior="Never"
+                                            AllowTextInput="True"
+                                            MouseWheelActiveTrigger="MouseOver"
+                                            x:Name="advert_Time"
+                                            Value="{Binding FocusLockHoldDuration, Mode=TwoWay}"
+                                            Minimum="1"
+                                            Maximum="9999"
+                                            Width="50"
+                                            Foreground="{StaticResource Text.Primary.Foreground}"
+                                            Background="Transparent"
+                                            Margin="5,0" />
                         <TextBlock VerticalAlignment="Center">분</TextBlock>
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
 
-            <Separator Style="{StaticResource ModernMenuSeparator}"/>
+            <Separator Style="{StaticResource ModernMenuSeparator}" />
 
-            <MenuItem Style="{StaticResource ModernMenuItem}" x:Name="InfoItem" Header="프로그램 정보" Click="InfoItem_Click">
+            <MenuItem Style="{StaticResource ModernMenuItem}"
+                      x:Name="InfoItem"
+                      Header="프로그램 정보"
+                      Click="InfoItem_Click">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource ic_information_outline}"/>
+                    <Image Source="{StaticResource ic_information_outline}" />
                 </MenuItem.Icon>
             </MenuItem>
-            
+
         </ContextMenu>
     </Window.ContextMenu>
 
-    <Border CornerRadius="6,6,6,6" Background="{StaticResource Window.Border.Brush}">
-        <Border BorderThickness="1" CornerRadius="6,6,6,6" Background="{StaticResource Window.Background}">
+    <Border CornerRadius="6,6,6,6"
+            Background="{StaticResource Window.Border.Brush}">
+        <Border BorderThickness="1"
+                CornerRadius="6,6,6,6"
+                Background="{StaticResource Window.Background}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{Binding FixedPartLength, FallbackValue=1.4*}" />
@@ -114,12 +141,26 @@
                         <ColumnDefinition Width="1.5*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" Click="Lock_Click" ToolTip="{Binding LockButtonToolTip}">
-                        <Image x:Name="LockImage" Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <Button Grid.Column="0"
+                            Background="Transparent"
+                            Style="{StaticResource HoverOpacityEffect}"
+                            Click="Lock_Click"
+                            ToolTip="{Binding LockButtonToolTip}">
+                        <Image x:Name="LockImage"
+                               Source="{Binding LockImage, FallbackValue={StaticResource ic_lock}}"
+                               Width="16"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
                     </Button>
-                    <Label Grid.Column="1" Content="{Binding ElapsedTime, FallbackValue=06:36:12}" Style="{StaticResource BigTimerLabel}" IsEnabled="{Binding IsAnyAppActive}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Label Grid.Column="1"
+                           Content="{Binding ElapsedTime, FallbackValue=06:36:12}"
+                           Style="{StaticResource BigTimerLabel}"
+                           IsEnabled="{Binding IsAnyAppActive}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
 
-                    <Grid Grid.Column="2" HorizontalAlignment="Left">
+                    <Grid Grid.Column="2"
+                          HorizontalAlignment="Left">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -128,28 +169,44 @@
                         <Grid.ContextMenu>
                             <ContextMenu ItemsSource="{Binding ConcentrationContextMenu}">
                                 <ContextMenu.Style>
-                                    <Style TargetType="ContextMenu" BasedOn="{StaticResource ModernMenu}">
+                                    <Style TargetType="ContextMenu"
+                                           BasedOn="{StaticResource ModernMenu}">
                                         <Setter Property="ItemContainerStyle">
                                             <Setter.Value>
-                                                <Style TargetType="MenuItem" BasedOn="{StaticResource ModernMenuItem}">
-                                                    <Setter Property="IsCheckable" Value="{Binding Path=IsCheckable}" />
-                                                    <Setter Property="IsChecked" Value="{Binding Path=IsChecked, Mode=TwoWay}" />
-                                                    <Setter Property="Icon" Value="{Binding Path=Icon}" />
-                                                    <Setter Property="Header" Value="{Binding Path=Header}" />
-                                                    <Setter Property="ItemsSource" Value="{Binding Path=Children}" />
+                                                <Style TargetType="MenuItem"
+                                                       BasedOn="{StaticResource ModernMenuItem}">
+                                                    <Setter Property="IsCheckable"
+                                                            Value="{Binding Path=IsCheckable}" />
+                                                    <Setter Property="IsChecked"
+                                                            Value="{Binding Path=IsChecked, Mode=TwoWay}" />
+                                                    <Setter Property="Icon"
+                                                            Value="{Binding Path=Icon}" />
+                                                    <Setter Property="Header"
+                                                            Value="{Binding Path=Header}" />
+                                                    <Setter Property="ItemsSource"
+                                                            Value="{Binding Path=Children}" />
                                                 </Style>
                                             </Setter.Value>
                                         </Setter>
                                     </Style>
-                                    
+
                                 </ContextMenu.Style>
                             </ContextMenu>
                         </Grid.ContextMenu>
 
-                        <Label Grid.Row="0" Content="집중도" Style="{StaticResource WhiteTextLabel}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                        <Label Grid.Row="1" Content="{Binding Concentration, FallbackValue=92%}" Style="{StaticResource WhiteTextLabel}" Foreground="{Binding TimerLabelForegroundColor, FallbackValue={StaticResource Text.Primary.Foreground}}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <Label Grid.Row="0"
+                               Content="집중도"
+                               Style="{StaticResource WhiteTextLabel}"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Center" />
+                        <Label Grid.Row="1"
+                               Content="{Binding Concentration, FallbackValue=92%}"
+                               Style="{StaticResource WhiteTextLabel}"
+                               Foreground="{Binding TimerLabelForegroundColor, FallbackValue={StaticResource Text.Primary.Foreground}}"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Center" />
                     </Grid>
-                    
+
                 </Grid>
 
                 <!-- 확대되었을 때에(expanded) 보이는 영역 -->
@@ -159,18 +216,24 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Separator Grid.Row="0" Background="{StaticResource Separator.Background}" Margin="0"/>
+                    <Separator Grid.Row="0"
+                               Background="{StaticResource Separator.Background}"
+                               Margin="0" />
 
-                    <Grid Grid.Row="1" Margin="0, 4, 0, 4">
+                    <Grid Grid.Row="1"
+                          Margin="0, 4, 0, 4">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
 
-                        <local:TimerSlot Grid.Row="0" DataContext="{Binding TimerSlots[0]}" />
-                        <local:TimerSlot Grid.Row="1" DataContext="{Binding TimerSlots[1]}"/>
-                        <local:TimerSlot Grid.Row="2" DataContext="{Binding TimerSlots[2]}"/>
+                        <local:TimerSlot Grid.Row="0"
+                                         DataContext="{Binding TimerSlots[0]}" />
+                        <local:TimerSlot Grid.Row="1"
+                                         DataContext="{Binding TimerSlots[1]}" />
+                        <local:TimerSlot Grid.Row="2"
+                                         DataContext="{Binding TimerSlots[2]}" />
                     </Grid>
                 </Grid>
             </Grid>

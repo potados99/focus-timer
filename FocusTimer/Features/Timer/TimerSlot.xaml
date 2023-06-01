@@ -1,22 +1,21 @@
 ﻿<UserControl x:Class="FocusTimer.Features.Timer.TimerSlot"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:timer="clr-namespace:FocusTimer.Features.Timer" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:timer="clr-namespace:FocusTimer.Features.Timer"
              d:DataContext="{d:DesignInstance Type=timer:TimerSlotViewModel}"
              Loaded="UserControl_Loaded"
-             mc:Ignorable="d" 
-             d:DesignHeight="20" d:DesignWidth="180">
-
-    <UserControl.Resources>
- 
-    </UserControl.Resources>
+             mc:Ignorable="d"
+             d:DesignHeight="20"
+             d:DesignWidth="180">
 
     <Grid>
 
         <!-- 앱이 있을 때 -->
-        <Grid d:Visibility="Visible" Visibility="{Binding IsAppVisible}" Margin="8, 0, 8, 0" >
+        <Grid d:Visibility="Visible"
+              Visibility="{Binding IsAppVisible}"
+              Margin="8, 0, 8, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="3*" />
@@ -24,21 +23,48 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Source="{Binding CurrentApp.Image}" d:Source="{StaticResource ic_chart_bar}" Width="20" VerticalAlignment="Center" HorizontalAlignment="Left" />
-            <Label Grid.Column="1" Style="{StaticResource PrimaryTextLabel}" VerticalAlignment="Center" HorizontalAlignment="Left" ToolTip="{Binding CurrentApp.AppName}">
-                <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentApp.AppName, FallbackValue=Chrome}" />
+            <Image Grid.Column="0"
+                   Source="{Binding CurrentApp.Image}"
+                   d:Source="{StaticResource ic_chart_bar}"
+                   Width="20"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource PrimaryTextLabel}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   ToolTip="{Binding CurrentApp.AppName}">
+                <TextBlock TextTrimming="CharacterEllipsis"
+                           Text="{Binding CurrentApp.AppName, FallbackValue=Chrome}" />
             </Label>
-            <Label Grid.Column="2" Style="{StaticResource SmallTimerLabel}" Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}" IsEnabled="{Binding IsAppActive}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Button Grid.Column="3" Background="Transparent" Style="{StaticResource HoverOpacityEffect}" HorizontalContentAlignment="Right" Click="Clear_Click">
-                <Image Source="{StaticResource ic_close_box}" Width="14"/>
+            <Label Grid.Column="2"
+                   Style="{StaticResource SmallTimerLabel}"
+                   Content="{Binding CurrentApp.Elapsed, FallbackValue=00:00:00}"
+                   IsEnabled="{Binding IsAppActive}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+            <Button Grid.Column="3"
+                    Background="Transparent"
+                    Style="{StaticResource HoverOpacityEffect}"
+                    HorizontalContentAlignment="Right"
+                    Click="Clear_Click">
+                <Image Source="{StaticResource ic_close_box}"
+                       Width="14" />
             </Button>
         </Grid>
 
         <!-- 앱이 없을 때 -->
-        <Button d:Visibility="Hidden" Visibility="{Binding IsSetButtonVisible}" HorizontalContentAlignment="Stretch" Background="#BB454545" Margin="4, 2, 4, 2" Style="{StaticResource HoverOpacityEffect}" Click="Register_Click">
+        <Button d:Visibility="Hidden"
+                Visibility="{Binding IsSetButtonVisible}"
+                HorizontalContentAlignment="Stretch"
+                Background="#BB454545"
+                Margin="4, 2, 4, 2"
+                Style="{StaticResource HoverOpacityEffect}"
+                Click="Register_Click">
             <Button.Resources>
                 <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="4"/>
+                    <Setter Property="CornerRadius"
+                            Value="4" />
                 </Style>
             </Button.Resources>
             <Grid Margin="8, 0, 8, 0">
@@ -48,13 +74,28 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{StaticResource ic_plus_box_outline}" Width="14" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <Label Grid.Column="1" Content="프로그램 등록" Foreground="White" FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Image Grid.Column="0"
+                       Source="{StaticResource ic_plus_box_outline}"
+                       Width="14"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left" />
+                <Label Grid.Column="1"
+                       Content="프로그램 등록"
+                       Foreground="White"
+                       FontSize="14"
+                       Padding="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center" />
             </Grid>
         </Button>
 
         <!-- 앱이 정해지는 중일 때 -->
-        <Label d:Visibility="Hidden" Visibility="{Binding IsWaitLabelVisible}" Style="{StaticResource PrimaryTextLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding WindowSelectPrompt}"/>
+        <Label d:Visibility="Hidden"
+               Visibility="{Binding IsWaitLabelVisible}"
+               Style="{StaticResource PrimaryTextLabel}"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Content="{Binding WindowSelectPrompt}" />
 
     </Grid>
 </UserControl>

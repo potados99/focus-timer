@@ -11,9 +11,13 @@
         AllowsTransparency="True"
         Background="{x:Null}"
         Topmost="True"
-        Title="BorderWindow" Height="450" Width="800"
+        Title="BorderWindow"
+        Height="450"
+        Width="800"
         ShowInTaskbar="False">
-    <Border BorderThickness="15" BorderBrush="{StaticResource Window.Background.Warning}" Visibility="{Binding IsWarningBorderVisible, FallbackValue=Visible}">
-        
+    <Border BorderThickness="15"
+            BorderBrush="{StaticResource Window.Background.Warning}"
+            Visibility="{Binding IsWarningBorderVisible, FallbackValue=Visible}">
+
     </Border>
 </Window>
