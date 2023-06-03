@@ -503,7 +503,7 @@ namespace FocusTimer.Features.Timer
             IsCheckable = false,
             IsChecked = false,
             Icon = new System.Windows.Controls.Image() { Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage },
-            Header = "집중도 계산에 포함할 프로그램",
+            Header = "집중도 계산에 포함할 프로그램  ",
         };
 
         public BindableMenuItem[] ConcentrationContextMenu
