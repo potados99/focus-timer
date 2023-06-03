@@ -12,7 +12,6 @@
         Width="1000"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
-        Topmost="True"
         AllowsTransparency="True"
         WindowStyle="None"
         Background="{StaticResource Window.Background}">
