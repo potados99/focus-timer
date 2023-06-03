@@ -13,7 +13,22 @@ namespace FocusTimer.Lib
 
         public const int SW_MAXIMIZE = 3;
         public const int SW_MINIMIZE = 6;
-      
+
+        public const int ALT = 0xA4;
+        public const int EXTENDEDKEY = 0x1;
+        public const int KEYUP = 0x2;
+        public const uint Restore = 9;
+
+        [DllImport("user32.dll")]
+        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern int ShowWindow(IntPtr hWnd, uint Msg);
+
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
 
