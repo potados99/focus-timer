@@ -193,6 +193,7 @@ namespace FocusTimer.Features.Charting.Processing
         private string[] AppPaths = new string[]
             {
                 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
+                "C:\\Program Files (x86)\\Hnc\\Office 2020\\HOffice110\\Bin\\Hwp.exe",
                 "C:\\Program Files (x86)\\Kakao\\KakaoTalk\\KakaoTalk.exe",
                 "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
                 "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
