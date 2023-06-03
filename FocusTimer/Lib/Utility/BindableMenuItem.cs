@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -11,7 +12,10 @@ namespace FocusTimer.Lib.Utility
 {
     internal class BindableMenuItem
     {
+        public delegate void ClickHandler(object sender, RoutedEventArgs e);
         public delegate void CheckHandler(bool isChecked);
+
+        public event ClickHandler OnClick;
         public event CheckHandler OnCheck;
 
         public bool IsCheckable { get; set; }       

@@ -42,7 +42,7 @@
                                        />
 
                             <ContentPresenter Grid.Column="0" x:Name="Icon" Content="{TemplateBinding Icon}" Width="14" HorizontalAlignment="Center" />
-                            <ContentPresenter Grid.Column="1" x:Name="Header" Content="{TemplateBinding Header}" VerticalAlignment="Center" Margin="0 0 30 0" />
+                            <ContentPresenter Grid.Column="1" x:Name="Header" Content="{TemplateBinding Header}" VerticalAlignment="Center" Margin="0 0 8 0" />
                             <Grid Grid.Column="2" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center" Visibility="Collapsed">
                                 <Path x:Name="ArrowPanelPath" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z"/>
                             </Grid>

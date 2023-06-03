@@ -81,6 +81,11 @@ namespace FocusTimer.Features.Timer
                 );
         }
 
+        private void StartFocusLockItem_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartFocusLockWithHold();
+        }
+
         private void Lock_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button { ToolTip: ToolTip toolTip })

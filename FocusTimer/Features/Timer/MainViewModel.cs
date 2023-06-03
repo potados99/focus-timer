@@ -220,6 +220,7 @@ namespace FocusTimer.Features.Timer
 
                 // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
                 NotifyPropertyChanged(nameof(FocusLockHoldDuration));
+                NotifyPropertyChanged(nameof(StartFocusLockItemLabel));
             }
         }
 
@@ -252,21 +253,21 @@ namespace FocusTimer.Features.Timer
             }
         }
 
-        public void ToggleFocusLock()
+        public string StartFocusLockItemLabel
         {
-            if (IsFocusLocked)
+            get
             {
-                UnlockFocus();
+                return $"{FocusLockHoldDuration}분간 강제 잠금";
             }
-            else
-            {
-                LockFocus();
-            }
+        }
+
+        public void StartFocusLockWithHold()
+        {
+            LockFocusWithHold();
 
             Render();
         }
-
-        private void LockFocus()
+       private void LockFocusWithHold()
         {
             FocusLockTimeSpan = new TimeSpan(0, FocusLockHoldDuration, 0);
             FocusLockTimer.Interval = TimeSpan.FromSeconds(1);
@@ -290,6 +291,28 @@ namespace FocusTimer.Features.Timer
             StartAnimation("LockingAnimation");
         }
 
+        public void ToggleFocusLock()
+        {
+            if (IsFocusLocked)
+            {
+                UnlockFocus();
+            }
+            else
+            {
+                LockFocus();
+            }
+
+            Render();
+        }
+
+        private void LockFocus()
+        {
+            FocusLockTimer.Stop();
+            IsFocusLocked = true;
+
+            StartAnimation("LockingAnimation");
+        }
+
         private void UnlockFocus()
         {
             if (IsFocusLockHold)
@@ -307,7 +330,6 @@ namespace FocusTimer.Features.Timer
             IsFocusLocked = false;
             StartAnimation("UnlockingAnimation");
         }
-
 
         private void RestoreFocusIfNeeded(IntPtr prev, IntPtr current)
         {
