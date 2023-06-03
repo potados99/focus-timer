@@ -16,6 +16,7 @@
         Background="{x:Null}"
         AllowsTransparency="True"
         Title="MainWindow"
+        Closed="Window_Closed"
         KeyDown="Window_KeyDown"
         Height="{Binding Path=WindowHeight, FallbackValue=160, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
         ShowInTaskbar="False"

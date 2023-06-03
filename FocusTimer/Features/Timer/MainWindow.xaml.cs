@@ -49,6 +49,11 @@ namespace FocusTimer.Features.Timer
             }
         }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
         private void ExitItem_Click(object sender, RoutedEventArgs e)
         {
             App.Current.Shutdown();

@@ -10,6 +10,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="{x:Null}"
+        Closed="Window_Closed"
         KeyDown="Window_KeyDown"
         Topmost="True"
         Title="BorderWindow"
