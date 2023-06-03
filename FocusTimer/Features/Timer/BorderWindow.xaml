@@ -10,6 +10,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="{x:Null}"
+        KeyDown="Window_KeyDown"
         Topmost="True"
         Title="BorderWindow"
         Height="450"

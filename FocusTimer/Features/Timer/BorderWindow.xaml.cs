@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace FocusTimer.Features.Timer
 {
@@ -10,6 +11,15 @@ namespace FocusTimer.Features.Timer
         public BorderWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.System && e.SystemKey == Key.F4)
+            {
+                // ALT + F4가 떨어지면 앱을 종료합니다.
+                Application.Current.Shutdown();
+            }
         }
     }
 }

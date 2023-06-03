@@ -42,6 +42,11 @@ namespace FocusTimer.Features.Timer
             {
                 ViewModel.CancelRegisteringApp();
             }
+            if (e.Key == Key.System && e.SystemKey == Key.F4)
+            {
+                // ALT + F4가 떨어지면 앱을 종료합니다.
+                Application.Current.Shutdown();
+            }
         }
 
         private void ExitItem_Click(object sender, RoutedEventArgs e)
