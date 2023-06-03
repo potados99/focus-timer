@@ -174,7 +174,7 @@ namespace FocusTimer.Features.Charting
                         new PrimaryMetricItem
                         {
                             Name = "Avg. 집중도",
-                            Value = $"{100 * UsageRepository.GetAppUsages().Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Sum(u => u.Usage):00}%"
+                            Value = $"{100 * UsageRepository.GetAppUsages().Where(u => u.IsConcentrated).Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Sum(u => u.Usage):00}%"
                         }
                     };
                 }
@@ -193,7 +193,7 @@ namespace FocusTimer.Features.Charting
                         new PrimaryMetricItem
                         {
                             Name = "집중도",
-                            Value = $"{100 * UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage):00}%"
+                            Value = $"{100 * UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Where(u => u.IsConcentrated).Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage):00}%"
                         }
                     };
                 }
