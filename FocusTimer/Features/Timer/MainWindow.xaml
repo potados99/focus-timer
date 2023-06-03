@@ -201,8 +201,8 @@
                                HorizontalAlignment="Center" />
                         <Label Grid.Row="1"
                                Content="{Binding Concentration, FallbackValue=92%}"
-                               Style="{StaticResource WhiteTextLabel}"
-                               Foreground="{Binding TimerLabelForegroundColor, FallbackValue={StaticResource Text.Primary.Foreground}}"
+                               Style="{StaticResource ConcentrationLabel}"
+                               IsEnabled="{Binding IsOnConcentraion}"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Center" />
                     </Grid>

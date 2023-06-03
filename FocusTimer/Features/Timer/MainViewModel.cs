@@ -81,6 +81,7 @@ namespace FocusTimer.Features.Timer
             NotifyPropertyChanged(nameof(LockButtonToolTip));
 
             NotifyPropertyChanged(nameof(Concentration));
+            NotifyPropertyChanged(nameof(IsOnConcentraion));
         }
 
         #region Main Window의 확장 및 축소
@@ -464,6 +465,14 @@ namespace FocusTimer.Features.Timer
                 double concentration = 100 * elapsedTotal / AlwaysOnStopwatch.ElapsedMilliseconds;
 
                 return concentration + "%";
+            }
+        }
+
+        public bool IsOnConcentraion
+        {
+            get
+            {
+                return TimerSlots.Any(s => s.IsAppActive && s.IsAppCountedOnConcentrationCalculation);
             }
         }
 

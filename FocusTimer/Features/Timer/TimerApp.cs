@@ -62,7 +62,7 @@ namespace FocusTimer.Features.Timer
             }
         }
 
-        public bool IsAppActive
+        public bool IsActive
         {
             get
             {
@@ -72,7 +72,7 @@ namespace FocusTimer.Features.Timer
 
         public void Render()
         {
-            if (IsAppActive)
+            if (IsActive)
             {
                 ActiveStopwatch.Start();
             }

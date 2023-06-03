@@ -54,9 +54,18 @@ namespace FocusTimer.Features.Timer
         {
             get
             {
-                return CurrentApp != null && CurrentApp.IsAppActive;
+                return CurrentApp != null && CurrentApp.IsActive;
             }
         }
+
+        public bool IsAppCountedOnConcentrationCalculation
+        {
+            get
+            {
+                return CurrentApp != null && CurrentApp.IsCountedOnConcentrationCalculation;
+            }
+        }
+
         public string WindowSelectPrompt { get; set; } = "창을 클릭해주세요";
 
         #endregion
