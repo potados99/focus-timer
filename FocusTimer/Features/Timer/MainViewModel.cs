@@ -40,7 +40,7 @@ namespace FocusTimer.Features.Timer
 
             watcher.OnFocused += (prev, current) =>
             {
-                if (CurrentRegisteringTimerSlot != null)
+                if (CurrentRegisteringTimerSlot != null && !APIWrapper.IsThisProcessForeground())
                 {
                     FinishRegisteringApp(new TimerApp(current));
                 }
