@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FocusTimer.Lib
 {
     public static class APIWrapper
     {
-        public static List<APIHook> CurrentHooks = new(); // 가비지 컬렉션 당하는 것을 막기 위해서는 콜백을 모두 들고 있어야 해요...
-
         #region 창
 
         public static string GetClassName(IntPtr windowHandle)
@@ -55,25 +54,18 @@ namespace FocusTimer.Lib
         #endregion
 
         #region 입력
-        
-        public static void HookKeyboard(Action callback)
+
+        public static long GetElapsedFromLastInput()
         {
-            var hook = new APIHook(API.WH_KEYBOARD_LL);
+            API.LASTINPUTINFO lastInputInfo = new API.LASTINPUTINFO();
+            lastInputInfo.cbSize = Marshal.SizeOf(lastInputInfo);
+            lastInputInfo.dwTime = 0;
 
-            hook.HookProc += (_, _, _) => callback();
-            hook.Install();
+            API.GetLastInputInfo(out lastInputInfo);
 
-            CurrentHooks.Add(hook);
-        }
+            int lastInputTick = lastInputInfo.dwTime;
 
-        public static void HookMouse(Action callback)
-        {
-            var hook = new APIHook(API.WH_MOUSE_LL);
-
-            hook.HookProc += (_, _, _) => callback();
-            hook.Install();
-
-            CurrentHooks.Add(hook);
+            return Environment.TickCount - lastInputTick;
         }
 
         #endregion

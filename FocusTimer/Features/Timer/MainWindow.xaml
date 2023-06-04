@@ -116,7 +116,6 @@
                 </MenuItem.Icon>
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <!-- TODO 구현해야,,! -->
                         <TextBlock VerticalAlignment="Center">동작이 없으면 타이머 정지:</TextBlock>
                         <xctk:IntegerUpDown AutoSelectBehavior="Never"
                                             AllowTextInput="True"

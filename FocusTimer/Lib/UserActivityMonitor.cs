@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace FocusTimer.Lib
 {
@@ -16,7 +17,7 @@ namespace FocusTimer.Lib
         public event StateChangeHandler? OnActivated;
         public event StateChangeHandler? OnDeactivated;
 
-        private readonly CountdownTimer Timer = new();
+        private readonly DispatcherTimer Timer = new();
 
         public int Timeout { get; set; }
 
@@ -24,35 +25,32 @@ namespace FocusTimer.Lib
         {
             Timeout = Settings.GetActivityTimeout();
 
-            APIWrapper.HookKeyboard(() => { StartTimer(); });
-            APIWrapper.HookMouse(() => { StartTimer(); });
-
-            SetupTimer();
-            StartTimer();
-        }
-
-        private void SetupTimer()
-        {
-            Timer.OnFinish += () => { OnDeactivated?.Invoke(); };
-        }
-
-        private void StartTimer()
-        {
-            if (!Timer.IsEnabled)
+            Timer.Interval = TimeSpan.FromMilliseconds(500);
+            Timer.Tick += (_, _) =>
             {
-                OnActivated?.Invoke();
-            }
+                if (IsActive && !WasActive)
+                {
+                    OnActivated?.Invoke();
+                }
 
-            Timer.Stop();
-            Timer.Duration = TimeSpan.FromSeconds(Timeout);
+                if (!IsActive && WasActive)
+                {
+                    OnDeactivated?.Invoke();
+                }
+
+                WasActive = IsActive;
+            };
+
             Timer.Start();
         }
+
+        private bool WasActive = true;
 
         public bool IsActive
         {
             get
             {
-                return Timer.IsEnabled;
+                return APIWrapper.GetElapsedFromLastInput() < (Timeout * 1000);
             }
         }
     }

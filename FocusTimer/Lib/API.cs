@@ -57,5 +57,18 @@ namespace FocusTimer.Lib
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr CallNextHookEx(IntPtr hhk, int code, IntPtr wParam, IntPtr lParam);
 
+        [DllImport("user32.dll")]
+        public static extern bool GetLastInputInfo(out LASTINPUTINFO plii);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LASTINPUTINFO
+        {
+            public static readonly int SizeOf = Marshal.SizeOf(typeof(LASTINPUTINFO));
+
+            [MarshalAs(UnmanagedType.U4)]
+            public int cbSize;
+            [MarshalAs(UnmanagedType.U4)]
+            public int dwTime;
+        }
     }
 }
