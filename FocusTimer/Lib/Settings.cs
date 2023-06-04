@@ -42,5 +42,20 @@ namespace FocusTimer.Lib
 
             Properties.Settings.Default.Save();
         }
+
+        public static int GetActivityTimeout()
+        {
+            int got = Properties.Settings.Default.ActivityTimeout;
+            int fallback = 10;
+
+            return got <= 0 ? fallback : got;
+        }
+
+        public static void SetActivityTimeout(int timeout)
+        {
+            Properties.Settings.Default.ActivityTimeout = timeout;
+
+            Properties.Settings.Default.Save();
+        }
     }
 }

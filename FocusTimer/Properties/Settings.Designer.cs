@@ -70,5 +70,17 @@ namespace FocusTimer.Properties {
                 this["FocusLockHoldDuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ActivityTimeout {
+            get {
+                return ((int)(this["ActivityTimeout"]));
+            }
+            set {
+                this["ActivityTimeout"] = value;
+            }
+        }
     }
 }

@@ -121,7 +121,7 @@
                         <xctk:IntegerUpDown AutoSelectBehavior="Never"
                                             AllowTextInput="True"
                                             MouseWheelActiveTrigger="MouseOver"
-                                            Value="{Binding FocusLockHoldDuration2, Mode=TwoWay}"
+                                            Value="{Binding ActivityTimeout, Mode=TwoWay}"
                                             Minimum="1"
                                             Maximum="9999"
                                             Width="50"

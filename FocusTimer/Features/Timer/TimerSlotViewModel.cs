@@ -1,4 +1,5 @@
-﻿using FocusTimer.Lib.Component;
+﻿using FocusTimer.Lib;
+using FocusTimer.Lib.Component;
 using System.Windows;
 using System.Windows.Media;
 

@@ -20,13 +20,23 @@ namespace FocusTimer.Features.Timer
     {
         public MainViewModel()
         {
+            UserActivityMonitor.Instance.OnActivated += () =>
+            {
+                RenderAll();
+            };
+
+            UserActivityMonitor.Instance.OnDeactivated += () =>
+            {
+                RenderAll();
+            };
+
             foreach (var slot in TimerSlots)
             {
                 slot.OnRegisterApplication += () => StartRegisteringApplication(slot);
                 slot.OnClearApplication += () => ClearApplication(slot);
             }
 
-            Watcher watcher = new();
+            WindowWatcher watcher = new();
 
             watcher.OnFocused += (prev, current) =>
             {
@@ -46,7 +56,10 @@ namespace FocusTimer.Features.Timer
         public void Loaded()
         {
             RestoreApps();
-            StartTimer();
+
+            InitGlobalTimer();
+            InitFocusLock();
+
             RenderAll();
         }
 
@@ -169,6 +182,16 @@ namespace FocusTimer.Features.Timer
 
         #region 스탑워치와 글로벌 틱 타이머
 
+        public void InitGlobalTimer()
+        {
+            OneSecTickTimer.Tick += (_, _) => RenderAll();
+            OneSecTickTimer.Interval = TimeSpan.FromSeconds(1);
+            OneSecTickTimer.Start();
+
+            AlwaysOnStopwatch.Start();
+            ActiveStopwatch.Start();
+        }
+
         private readonly Stopwatch ActiveStopwatch = new();
         private readonly Stopwatch AlwaysOnStopwatch = new();
         private readonly DispatcherTimer OneSecTickTimer = new();
@@ -181,22 +204,18 @@ namespace FocusTimer.Features.Timer
             }
         }
 
-        public void StartTimer()
-        {
-            OneSecTickTimer.Tick += (_, _) => RenderAll();
-            OneSecTickTimer.Interval = new TimeSpan(0, 0, 0, 1);
-            OneSecTickTimer.Start();
-
-            AlwaysOnStopwatch.Start();
-            ActiveStopwatch.Start();
-        }
-
         #endregion
 
         #region 포커스 잠금과 홀드 타이머
 
-        private readonly DispatcherTimer FocusLockTimer = new();
-        private TimeSpan FocusLockTimeSpan = new();
+        public void InitFocusLock()
+        {
+            FocusLockTimer.OnFinish += () => {
+                UnlockFocus();
+            };
+        }
+
+        private readonly CountdownTimer FocusLockTimer = new();
 
         public bool IsFocusLocked { get; set; } = false;
 
@@ -247,7 +266,7 @@ namespace FocusTimer.Features.Timer
         {
             get
             {
-                _LockButtonToolTip.Content = $"{(int)Math.Ceiling(FocusLockTimeSpan.TotalMinutes)}분 남았습니다.";
+                _LockButtonToolTip.Content = $"{(int)Math.Ceiling(FocusLockTimer.TimeLeft.TotalMinutes)}분 남았습니다.";
 
                 return IsFocusLockHold ? _LockButtonToolTip : null;
             }
@@ -269,22 +288,7 @@ namespace FocusTimer.Features.Timer
         }
        private void LockFocusWithHold()
         {
-            FocusLockTimeSpan = new TimeSpan(0, FocusLockHoldDuration, 0);
-            FocusLockTimer.Interval = TimeSpan.FromSeconds(1);
-            FocusLockTimer.Tick += (_, _) =>
-            {
-                if (FocusLockTimeSpan == TimeSpan.Zero || FocusLockTimeSpan.TotalSeconds <= 0)
-                {
-                    FocusLockTimer.Stop();
-                    UnlockFocus();
-                }
-                else
-                {
-                    FocusLockTimeSpan = FocusLockTimeSpan.Add(TimeSpan.FromSeconds(-1));
-                }
-
-                Render();
-            };
+            FocusLockTimer.Duration = TimeSpan.FromMinutes(FocusLockHoldDuration);
             FocusLockTimer.Start();
 
             IsFocusLocked = true;
@@ -345,7 +349,7 @@ namespace FocusTimer.Features.Timer
                 return;
             }
 
-            if (Watcher.SkipList.Contains(APIWrapper.GetForegroundWindowClass()))
+            if (WindowWatcher.SkipList.Contains(APIWrapper.GetForegroundWindowClass()))
             {
                 // 현재 포커스가 시스템 UI로 가 있다면 넘어갑니다.
                 return;
@@ -533,6 +537,26 @@ namespace FocusTimer.Features.Timer
                     .ToArray();
 
                 return new BindableMenuItem[] { WhichAppToIncludeMenuItem };
+            }
+        }
+
+        #endregion
+
+        #region 동작 감지
+
+        public int ActivityTimeout
+        {
+            get
+            {
+                return Settings.GetActivityTimeout();
+            }
+            set
+            {
+                Settings.SetActivityTimeout(value);
+                UserActivityMonitor.Instance.Timeout = value;
+
+                // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
+                NotifyPropertyChanged(nameof(ActivityTimeout));
             }
         }
 

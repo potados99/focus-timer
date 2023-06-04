@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace FocusTimer.Lib
 {
-    class Watcher
+    public class WindowWatcher
     {
         public delegate void FocusedEventHandler(IntPtr prev, IntPtr current);
 
