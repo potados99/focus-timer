@@ -16,7 +16,8 @@
         Title="BorderWindow"
         Height="450"
         Width="800"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        >
     <Border BorderThickness="15"
             BorderBrush="{StaticResource Text.Timer.Foreground.Disabled}"
             Visibility="{Binding IsWarningBorderVisible, FallbackValue=Visible}">

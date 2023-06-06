@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,10 @@
 	<None Remove="Costura64\libHarfBuzzSharp.dll" />
 	<None Remove="Costura64\libSkiaSharp.dll" />
     <None Remove="Resources\digital-7.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
