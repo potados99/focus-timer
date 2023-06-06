@@ -9,13 +9,10 @@
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+	<GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Costura32\libHarfBuzzSharp.dll" />
-    <None Remove="Costura32\libSkiaSharp.dll" />
-	<None Remove="Costura64\libHarfBuzzSharp.dll" />
-	<None Remove="Costura64\libSkiaSharp.dll" />
     <None Remove="Resources\digital-7.ttf" />
   </ItemGroup>
 
@@ -24,19 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Costura32\libHarfBuzzSharp.dll" />
-    <EmbeddedResource Include="Costura32\libSkiaSharp.dll" />
-	<EmbeddedResource Include="Costura64\libHarfBuzzSharp.dll" />
-	<EmbeddedResource Include="Costura64\libSkiaSharp.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
-    <PackageReference Include="Costura.Fody" Version="5.7.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.32" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 

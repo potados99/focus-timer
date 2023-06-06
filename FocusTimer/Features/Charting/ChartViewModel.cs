@@ -23,16 +23,19 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using FocusTimer.Features.Charting.Processing;
 using FocusTimer.Features.Charting.Repository;
+using FocusTimer.Features.Charting.Entity;
 
 namespace FocusTimer.Features.Charting
 {
     internal class ChartViewModel : BaseModel
     {
         public delegate void ChartNeedsUpdateEventHandler();
-        public event ChartNeedsUpdateEventHandler OnChartNeedsUpdate;
+        public event ChartNeedsUpdateEventHandler? OnChartNeedsUpdate;
 
         public void Loaded()
         {
+            var context = new FocusTimerDatabaseContext();
+
             LiveCharts.Configure(config =>
                 config
                     // registers SkiaSharp as the library backend
@@ -97,6 +100,9 @@ namespace FocusTimer.Features.Charting
             NotifyPropertyChanged(nameof(SeriesCollection2));
             NotifyPropertyChanged(nameof(SharedXAxis));
             NotifyPropertyChanged(nameof(YAxis));
+
+            
+            context.Initialize();
         }
 
         public ObservableCollection<ISeries> SeriesCollection1 { get; set; }

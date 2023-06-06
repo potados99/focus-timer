@@ -1,9 +1,12 @@
-﻿using FocusTimer.Lib;
+﻿using FocusTimer.Features.Charting.Entity;
+using FocusTimer.Features.Charting.Repository;
+using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace FocusTimer.Features.Timer
@@ -15,9 +18,7 @@ namespace FocusTimer.Features.Timer
     public class TimerApp
     {
         public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle).ExecutablePath())
-        {
-
-        }
+        { }
 
         public TimerApp(string? executablePath)
         {
@@ -37,28 +38,21 @@ namespace FocusTimer.Features.Timer
             ActiveStopwatch.Reset();
         }
 
-        private readonly Stopwatch ActiveStopwatch = new();
+        #region UI 속성들
 
-        public string ProcessExecutablePath { get; set; }
-
-        public ImageSource? Image { get; set; }
         public string? AppName { get; set; }
 
+        public ImageSource? Image { get; set; }
+
         public bool IsCountedOnConcentrationCalculation { get; set; } = true;
+
+        public string? ProcessExecutablePath { get; set; }
 
         public string Elapsed
         {
             get
             {
                 return ActiveStopwatch.ElapsedString();
-            }
-        }
-
-        public long ElapsedMilliseconds
-        {
-            get
-            {
-                return ActiveStopwatch.ElapsedMilliseconds;
             }
         }
 
@@ -70,16 +64,56 @@ namespace FocusTimer.Features.Timer
             }
         }
 
+        #endregion
+
+        public long ElapsedTicks
+        {
+            get
+            {
+                return ActiveStopwatch.ElapsedTicks;
+            }
+        }
+
+        private readonly Stopwatch ActiveStopwatch = new();
+
         public void Render()
         {
             if (IsActive)
             {
                 ActiveStopwatch.Start();
+                UpdateUsage();
             }
             else
             {
                 ActiveStopwatch.Stop();
             }
         }
+
+        #region 사용량 집계
+
+        private AppUsage? Usage;
+        private long ElapsedTicksOffset = 0;
+
+        private async Task UpdateUsage()
+        {
+            Debug.WriteLine("AppUsage 업데이트!");
+            
+            if (Usage != null && Usage.RegisteredAt.Date < DateTime.Today)
+            {
+                // 날짜가 지났습니다!
+                ElapsedTicksOffset += Usage.Usage;
+                Usage = null;
+            }
+
+            Usage ??= await UsageRepository.CreateAppUsage(ProcessExecutablePath, IsCountedOnConcentrationCalculation);
+
+            Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
+            Usage.UpdatedAt = DateTime.Now;
+            Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
+
+            await UsageRepository.SaveChanges();
+        }
+
+        #endregion
     }
 }

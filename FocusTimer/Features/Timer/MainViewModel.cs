@@ -1,4 +1,6 @@
-﻿using FocusTimer.Lib;
+﻿using FocusTimer.Features.Charting.Entity;
+using FocusTimer.Features.Charting.Repository;
+using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 using System;
@@ -78,6 +80,7 @@ namespace FocusTimer.Features.Timer
             if (IsAnyAppActive)
             {
                 ActiveStopwatch.Start();
+                UpdateUsage();
             }
             else
             {
@@ -96,6 +99,40 @@ namespace FocusTimer.Features.Timer
             NotifyPropertyChanged(nameof(Concentration));
             NotifyPropertyChanged(nameof(IsOnConcentraion));
         }
+
+        #region 사용량 집계
+
+        public long ElapsedTicks
+        {
+            get
+            {
+                return ActiveStopwatch.ElapsedTicks;
+            }
+        }
+
+        private TimerUsage? Usage;
+        private long ElapsedTicksOffset = 0;
+
+        private async Task UpdateUsage()
+        {
+            Debug.WriteLine("TimerUsage 업데이트!");
+
+            if (Usage != null && Usage.StartedAt.Date < DateTime.Today)
+            {
+                // 날짜가 지났습니다!
+                ElapsedTicksOffset += Usage.Usage;
+                Usage = null;
+            }
+
+            Usage ??= await UsageRepository.CreateTimerUsage();
+
+            Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
+            Usage.UpdatedAt = DateTime.Now;
+
+            await UsageRepository.SaveChanges();
+        }
+
+        #endregion
 
         #region Main Window의 확장 및 축소
 
@@ -481,14 +518,14 @@ namespace FocusTimer.Features.Timer
             {
                 var elapsedTotal = TimerSlots
                     .Where(s => s.CurrentApp?.IsCountedOnConcentrationCalculation ?? false)
-                    .Sum(s => s.CurrentApp?.ElapsedMilliseconds ?? 0);
+                    .Sum(s => s.CurrentApp?.ElapsedTicks ?? 0);
 
                 if (elapsedTotal == 0)
                 {
                     return "0%";
                 }
 
-                double concentration = 100 * elapsedTotal / AlwaysOnStopwatch.ElapsedMilliseconds;
+                double concentration = 100 * elapsedTotal / AlwaysOnStopwatch.ElapsedTicks;
 
                 return concentration + "%";
             }
