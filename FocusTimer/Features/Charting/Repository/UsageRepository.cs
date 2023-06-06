@@ -24,7 +24,7 @@ namespace FocusTimer.Features.Charting.Repository
             return c.TimerUsages;
         }
 
-        public static async Task<AppUsage> CreateAppUsage(string appPath, bool IsConcentrated = true)
+        public static AppUsage CreateAppUsage(string appPath, bool IsConcentrated = true)
         {
             var usage = new AppUsage
             {
@@ -35,20 +35,19 @@ namespace FocusTimer.Features.Charting.Repository
                 IsConcentrated = IsConcentrated
             };
             context.AppUsages.Add(usage);
-            await context.SaveChangesAsync();
             return usage;
         }
 
-        public static async Task<TimerUsage> CreateTimerUsage()
+        public static TimerUsage CreateTimerUsage()
         {
             var usage = new TimerUsage();
             context.TimerUsages.Add(usage);
-            await context.SaveChangesAsync();
             return usage;
         }
 
         public static async Task SaveChanges()
         {
+            return;
             await context.SaveChangesAsync();
         }
     }

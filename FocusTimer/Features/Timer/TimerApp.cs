@@ -81,12 +81,13 @@ namespace FocusTimer.Features.Timer
             if (IsActive)
             {
                 ActiveStopwatch.Start();
-                UpdateUsage();
             }
             else
             {
                 ActiveStopwatch.Stop();
             }
+
+            UpdateUsage();
         }
 
         #region 사용량 집계
@@ -94,24 +95,22 @@ namespace FocusTimer.Features.Timer
         private AppUsage? Usage;
         private long ElapsedTicksOffset = 0;
 
-        private async Task UpdateUsage()
-        {
-            Debug.WriteLine("AppUsage 업데이트!");
-            
+        private void UpdateUsage()
+        {            
             if (Usage != null && Usage.RegisteredAt.Date < DateTime.Today)
             {
                 // 날짜가 지났습니다!
                 ElapsedTicksOffset += Usage.Usage;
                 Usage = null;
             }
-
-            Usage ??= await UsageRepository.CreateAppUsage(ProcessExecutablePath, IsCountedOnConcentrationCalculation);
+            
+            Usage ??= UsageRepository.CreateAppUsage(ProcessExecutablePath, IsCountedOnConcentrationCalculation);
 
             Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
             Usage.UpdatedAt = DateTime.Now;
             Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
 
-            await UsageRepository.SaveChanges();
+            // 변경사항 저장은 TimerUsage 저장할 때 한번에 묻어가요~
         }
 
         #endregion

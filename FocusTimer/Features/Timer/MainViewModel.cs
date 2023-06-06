@@ -76,16 +76,17 @@ namespace FocusTimer.Features.Timer
         }
 
         public void Render()
-        {
+        {                
             if (IsAnyAppActive)
             {
                 ActiveStopwatch.Start();
-                UpdateUsage();
             }
             else
             {
                 ActiveStopwatch.Stop();
             }
+
+            UpdateUsage();
 
             NotifyPropertyChanged(nameof(ElapsedTime));
             NotifyPropertyChanged(nameof(IsAnyAppActive));
@@ -113,23 +114,21 @@ namespace FocusTimer.Features.Timer
         private TimerUsage? Usage;
         private long ElapsedTicksOffset = 0;
 
-        private async Task UpdateUsage()
+        private void UpdateUsage()
         {
-            Debug.WriteLine("TimerUsage 업데이트!");
-
             if (Usage != null && Usage.StartedAt.Date < DateTime.Today)
             {
                 // 날짜가 지났습니다!
                 ElapsedTicksOffset += Usage.Usage;
                 Usage = null;
             }
-
-            Usage ??= await UsageRepository.CreateTimerUsage();
+            
+            Usage ??= UsageRepository.CreateTimerUsage();
 
             Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
             Usage.UpdatedAt = DateTime.Now;
 
-            await UsageRepository.SaveChanges();
+            UsageRepository.SaveChanges();
         }
 
         #endregion
