@@ -13,7 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\digital-7.ttf" />
+    <None Remove="Resources\DSEG7Classic-Bold.ttf" />
+    <None Remove="Resources\DSEG7Classic-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,9 +41,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\digital-7.ttf">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Resources\DSEG7Classic-Bold.ttf" />
+    <Resource Include="Resources\DSEG7Classic-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>

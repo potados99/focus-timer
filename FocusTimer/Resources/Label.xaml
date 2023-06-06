@@ -18,9 +18,9 @@
 
     <Style x:Key="BigTimerLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
         <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground}" />
-        <Setter Property="FontSize" Value="38" />
-        <Setter Property="FontFamily" Value="{StaticResource digital-7}" />
-
+        <Setter Property="FontSize" Value="25" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontFamily" Value="{StaticResource DSEG7}" />
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground.Disabled}" />
@@ -30,8 +30,9 @@
 
     <Style x:Key="SmallTimerLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
         <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground}" />
-        <Setter Property="FontSize" Value="22" />
-        <Setter Property="FontFamily" Value="{StaticResource digital-7}" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontFamily" Value="{StaticResource DSEG7}" />
 
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
