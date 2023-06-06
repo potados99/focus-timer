@@ -30,8 +30,8 @@
 
     <Style x:Key="SmallTimerLabel" TargetType="Label" BasedOn="{StaticResource WhiteTextLabel}">
         <Setter Property="Foreground" Value="{StaticResource Text.Timer.Foreground}" />
-        <Setter Property="FontSize" Value="15" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="FontFamily" Value="{StaticResource DSEG7}" />
 
         <Style.Triggers>
