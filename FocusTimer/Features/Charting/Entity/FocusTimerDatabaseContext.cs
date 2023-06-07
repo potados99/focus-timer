@@ -21,14 +21,14 @@ namespace FocusTimer.Features.Charting.Entity
         private static DbContextOptions GetOptions()
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var thisAppData = Path.Combine(appData, "FocusTimer");
+            var thisAppData = Path.Combine(appData, "The Potato Baking Company", "Focus");
 
             if (!Directory.Exists(thisAppData))
             {
                 Directory.CreateDirectory(thisAppData);
             }
 
-            var dbPath = Path.Combine(thisAppData, "FocusTimer.db");
+            var dbPath = Path.Combine(thisAppData, "focus.db");
 
             return new DbContextOptionsBuilder().UseSqlite($"Data Source={dbPath}").Options;
         }
