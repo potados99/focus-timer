@@ -16,7 +16,9 @@ namespace FocusTimer.Features.Charting.Entity
         public DbSet<AppUsage> AppUsages { get; set; }
         public DbSet<TimerUsage> TimerUsages { get; set; }
 
-        public FocusTimerDatabaseContext() : base(GetOptions()) { }
+        public FocusTimerDatabaseContext() : base(GetOptions()) {
+            Initialize();
+        }
 
         private static DbContextOptions GetOptions()
         {
@@ -35,18 +37,7 @@ namespace FocusTimer.Features.Charting.Entity
 
         public void Initialize()
         {
-            Database.EnsureCreated();
-
-            AppUsages.Add(new AppUsage
-            {
-                AppPath = "hahahahah",
-                RegisteredAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Usage = 9999,
-                IsConcentrated = true
-            });
-
-            SaveChanges();
+            Database.EnsureCreatedAsync();
         }
     }
 }
