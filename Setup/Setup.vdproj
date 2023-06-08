@@ -188,15 +188,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Focus"
-        "ProductCode" = "8:{3A24F413-3340-4540-81F0-BD1C5CE14405}"
-        "PackageCode" = "8:{99BA0239-9457-4E2B-878B-20FAD0D755B9}"
+        "ProductCode" = "8:{68E33894-73F5-4FFE-9291-05052E841412}"
+        "PackageCode" = "8:{5D5779FE-A0EE-4612-9F77-38BCB72BF931}"
         "UpgradeCode" = "8:{0C21B2A4-65C3-4424-8203-678E02936CA6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1"
         "Manufacturer" = "8:The Potato Baking Company"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -827,7 +827,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D65DEAA53310472ABF7540C561A241C0"
             {
-            "SourcePath" = "8:..\\FocusTimer\\obj\\Debug\\net472\\FocusTimer.exe"
+            "SourcePath" = "8:..\\FocusTimer\\obj\\Release\\net472\\FocusTimer.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4BBFAB5D8C7E4C43853DA9675715046D"
