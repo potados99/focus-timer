@@ -34,8 +34,6 @@ namespace FocusTimer.Features.Charting
 
         public void Loaded()
         {
-            var context = new FocusTimerDatabaseContext();
-
             LiveCharts.Configure(config =>
                 config
                     // registers SkiaSharp as the library backend
@@ -73,7 +71,7 @@ namespace FocusTimer.Features.Charting
                         FontFamily = "맑은 고딕"
                     },
                     Labeler = (value) =>
-                    {
+                    { 
                         var date = new DateTime((long)value);
 
                         return date.ToString(date.Day == 1 ? "M월 d" : "dd");
@@ -100,9 +98,6 @@ namespace FocusTimer.Features.Charting
             NotifyPropertyChanged(nameof(SeriesCollection2));
             NotifyPropertyChanged(nameof(SharedXAxis));
             NotifyPropertyChanged(nameof(YAxis));
-
-            
-            context.Initialize();
         }
 
         public ObservableCollection<ISeries> SeriesCollection1 { get; set; }
@@ -167,42 +162,7 @@ namespace FocusTimer.Features.Charting
         {
             get
             {
-                if (SelectedDate == DateTime.MinValue)
-                {
-                    var usages = UsageRepository.GetAppUsages();
-
-                    return new PrimaryMetricItem[]
-                    {
-                        new PrimaryMetricItem {
-                            Name = "Avg. 타이머 가동",
-                            Value = TickToMinutes((long)UsageRepository.GetTimerUsages().GroupBy(u => u.StartedAt.Date).Average(g => g.Sum(u => u.Usage)))
-                        },
-                        new PrimaryMetricItem
-                        {
-                            Name = "Avg. 집중도",
-                            Value = $"{100 * UsageRepository.GetAppUsages().Where(u => u.IsConcentrated).Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Sum(u => u.Usage):00}%"
-                        }
-                    };
-                }
-                else
-                {
-                    return new PrimaryMetricItem[]
-                    {
-                        new PrimaryMetricItem {
-                            Name = "타이머 가동",
-                            Value = TickToMinutes(UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage))
-                        },
-                        new PrimaryMetricItem {
-                            Name = "실제 사용",
-                            Value = TickToMinutes(UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage))
-                        },
-                        new PrimaryMetricItem
-                        {
-                            Name = "집중도",
-                            Value = $"{100 * UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Where(u => u.IsConcentrated).Sum(u => u.Usage) / UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage):00}%"
-                        }
-                    };
-                }
+                return ChartDataProcessor.GetPrimaryMetrics(SelectedDate);
             }
         }
 
@@ -210,59 +170,7 @@ namespace FocusTimer.Features.Charting
         {
             get
             {
-                if (SelectedDate == DateTime.MinValue)
-                {
-                    var usages = UsageRepository.GetAppUsages();
-
-                    return usages.GroupBy(u => u.AppPath).Select(thisAppGroup => new AppUsageItem
-                    {
-                        AppPath = thisAppGroup.Key,
-                        UsageString = TickToMinutes(thisAppGroup.Sum(g => g.Usage)),
-                        UsagesByTime = new UsageByTimeItem[]
-                        {
-                            new UsageByTimeItem
-                            {
-                                TimeString = "Avg. 사용 시간",
-                                UsageString = TickToMinutes((long)thisAppGroup.GroupBy(u => u.RegisteredAt.Date).Average(g => g.Sum(u => u.Usage)))
-                            },
-                            new UsageByTimeItem
-                            {
-                                TimeString = "Avg. 비활성 시간",
-                                UsageString = TickToMinutes((long)thisAppGroup.GroupBy(u => u.RegisteredAt.Date).Average(g => g.Sum(u => (u.UpdatedAt - u.RegisteredAt).Ticks - u.Usage)))
-                            },
-                        }
-                    });
-                }
-                else
-                {
-                    var usages = UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date);
-
-                    return usages.Select(u => new AppUsageItem
-                    {
-                        Date = u.RegisteredAt.Date,
-                        AppPath = u.AppPath,
-                        UsageString = TickToMinutes(usages.Where(au => au.AppPath == u.AppPath).Sum(au => au.Usage)),
-                        UsagesByTime = usages.Where(au => au.AppPath == u.AppPath).Select(au => new UsageByTimeItem
-                        {
-                            TimeString = $"{au.RegisteredAt:HH:mm} ~ {au.UpdatedAt:HH:mm}",
-                            UsageString = TickToMinutes(u.Usage)
-                        }),
-                    });
-                }
-            }
-        }
-
-        private string TickToMinutes(long ticks)
-        {
-            var minutes = (int)Math.Ceiling(new TimeSpan(ticks).TotalMinutes);
-
-            if (minutes >= 60)
-            {
-                return $"{minutes / 60}시간 {minutes % 60}분";
-            }
-            else
-            {
-                return $"{minutes % 60}분";
+                return ChartDataProcessor.GetAppUsagesAtDate(SelectedDate);
             }
         }
     }

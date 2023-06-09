@@ -107,6 +107,7 @@ namespace FocusTimer.Features.Timer
             Usage ??= UsageRepository.CreateAppUsage(ProcessExecutablePath, IsCountedOnConcentrationCalculation);
 
             Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
+
             Usage.UpdatedAt = DateTime.Now;
             Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
 

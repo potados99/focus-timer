@@ -10,18 +10,16 @@ namespace FocusTimer.Features.Charting.Repository
 {
     public static class UsageRepository
     {
-        private static Context c = ChartDataProcessor.GenerateDummy();
-
         private static FocusTimerDatabaseContext context = new();
 
         public static IEnumerable<AppUsage> GetAppUsages()
         {
-            return c.AppUsages;
+            return context.AppUsages;
         }
 
         public static IEnumerable<TimerUsage> GetTimerUsages()
         {
-            return c.TimerUsages;
+            return context.TimerUsages;
         }
 
         public static AppUsage CreateAppUsage(string appPath, bool IsConcentrated = true)
@@ -40,14 +38,17 @@ namespace FocusTimer.Features.Charting.Repository
 
         public static TimerUsage CreateTimerUsage()
         {
-            var usage = new TimerUsage();
+            var usage = new TimerUsage
+            {
+                StartedAt = DateTime.Now,
+                Usage = 0
+            };
             context.TimerUsages.Add(usage);
             return usage;
         }
 
         public static async Task SaveChanges()
         {
-            return;
             await context.SaveChangesAsync();
         }
     }

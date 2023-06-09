@@ -1,5 +1,6 @@
 ﻿using FocusTimer.Features.Charting;
 using FocusTimer.Features.Charting.Entity;
+using FocusTimer.Features.Charting.Repository;
 using FocusTimer.Lib.Utility;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -24,7 +25,6 @@ namespace FocusTimer.Features.Charting.Processing
             IEnumerable<TimerUsage> timerUsages
             )
         {
-
             var usagesPerDay = timerUsages.GroupBy(u => u.StartedAt.Date).Select(g => new
             {
                 Date = g.Key,
@@ -35,7 +35,10 @@ namespace FocusTimer.Features.Charting.Processing
             var values = usagesPerDay.Select(u => new DataPoint
             {
                 DateTime = u.Date,
-                Value = 100 * u.AppUsages.Where(au => au.IsConcentrated).Sum(au => au.Usage) / u.TimerUsages.Sum(tu => tu.Usage)
+                Value = Percentage(
+                    u.AppUsages.Where(au => au.IsConcentrated).Sum(au => au.Usage),
+                    u.TimerUsages.Sum(tu => tu.Usage)
+                    )
             });
 
             return new ObservableCollection<ISeries> {
@@ -113,281 +116,119 @@ namespace FocusTimer.Features.Charting.Processing
             return series;
         }
 
-        public static Context GenerateDummy()
+        internal static IEnumerable<PrimaryMetricItem> GetPrimaryMetrics(DateTime SelectedDate)
         {
-            var c = new Context();
-
-            while (c.IsItNotDone)
+            if (SelectedDate == DateTime.MinValue)
             {
-                if (c.OutOfWorkingHour)
+                var usages = UsageRepository.GetAppUsages();
+
+                return new PrimaryMetricItem[]
                 {
-                    // 타이머가 켜져 있지 않으면
-                    // 아무것도 안 해요
-                }
-                else
-                {
-                    if (c.IsFocusing)
-                    {
-                        // 앱을 사용 중이라면
-                        // 그 앱의 사용 시간을 늘립니다.
-                        var app = c.GetOrCreateCurrentAppUsage();
-
-                        app.Usage += new TimeSpan(0, 1, 0).Ticks;
-                    }
-                    else if (c.IsFocusingFinished)
-                    {
-                        // 앱 사용이 끝났으면
-                        if (c.WithHalfChance)
+                        new PrimaryMetricItem {
+                            Name = "Avg. 타이머 가동",
+                            Value = TickToMinutes((long)UsageRepository.GetTimerUsages().GroupBy(u => u.StartedAt.Date).Average(g => g.Sum(u => u.Usage)))
+                        },
+                        new PrimaryMetricItem
                         {
-                            // 절반 확률로 쉬거나
-                            c.StartResting();
+                            Name = "Avg. 집중도",
+                            Value = Percentage(
+                                UsageRepository.GetAppUsages().Where(u => u.IsConcentrated).Sum(u => u.Usage),
+                                UsageRepository.GetTimerUsages().Sum(u => u.Usage)
+                                ) + "%"
                         }
-                        else
-                        {
-                            // 바로 다른거 하러 갑니다.
-                            c.StartFocusing();
-                        }
-                    }
-                    else if (c.IsResting)
-                    {
-                        // 놀 때에는 아무 것도 안 해요
-                    }
-                    else if (c.IsRestingFinished)
-                    {
-                        // 휴식이 끝났으면
-                        if (c.WithHalfChance)
-                        {
-                            // 절반 확률로 쉬거나
-                            c.StartResting();
-                        }
-                        else
-                        {
-                            // 바로 다른거 하러 갑니다.
-                            c.StartFocusing();
-                        }
-                    }
-                    else
-                    {
-                        // 집중하지도 놀지도 않고 있을 때에는
-                        // 바로 집중 시작합니다.
-                        c.StartFocusing();
-                    }
-
-                    c.GetOrCreateTimerUsage().Usage += new TimeSpan(0, 1, 0).Ticks;
-                }
-
-                // 암튼 시간은 흐릅니다.
-                c.TimeGoes();
-            }
-
-            return c;
-        }
-
-    }
-
-    public class Context
-    {
-        private DateTime CurrentDateTime = DateTime.Now.Subtract(new TimeSpan(21, 0, 0, 0));
-        private DateTime UntilNow = DateTime.Now;
-
-        private string[] AppPaths = new string[]
-            {
-                "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
-                "C:\\Program Files (x86)\\Hnc\\Office 2020\\HOffice110\\Bin\\Hwp.exe",
-                "C:\\Program Files (x86)\\Kakao\\KakaoTalk\\KakaoTalk.exe",
-                "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-                "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
-                "C:\\Windows\\explorer.exe"
-            };
-
-        public DateTime? FocusOnUntil { get; set; }
-        public DateTime? TakeARestUntil { get; set; }
-
-        private TimeSpan WorkingHourBegin = new TimeSpan(7, 0, 0);
-        private TimeSpan WorkingHourEnd = new TimeSpan(18, 0, 0);
-
-        private Random r = new Random();
-        public string? CurrentAppPath { get; set; } = null;
-
-        public List<AppUsage> AppUsages = new();
-        public List<TimerUsage> TimerUsages = new();
-
-        public bool OutOfWorkingHour
-        {
-            get
-            {
-                var timeElapsedToday = CurrentDateTime - CurrentDateTime.Date;
-
-                return timeElapsedToday > WorkingHourEnd || timeElapsedToday < WorkingHourBegin;
-            }
-        }
-
-        public bool WithHalfChance
-        {
-            get
-            {
-                return r.Next(0, 10) >= 5;
-            }
-        }
-
-        public bool IsItNotDone
-        {
-            get
-            {
-                return CurrentDateTime < UntilNow;
-            }
-        }
-
-        public bool IsItZeroOClock
-        {
-            get
-            {
-                return CurrentDateTime.Hour == 0 && CurrentDateTime.Minute == 0;
-            }
-        }
-
-        public bool IsFocusing
-        {
-            get
-            {
-                return FocusOnUntil != null && CurrentDateTime < FocusOnUntil;
-            }
-        }
-
-        public bool IsFocusingFinished
-        {
-            get
-            {
-                return FocusOnUntil != null && (FocusOnUntil - CurrentDateTime)?.TotalMinutes == 0;
-            }
-        }
-
-        public bool IsResting
-        {
-            get
-            {
-                return TakeARestUntil != null && CurrentDateTime < TakeARestUntil;
-            }
-        }
-
-        public bool IsRestingFinished
-        {
-            get
-            {
-                return TakeARestUntil != null && (TakeARestUntil - CurrentDateTime)?.TotalMinutes == 0;
-            }
-        }
-
-        public void TimeGoes()
-        {
-            if (OutOfWorkingHour)
-            {
-                if (IsItZeroOClock)
-                {
-                    WorkingHourBegin = new TimeSpan(r.Next(6, 12), r.Next(0, 60), 0);
-                    WorkingHourEnd = new TimeSpan(r.Next(14, 22), r.Next(0, 60), 0);
-                }
-
-                CurrentDateTime = CurrentDateTime.AddMinutes(1);
+                };
             }
             else
             {
-                if (IsItZeroOClock)
+                return new PrimaryMetricItem[]
                 {
-                    var yesterday = CurrentDateTime.Date.Subtract(new TimeSpan(1, 0, 0, 0));
-                    var usagesOfYesterday = AppUsages.Where(u => u.RegisteredAt.Date == yesterday);
-
-                    AppUsages.AddRange(
-                        usagesOfYesterday.Select(u => new AppUsage
+                        new PrimaryMetricItem {
+                            Name = "타이머 가동",
+                            Value = TickToMinutes(UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage))
+                        },
+                        new PrimaryMetricItem {
+                            Name = "실제 사용",
+                            Value = TickToMinutes(UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Sum(u => u.Usage))
+                        },
+                        new PrimaryMetricItem
                         {
-                            AppPath = u.AppPath,
-                            Usage = 0,
-                            RegisteredAt = new DateTime(CurrentDateTime.Ticks),
-                            UpdatedAt = new DateTime(CurrentDateTime.Ticks),
-                            IsConcentrated = true
-                        }).ToList());
+                            Name = "집중도",
+                            Value = Percentage(
+                                UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date).Where(u => u.IsConcentrated).Sum(u => u.Usage),
+                                UsageRepository.GetTimerUsages().Where(u => u.StartedAt.Date == SelectedDate.Date).Sum(u => u.Usage)
+                                ) + "%"
+                        }
+                };
+            }
+        }
 
-                    TimerUsages.Add(new TimerUsage
+        internal static IEnumerable<AppUsageItem> GetAppUsagesAtDate(DateTime SelectedDate)
+        {
+            if (SelectedDate == DateTime.MinValue)
+            {
+                var usages = UsageRepository.GetAppUsages();
+
+                return usages.GroupBy(u => u.AppPath).Select(thisAppGroup => new AppUsageItem
+                {
+                    AppPath = thisAppGroup.Key,
+                    UsageString = TickToMinutes(thisAppGroup.Sum(g => g.Usage)),
+                    UsagesByTime = new UsageByTimeItem[]
                     {
-                        Usage = 0,
-                        StartedAt = new DateTime(CurrentDateTime.Ticks),
-                        UpdatedAt = new DateTime(CurrentDateTime.Ticks),
-                    });
-
-                    WorkingHourBegin = new TimeSpan(r.Next(6, 12), r.Next(0, 60), 0);
-                    WorkingHourEnd = new TimeSpan(r.Next(14, 22), r.Next(0, 60), 0);
-                }
-
-                var appUsagesOfToday = AppUsages.Where(u => u.RegisteredAt.Date == CurrentDateTime.Date);
-
-                foreach (var usage in appUsagesOfToday)
-                {
-                    usage.UpdatedAt = new DateTime(CurrentDateTime.Ticks);
-                }
-
-                var timerUsagesOfToday = TimerUsages.Where(u => u.StartedAt.Date == CurrentDateTime.Date);
-
-                foreach (var usage in timerUsagesOfToday)
-                {
-                    usage.UpdatedAt = new DateTime(CurrentDateTime.Ticks);
-                }
-
-                CurrentDateTime = CurrentDateTime.AddMinutes(1);
+                            new UsageByTimeItem
+                            {
+                                TimeString = "Avg. 사용 시간",
+                                UsageString = TickToMinutes((long)thisAppGroup.GroupBy(u => u.RegisteredAt.Date).Average(g => g.Sum(u => u.Usage)))
+                            },
+                            new UsageByTimeItem
+                            {
+                                TimeString = "Avg. 비활성 시간",
+                                UsageString = TickToMinutes((long)thisAppGroup.GroupBy(u => u.RegisteredAt.Date).Average(g => g.Sum(u => (u.UpdatedAt - u.RegisteredAt).Ticks - u.Usage)))
+                            },
+                    }
+                });
             }
-        }
-
-        public AppUsage GetOrCreateCurrentAppUsage()
-        {
-            var u = AppUsages.LastOrDefault(u => u.AppPath == CurrentAppPath && u.RegisteredAt.Date == CurrentDateTime.Date);
-
-            if (u == null)
+            else
             {
-                u = new AppUsage
+                var usages = UsageRepository.GetAppUsages().Where(u => u.RegisteredAt.Date == SelectedDate.Date);
+
+                return usages.GroupBy(u => u.AppPath).Select(thisAppGroup => new AppUsageItem
                 {
-                    AppPath = CurrentAppPath,
-                    Usage = 0,
-                    RegisteredAt = new DateTime(CurrentDateTime.Ticks),
-                    UpdatedAt = new DateTime(CurrentDateTime.Ticks),
-                    IsConcentrated = true
-                };
-
-                AppUsages.Add(u);
+                    Date = thisAppGroup.First().RegisteredAt.Date,
+                    AppPath = thisAppGroup.Key,
+                    UsageString = TickToMinutes(thisAppGroup.Sum(au => au.Usage)),
+                    UsagesByTime = thisAppGroup.Select(au => new UsageByTimeItem
+                    {
+                        TimeString = $"{au.RegisteredAt:HH:mm} ~ {au.UpdatedAt:HH:mm}",
+                        UsageString = TickToMinutes(au.Usage)
+                    }),
+                });
             }
-
-            return u;
         }
 
-        public TimerUsage GetOrCreateTimerUsage()
+        private static int Percentage(long one, long that)
         {
-            var u = TimerUsages.LastOrDefault(u => u.StartedAt.Date == CurrentDateTime.Date);
+            int percentage = 0;
 
-            if (u == null)
+            if (that > 0)
             {
-                u = new TimerUsage
-                {
-                    Usage = 0,
-                    StartedAt = new DateTime(CurrentDateTime.Ticks),
-                    UpdatedAt = new DateTime(CurrentDateTime.Ticks),
-                };
-
-                TimerUsages.Add(u);
+                percentage = (int)Math.Round(100f * one / that);
             }
 
-            return u;
+            return percentage;
         }
 
-        public void StartFocusing()
+        private static string TickToMinutes(long ticks)
         {
-            TakeARestUntil = null;
-            FocusOnUntil = CurrentDateTime.AddMinutes(r.Next(1, 60));
-            CurrentAppPath = AppPaths[r.Next(0, AppPaths.Length)];
-        }
+            var minutes = (int)Math.Ceiling(new TimeSpan(ticks).TotalMinutes);
 
-        public void StartResting()
-        {
-            FocusOnUntil = null;
-            TakeARestUntil = CurrentDateTime.AddMinutes(r.Next(5, 24));
-            CurrentAppPath = null;
+            if (minutes >= 60)
+            {
+                return $"{minutes / 60}시간 {minutes % 60}분";
+            }
+            else
+            {
+                return $"{minutes % 60}분";
+            }
         }
     }
 }

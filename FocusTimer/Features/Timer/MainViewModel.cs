@@ -107,7 +107,7 @@ namespace FocusTimer.Features.Timer
         {
             get
             {
-                return ActiveStopwatch.ElapsedTicks;
+                return AlwaysOnStopwatch.ElapsedTicks;
             }
         }
 

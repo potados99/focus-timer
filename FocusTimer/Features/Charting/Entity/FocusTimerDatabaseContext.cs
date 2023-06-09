@@ -1,4 +1,5 @@
-﻿using HarfBuzzSharp;
+﻿using FocusTimer.Features.Charting.Processing;
+using HarfBuzzSharp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System;
@@ -16,28 +17,43 @@ namespace FocusTimer.Features.Charting.Entity
         public DbSet<AppUsage> AppUsages { get; set; }
         public DbSet<TimerUsage> TimerUsages { get; set; }
 
+        private static string DbPath
+        {
+            get
+            {
+                var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var thisAppData = Path.Combine(appData, "The Potato Baking Company", "Focus Timer");
+
+                if (!Directory.Exists(thisAppData))
+                {
+                    Directory.CreateDirectory(thisAppData);
+                }
+
+                return Path.Combine(thisAppData, "usages.db");
+            }
+        }
+
         public FocusTimerDatabaseContext() : base(GetOptions()) {
             Initialize();
         }
 
         private static DbContextOptions GetOptions()
         {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var thisAppData = Path.Combine(appData, "The Potato Baking Company", "Focus");
-
-            if (!Directory.Exists(thisAppData))
-            {
-                Directory.CreateDirectory(thisAppData);
-            }
-
-            var dbPath = Path.Combine(thisAppData, "focus.db");
-
-            return new DbContextOptionsBuilder().UseSqlite($"Data Source={dbPath}").Options;
+            return new DbContextOptionsBuilder().UseSqlite($"Data Source={DbPath}").Options;
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
-            Database.EnsureCreatedAsync();
+            if (!File.Exists(DbPath)) {             
+                await Database.EnsureCreatedAsync();
+
+                var c = DummyDataGenerator.GenerateEmpty();
+
+                await AppUsages.AddRangeAsync(c.AppUsages);
+                await TimerUsages.AddRangeAsync(c.TimerUsages);
+
+                await SaveChangesAsync();
+            }
         }
     }
 }
