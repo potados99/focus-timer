@@ -32,7 +32,12 @@ namespace FocusTimer.Features.Charting.Repository
                 Usage = 0,
                 IsConcentrated = IsConcentrated
             };
-            context.AppUsages.Add(usage);
+
+            context.PendingActions.Enqueue(() =>
+            {
+                context.AppUsages.Add(usage);
+            }); 
+
             return usage;
         }
 
@@ -43,13 +48,13 @@ namespace FocusTimer.Features.Charting.Repository
                 StartedAt = DateTime.Now,
                 Usage = 0
             };
-            context.TimerUsages.Add(usage);
-            return usage;
-        }
 
-        public static async Task SaveChanges()
-        {
-            await context.SaveChangesAsync();
+            context.PendingActions.Enqueue(() =>
+            {
+                context.TimerUsages.Add(usage);
+            });
+
+            return usage;
         }
     }
 }

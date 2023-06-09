@@ -7,8 +7,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace FocusTimer.Features.Charting.Entity
 {
@@ -16,6 +19,8 @@ namespace FocusTimer.Features.Charting.Entity
     {
         public DbSet<AppUsage> AppUsages { get; set; }
         public DbSet<TimerUsage> TimerUsages { get; set; }
+
+        public Queue<Action> PendingActions = new();
 
         private static string DbPath
         {
@@ -51,9 +56,24 @@ namespace FocusTimer.Features.Charting.Entity
 
                 await AppUsages.AddRangeAsync(c.AppUsages);
                 await TimerUsages.AddRangeAsync(c.TimerUsages);
-
                 await SaveChangesAsync();
             }
+
+            Thread thread = new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {                   
+                    Thread.Sleep(2000);
+
+                    if (PendingActions.Count > 0)
+                    {
+                        PendingActions.Dequeue()();
+                    }
+
+                    SaveChanges();
+                }
+            }));
+            thread.Start();
         }
     }
 }
