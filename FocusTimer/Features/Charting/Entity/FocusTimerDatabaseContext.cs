@@ -73,6 +73,7 @@ namespace FocusTimer.Features.Charting.Entity
                     SaveChanges();
                 }
             }));
+            thread.IsBackground = true;
             thread.Start();
         }
     }
