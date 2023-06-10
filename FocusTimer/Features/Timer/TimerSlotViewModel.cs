@@ -124,10 +124,13 @@ namespace FocusTimer.Features.Timer
             Render();
         }
 
+        public void Tick()
+        {
+            CurrentApp?.Tick();
+        }
+
         public void Render()
         {
-            CurrentApp?.Render();
-
             NotifyPropertyChanged(nameof(CurrentApp));
 
             NotifyPropertyChanged(nameof(IsAppVisible));

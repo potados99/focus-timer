@@ -74,7 +74,7 @@ namespace FocusTimer.Features.Timer
 
         private readonly Stopwatch ActiveStopwatch = new();
 
-        public void Render()
+        public void Tick()
         {
             if (IsActive)
             {

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -60,7 +61,32 @@ namespace FocusTimer.Features.Timer
             InitGlobalTimer();
             InitFocusLock();
 
+            TickAll();
             RenderAll();
+        }
+
+        public void TickAll()
+        {
+            Tick();
+
+            foreach (var slot in TimerSlots)
+            {
+                slot.Tick();
+            }
+        }
+
+        public void Tick()
+        {
+            if (IsAnyAppActive)
+            {
+                ActiveStopwatch.Start();
+            }
+            else
+            {
+                ActiveStopwatch.Stop();
+            }
+
+            UpdateUsage();
         }
 
         public void RenderAll()
@@ -75,17 +101,6 @@ namespace FocusTimer.Features.Timer
 
         public void Render()
         {
-            if (IsAnyAppActive)
-            {
-                ActiveStopwatch.Start();
-            }
-            else
-            {
-                ActiveStopwatch.Stop();
-            }
-
-            UpdateUsage();
-
             NotifyPropertyChanged(nameof(ElapsedTime));
             NotifyPropertyChanged(nameof(IsAnyAppActive));
             NotifyPropertyChanged(nameof(IsWarningBorderVisible));
@@ -218,7 +233,11 @@ namespace FocusTimer.Features.Timer
 
         public void InitGlobalTimer()
         {
-            OneSecTickTimer.Tick += (_, _) => RenderAll();
+            OneSecTickTimer.Tick += (_, _) =>
+            {
+                TickAll();
+                RenderAll();
+            };
             OneSecTickTimer.Interval = TimeSpan.FromSeconds(1);
             OneSecTickTimer.Start();
 
