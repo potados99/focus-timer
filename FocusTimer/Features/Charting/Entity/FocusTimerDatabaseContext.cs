@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
 namespace FocusTimer.Features.Charting.Entity
 {
     public class FocusTimerDatabaseContext : DbContext
@@ -20,9 +22,9 @@ namespace FocusTimer.Features.Charting.Entity
         public DbSet<AppUsage> AppUsages { get; set; }
         public DbSet<TimerUsage> TimerUsages { get; set; }
 
-        public Queue<Action> PendingActions = new();
+        private readonly Queue<Action> PendingActions = new();
 
-        private static string DbPath
+        private string DbPath
         {
             get
             {
@@ -38,43 +40,92 @@ namespace FocusTimer.Features.Charting.Entity
             }
         }
 
-        public FocusTimerDatabaseContext() : base(GetOptions()) {
-            Initialize();
+        public FocusTimerDatabaseContext(bool readOnly) {
+            Initialize(readOnly);
         }
 
-        private static DbContextOptions GetOptions()
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => 
+            optionsBuilder.UseSqlite($"Data Source={DbPath}");
+
+        public void Initialize(bool readOnly)
         {
-            return new DbContextOptionsBuilder().UseSqlite($"Data Source={DbPath}").Options;
-        }
-
-        public async Task Initialize()
-        {
-            if (!File.Exists(DbPath)) {             
-                await Database.EnsureCreatedAsync();
-
-                var c = DummyDataGenerator.GenerateEmpty();
-
-                await AppUsages.AddRangeAsync(c.AppUsages);
-                await TimerUsages.AddRangeAsync(c.TimerUsages);
-                await SaveChangesAsync();
+            if (readOnly)
+            {
+                // 읽기 전용 컨텍스트이면 DB 생성과 백그라운드 워커 스레드 실행을 하지 않습니다.
+                return;
             }
 
-            Thread thread = new Thread(new ThreadStart(() =>
+            if (!File.Exists(DbPath)) {
+                PendingActions.Enqueue(() =>
+                {
+                    Database.EnsureCreated();
+
+                    var c = DummyDataGenerator.GenerateEmpty();
+
+                    AppUsages.AddRange(c.AppUsages);
+                    TimerUsages.AddRange(c.TimerUsages);
+                    SaveChanges();
+                });
+            }
+
+            new BackgroundWorker(this).StartWorking();
+        }
+
+        public void AddAppUsage(AppUsage usage)
+        {
+            PendingActions.Enqueue(() =>
+            {
+                AppUsages.Add(usage);
+            });
+        }
+
+        public void AddTimerUsage(TimerUsage usage)
+        {
+            PendingActions.Enqueue(() =>
+            {
+                TimerUsages.Add(usage);
+            });
+        }
+
+        public void Save()
+        {
+            PendingActions.Enqueue(() =>
+            {
+                SaveChanges();
+            });
+        }
+
+        class BackgroundWorker
+        {
+            private readonly FocusTimerDatabaseContext Context;
+
+            public BackgroundWorker(FocusTimerDatabaseContext context)
+            {
+                Context = context;
+            }
+
+            public void StartWorking()
+            {
+                ThreadStart start = new(Work);
+                Thread thread = new(start)
+                {
+                    IsBackground = true
+                };
+                thread.Start();
+            }
+
+            private void Work()
             {
                 while (true)
-                {                   
-                    Thread.Sleep(2000);
-
-                    if (PendingActions.Count > 0)
+                {
+                    while (Context.PendingActions.Count > 0)
                     {
-                        PendingActions.Dequeue()();
+                        Context.PendingActions.Dequeue()();
                     }
 
-                    SaveChanges();
+                    Thread.Sleep(1000);
                 }
-            }));
-            thread.IsBackground = true;
-            thread.Start();
+            }
         }
     }
 }

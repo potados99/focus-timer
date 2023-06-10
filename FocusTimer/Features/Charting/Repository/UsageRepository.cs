@@ -10,33 +10,33 @@ namespace FocusTimer.Features.Charting.Repository
 {
     public static class UsageRepository
     {
-        private static FocusTimerDatabaseContext context = new();
+        private static readonly FocusTimerDatabaseContext ReadingContext = new(true);
+        private static readonly FocusTimerDatabaseContext WritingContext = new(false);
+
+        private static readonly int LastHowManyDays = 21;
 
         public static IEnumerable<AppUsage> GetAppUsages()
         {
-            return context.AppUsages;
+            var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
+
+            return ReadingContext.AppUsages.Where(u => u.RegisteredAt >= then);
         }
 
         public static IEnumerable<TimerUsage> GetTimerUsages()
         {
-            return context.TimerUsages;
+            var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
+
+            return ReadingContext.TimerUsages.Where(u => u.StartedAt >= then);
         }
 
-        public static AppUsage CreateAppUsage(string appPath, bool IsConcentrated = true)
+        public static AppUsage CreateAppUsage()
         {
             var usage = new AppUsage
             {
-                AppPath = appPath,
-                RegisteredAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Usage = 0,
-                IsConcentrated = IsConcentrated
+                RegisteredAt = DateTime.Now
             };
 
-            context.PendingActions.Enqueue(() =>
-            {
-                context.AppUsages.Add(usage);
-            }); 
+            WritingContext.AddAppUsage(usage);
 
             return usage;
         }
@@ -45,16 +45,17 @@ namespace FocusTimer.Features.Charting.Repository
         {
             var usage = new TimerUsage
             {
-                StartedAt = DateTime.Now,
-                Usage = 0
+                StartedAt = DateTime.Now
             };
 
-            context.PendingActions.Enqueue(() =>
-            {
-                context.TimerUsages.Add(usage);
-            });
+            WritingContext.AddTimerUsage(usage);
 
             return usage;
+        }
+
+        public static void Save()
+        {
+            WritingContext.Save();
         }
     }
 }

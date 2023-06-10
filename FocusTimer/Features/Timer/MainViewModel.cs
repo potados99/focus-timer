@@ -127,6 +127,8 @@ namespace FocusTimer.Features.Timer
 
             Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
             Usage.UpdatedAt = DateTime.Now;
+
+            UsageRepository.Save();
         }
 
         #endregion

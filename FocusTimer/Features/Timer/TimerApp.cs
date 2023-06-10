@@ -27,7 +27,7 @@ namespace FocusTimer.Features.Timer
                 throw new Exception("TimerApp의 생성자에 executablePath가 null로 들어왔습니다. 이래서는 안 됩니다!");
             }
 
-            ProcessExecutablePath = executablePath;
+            ProcessExecutablePath = executablePath!;
 
             Image = Icon.ExtractAssociatedIcon(executablePath)?.ToImageSource();
             AppName = FileVersionInfo.GetVersionInfo(executablePath).FileDescription;
@@ -46,7 +46,7 @@ namespace FocusTimer.Features.Timer
 
         public bool IsCountedOnConcentrationCalculation { get; set; } = true;
 
-        public string? ProcessExecutablePath { get; set; }
+        public string ProcessExecutablePath { get; set; }
 
         public string Elapsed
         {
@@ -103,15 +103,15 @@ namespace FocusTimer.Features.Timer
                 ElapsedTicksOffset += Usage.Usage;
                 Usage = null;
             }
-            
-            Usage ??= UsageRepository.CreateAppUsage(ProcessExecutablePath, IsCountedOnConcentrationCalculation);
 
+            Usage ??= UsageRepository.CreateAppUsage();
+
+            Usage.AppPath = ProcessExecutablePath;
             Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
-
             Usage.UpdatedAt = DateTime.Now;
             Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
 
-            // 변경사항 저장은 TimerUsage 저장할 때 한번에 묻어가요~
+            UsageRepository.Save();
         }
 
         #endregion
