@@ -215,10 +215,10 @@ namespace FocusTimer.Features.Charting
 
         private string PointToValueString(ChartPoint point)
         {
-            var ts = new TimeSpan(0, (int)point.StackedValue.Total, 0);
-            var dt = new DateTime(ts.Ticks);
+            var minutes = Math.Ceiling(new TimeSpan((long)point.StackedValue.Total).TotalMinutes);
+            var dt = new DateTime(TimeSpan.FromMinutes(minutes).Ticks);
 
-            if (ts.TotalMinutes >= 60)
+            if (minutes >= 60)
             {
                 return dt.ToString("H시간 m분");
             }

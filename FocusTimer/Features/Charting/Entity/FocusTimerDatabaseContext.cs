@@ -54,11 +54,11 @@ namespace FocusTimer.Features.Charting.Entity
                 {
                     Database.EnsureCreated();
 
-                    var c = DummyDataGenerator.GenerateEmpty();
+                    //var c = DummyDataGenerator.GenerateEmpty();
 
-                    AppUsages.AddRange(c.AppUsages);
-                    TimerUsages.AddRange(c.TimerUsages);
-                    SaveChanges();
+                    //AppUsages.AddRange(c.AppUsages);
+                    //TimerUsages.AddRange(c.TimerUsages);
+                    //SaveChanges();
                 });
             }
 

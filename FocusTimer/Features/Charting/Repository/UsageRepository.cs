@@ -16,14 +16,14 @@ namespace FocusTimer.Features.Charting.Repository
         {
             var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
-            return ReadingContext.AppUsages.Where(u => u.RegisteredAt >= then);
+            return ReadingContext.AppUsages.Where(u => u.RegisteredAt >= then).OrderBy(u => u.RegisteredAt);
         } 
 
         public static IEnumerable<TimerUsage> GetTimerUsages()
         {
             var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
-            return ReadingContext.TimerUsages.Where(u => u.StartedAt >= then);
+            return ReadingContext.TimerUsages.Where(u => u.StartedAt >= then).OrderBy(u => u.StartedAt);
         }
 
         public static AppUsage CreateAppUsage()

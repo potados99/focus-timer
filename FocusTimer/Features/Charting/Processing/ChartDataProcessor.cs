@@ -20,11 +20,16 @@ namespace FocusTimer.Features.Charting.Processing
             IEnumerable<TimerUsage> timerUsages
             )
         {
-            var usagesPerDay = timerUsages.GroupBy(u => u.StartedAt.Date).Select(g => new
+            // 차트에 표시할 영역의 날짜들을 가져옵니다.
+            var dates = Enumerable.Range(0, 1 + EndDate.Subtract(StartDate).Days)
+                .Select(offset => StartDate.AddDays(offset))
+                .ToArray();
+
+            var usagesPerDay = dates.Select(d => new
             {
-                Date = g.Key,
-                AppUsages = appUsages.Where(u => u.RegisteredAt.Date == g.Key),
-                TimerUsages = g
+                Date = d,
+                AppUsages = appUsages.Where(u => u.RegisteredAt.Date == d),
+                TimerUsages = timerUsages.Where(u => u.StartedAt.Date == d)
             });
 
             var values = usagesPerDay.Select(u => new DataPoint
@@ -50,6 +55,32 @@ namespace FocusTimer.Features.Charting.Processing
             };
         }
 
+        private static DateTime StartDate
+        {
+            get
+            {
+                return DateTime.Now.Date.AddDays(-21);
+            }
+        }
+
+        private static DateTime EndDate
+        {
+            get
+            {
+                return DateTime.Now.Date;
+            }
+        }
+
+        private static IEnumerable<DateTime> Dates
+        {
+            get
+            {
+                return Enumerable.Range(0, 1 + EndDate.Subtract(StartDate).Days)
+                .Select(offset => StartDate.AddDays(offset))
+                .ToArray();
+            }
+        }
+
         internal static ObservableCollection<ISeries> GetLowerChartSeries(
             IEnumerable<AppUsage> appUsages,
             IEnumerable<TimerUsage> timerUsages
@@ -57,26 +88,39 @@ namespace FocusTimer.Features.Charting.Processing
         {
             var series = new ObservableCollection<ISeries>();
 
-            var usagesPerApp = appUsages.Select(u => u.AppPath).Distinct().Select(path => new
+            // 존재하는 모든 종류의 앱의 경로를 중복 없이 가져옵니다.
+            var appPaths = appUsages.Select(u => u.AppPath).Distinct();
+
+            // 앱별로 AppUsage를 분류합니다.
+            var usagesPerApp = appPaths.Select(path =>
             {
-                AppPath = path,
-                FillColor = Icon.ExtractAssociatedIcon(path).ToSKColor(),
-                AppUsagesPerDay = timerUsages.Select(tu => tu.StartedAt.Date).Select(d => new
+                // 전 기간에 걸쳐 현재 앱의 사용량을 모두 가져옵니다.
+                var thisAppUsageOnAllPeriod = appUsages.Where(au => au.AppPath == path);
+
+                // 앱별로 경로, 색상, 날짜별 사용량을 구합니다.
+                return new
                 {
-                    Date = d,
-                    Usages = appUsages.Where(au => au.RegisteredAt.Date == d && au.AppPath == path)
-                })
+                    AppPath = path,
+                    FillColor = Icon.ExtractAssociatedIcon(path).ToSKColor(),
+                    AppUsagesPerDay = Dates.Select(d => new
+                    {
+                        Date = d,
+                        Usages = thisAppUsageOnAllPeriod.Where(au => au.RegisteredAt.Date == d)
+                    })
+                };
             });
 
+            // 앱마다 날짜별 사용량이 구해졌으니
             foreach (var thisAppUsage in usagesPerApp)
             {
+                // 그것을 기반으로 series를 만들어 더해줍니다.
                 series.Add(new StackedColumnSeries<DataPoint>
                 {
                     Name = thisAppUsage.AppPath,
                     Values = thisAppUsage.AppUsagesPerDay.Select(u => new DataPoint
                     {
                         DateTime = u.Date,
-                        Value = Math.Ceiling(new TimeSpan(u.Usages.Sum(uu => uu.Usage)).TotalMinutes)
+                        Value = u.Usages.Sum(uu => uu.Usage)
                     }).ToArray(),
                     Fill = new SolidColorPaint(thisAppUsage.FillColor),
                     MaxBarWidth = 16,
@@ -85,12 +129,14 @@ namespace FocusTimer.Features.Charting.Processing
                 });
             }
 
-            var idle = timerUsages.GroupBy(u => u.StartedAt.Date).Select(g => new
+            var idle = Dates.Select(d => new
             {
-                Date = g.Key,
+                Date = d,
                 IdleMinutes = Math.Ceiling(
-                    new TimeSpan(g.Sum(tu => tu.Usage) - appUsages.Where(au => au.RegisteredAt.Date == g.Key).Sum(au => au.Usage))
-                    .TotalMinutes
+                    new TimeSpan(
+                        timerUsages.Where(u => u.StartedAt.Date == d).Sum(tu => tu.Usage)
+                        - appUsages.Where(au => au.RegisteredAt.Date == d).Sum(au => au.Usage)
+                        ).TotalMinutes
                     )
             });
 
