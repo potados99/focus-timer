@@ -1,12 +1,10 @@
 ﻿using FocusTimer.Features.Charting.Entity;
 using FocusTimer.Features.Charting.Repository;
 using FocusTimer.Lib;
-using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace FocusTimer.Features.Timer
@@ -96,7 +94,7 @@ namespace FocusTimer.Features.Timer
         private long ElapsedTicksOffset = 0;
 
         private void UpdateUsage()
-        {            
+        {
             if (Usage != null && Usage.RegisteredAt.Date < DateTime.Today)
             {
                 // 날짜가 지났습니다!

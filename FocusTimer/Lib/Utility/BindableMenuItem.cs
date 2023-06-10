@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace FocusTimer.Lib.Utility
 {
@@ -18,7 +11,7 @@ namespace FocusTimer.Lib.Utility
         public event ClickHandler OnClick;
         public event CheckHandler OnCheck;
 
-        public bool IsCheckable { get; set; }       
+        public bool IsCheckable { get; set; }
 
         private bool _IsChecked;
         public bool IsChecked

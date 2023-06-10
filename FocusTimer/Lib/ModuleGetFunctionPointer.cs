@@ -1,11 +1,11 @@
-﻿using System;
+﻿using SQLitePCL;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using SQLitePCL;
 
 namespace FocusTimer.Lib
-{   
+{
     public class ModuleGetFunctionPointer : IGetFunctionPointer
     {
         private readonly ProcessModule _module;

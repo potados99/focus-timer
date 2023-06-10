@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace FocusTimer.Lib.Utility
@@ -27,7 +22,8 @@ namespace FocusTimer.Lib.Utility
 
         public TimeSpan TimeLeft { get; private set; }
 
-        public CountdownTimer() {
+        public CountdownTimer()
+        {
             Prepare();
         }
 

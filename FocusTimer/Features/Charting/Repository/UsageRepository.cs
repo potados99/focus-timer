@@ -1,10 +1,7 @@
 ﻿using FocusTimer.Features.Charting.Entity;
-using FocusTimer.Features.Charting.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FocusTimer.Features.Charting.Repository
 {
@@ -20,7 +17,7 @@ namespace FocusTimer.Features.Charting.Repository
             var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
             return ReadingContext.AppUsages.Where(u => u.RegisteredAt >= then);
-        }
+        } 
 
         public static IEnumerable<TimerUsage> GetTimerUsages()
         {

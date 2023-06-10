@@ -4,8 +4,8 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using MColor = System.Windows.Media.Color;
 using DColor = System.Drawing.Color;
+using MColor = System.Windows.Media.Color;
 
 namespace FocusTimer.Lib.Utility
 {

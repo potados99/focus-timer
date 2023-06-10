@@ -6,9 +6,7 @@ using FocusTimer.Lib.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -76,7 +74,7 @@ namespace FocusTimer.Features.Timer
         }
 
         public void Render()
-        {                
+        {
             if (IsAnyAppActive)
             {
                 ActiveStopwatch.Start();
@@ -122,7 +120,7 @@ namespace FocusTimer.Features.Timer
                 ElapsedTicksOffset += Usage.Usage;
                 Usage = null;
             }
-            
+
             Usage ??= UsageRepository.CreateTimerUsage();
 
             Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
@@ -246,7 +244,8 @@ namespace FocusTimer.Features.Timer
 
         public void InitFocusLock()
         {
-            FocusLockTimer.OnFinish += () => {
+            FocusLockTimer.OnFinish += () =>
+            {
                 UnlockFocus();
             };
         }
@@ -322,7 +321,7 @@ namespace FocusTimer.Features.Timer
 
             Render();
         }
-       private void LockFocusWithHold()
+        private void LockFocusWithHold()
         {
             FocusLockTimer.Duration = TimeSpan.FromMinutes(FocusLockHoldDuration);
             FocusLockTimer.Start();
@@ -358,7 +357,8 @@ namespace FocusTimer.Features.Timer
             if (IsFocusLockHold)
             {
                 _LockButtonToolTip.IsOpen = true;
-                Task.Delay(700).ContinueWith(_ => Application.Current.Dispatcher.Invoke(new Action(() => {
+                Task.Delay(700).ContinueWith(_ => Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
                     _LockButtonToolTip.IsOpen = false;
                 })));
 

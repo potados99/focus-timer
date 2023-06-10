@@ -1,29 +1,17 @@
-﻿using LiveChartsCore.SkiaSharpView;
+﻿using FocusTimer.Features.Charting.Processing;
+using FocusTimer.Features.Charting.Repository;
+using FocusTimer.Lib.Component;
 using LiveChartsCore;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FocusTimer.Lib.Component;
-using System.Windows.Media.TextFormatting;
-using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
-using LiveChartsCore.SkiaSharpView.SKCharts;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.ConditionalDraw;
-using System.Windows.Media;
-using System.Diagnostics;
-using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
-using FocusTimer.Features.Charting.Processing;
-using FocusTimer.Features.Charting.Repository;
-using FocusTimer.Features.Charting.Entity;
+using System.Linq;
 
 namespace FocusTimer.Features.Charting
 {
@@ -71,7 +59,7 @@ namespace FocusTimer.Features.Charting
                         FontFamily = "맑은 고딕"
                     },
                     Labeler = (value) =>
-                    { 
+                    {
                         var date = new DateTime((long)value);
 
                         return date.ToString(date.Day == 1 ? "M월 d" : "dd");

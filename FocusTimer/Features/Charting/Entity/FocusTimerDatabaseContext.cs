@@ -1,17 +1,9 @@
 ﻿using FocusTimer.Features.Charting.Processing;
-using HarfBuzzSharp;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -40,11 +32,12 @@ namespace FocusTimer.Features.Charting.Entity
             }
         }
 
-        public FocusTimerDatabaseContext(bool readOnly) {
+        public FocusTimerDatabaseContext(bool readOnly)
+        {
             Initialize(readOnly);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseSqlite($"Data Source={DbPath}");
 
         public void Initialize(bool readOnly)
@@ -55,7 +48,8 @@ namespace FocusTimer.Features.Charting.Entity
                 return;
             }
 
-            if (!File.Exists(DbPath)) {
+            if (!File.Exists(DbPath))
+            {
                 PendingActions.Enqueue(() =>
                 {
                     Database.EnsureCreated();
