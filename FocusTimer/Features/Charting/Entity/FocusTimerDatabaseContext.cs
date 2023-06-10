@@ -53,12 +53,6 @@ namespace FocusTimer.Features.Charting.Entity
                 PendingActions.Enqueue(() =>
                 {
                     Database.EnsureCreated();
-
-                    //var c = DummyDataGenerator.GenerateEmpty();
-
-                    //AppUsages.AddRange(c.AppUsages);
-                    //TimerUsages.AddRange(c.TimerUsages);
-                    //SaveChanges();
                 });
             }
 
