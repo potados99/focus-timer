@@ -132,12 +132,7 @@ namespace FocusTimer.Features.Charting.Processing
             var idle = Dates.Select(d => new
             {
                 Date = d,
-                IdleMinutes = Math.Ceiling(
-                    new TimeSpan(
-                        timerUsages.Where(u => u.StartedAt.Date == d).Sum(tu => tu.Usage)
-                        - appUsages.Where(au => au.RegisteredAt.Date == d).Sum(au => au.Usage)
-                        ).TotalMinutes
-                    )
+                IdleTicks = timerUsages.Where(u => u.StartedAt.Date == d).Sum(tu => tu.Usage) - appUsages.Where(au => au.RegisteredAt.Date == d).Sum(au => au.Usage)
             });
 
             series.Add(new StackedColumnSeries<DataPoint>
@@ -146,7 +141,7 @@ namespace FocusTimer.Features.Charting.Processing
                 Values = idle.Select(u => new DataPoint
                 {
                     DateTime = u.Date,
-                    Value = u.IdleMinutes
+                    Value = u.IdleTicks
                 }).ToArray(),
                 MaxBarWidth = 16,
                 Rx = 4,
