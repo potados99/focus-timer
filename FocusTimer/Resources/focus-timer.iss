@@ -4,9 +4,9 @@
 ; Test key = 3BCE-B983-D4E3-7B56-E575-471E
 
 #define MyAppName "Focus Timer"
-#define MyAppVersion "0.2"
-#define MyAppPublisher "The Potato Baking Company"
-#define MyAppURL "https://tumblbug.com/focus-timer"
+#define MyAppVersion "1.0"
+#define MyAppPublisher "World Moment"
+#define MyAppURL "https://tumblbug.com/worldmoment_focus"
 #define MyAppExeName "FocusTimer.exe"
 #define MyAppSolutionPath "C:\Users\Administrator\source\repos\FocusTimer"
 
