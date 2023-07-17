@@ -63,6 +63,8 @@ namespace FocusTimer.Features.Timer
 
             TickAll();
             RenderAll();
+
+            this.GetLogger().Info("ViewModel 시작!");
         }
 
         public void TickAll()
