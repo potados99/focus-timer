@@ -7,7 +7,7 @@
 #define MyAppVersion "0.2"
 #define MyAppPublisher "World Moment"
 #define MyAppURL "https://tumblbug.com/worldmoment_focus"
-#define MyAppExeName "FocusTimerSetup.exe"
+#define MyAppExeName "FocusTimer.exe"
 #define MyAppSolutionPath "C:\Users\Administrator\source\repos\FocusTimer"
 
 [Setup]
@@ -27,7 +27,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
 OutputDir={#MyAppSolutionPath}\FocusTimer\bin\Release\Publish
-OutputBaseFilename=FocusTimer
+OutputBaseFilename=FocusTimerSetup
 SetupIconFile={#MyAppSolutionPath}\FocusTimer\Resources\icon_small.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 UninstallDisplayName={#MyAppName}
