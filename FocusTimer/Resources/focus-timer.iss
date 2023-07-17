@@ -4,7 +4,7 @@
 ; Test key = 3BCE-B983-D4E3-7B56-E575-471E
 
 #define MyAppName "Focus Timer"
-#define MyAppVersion "1.0"
+#define MyAppVersion "0.2"
 #define MyAppPublisher "World Moment"
 #define MyAppURL "https://tumblbug.com/worldmoment_focus"
 #define MyAppExeName "FocusTimerSetup.exe"
