@@ -7,7 +7,7 @@
 #define MyAppVersion "1.0"
 #define MyAppPublisher "World Moment"
 #define MyAppURL "https://tumblbug.com/worldmoment_focus"
-#define MyAppExeName "FocusTimer.exe"
+#define MyAppExeName "FocusTimerSetup.exe"
 #define MyAppSolutionPath "C:\Users\Administrator\source\repos\FocusTimer"
 
 [Setup]
