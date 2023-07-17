@@ -21,7 +21,7 @@ namespace FocusTimer.Features.Charting.Entity
             get
             {
                 var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var thisAppData = Path.Combine(appData, "The Potato Baking Company", "Focus Timer");
+                var thisAppData = Path.Combine(appData, "World Moment", "Focus Timer");
 
                 if (!Directory.Exists(thisAppData))
                 {
