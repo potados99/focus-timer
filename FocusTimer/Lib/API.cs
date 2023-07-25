@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -70,5 +71,24 @@ namespace FocusTimer.Lib
             [MarshalAs(UnmanagedType.U4)]
             public int dwTime;
         }
+
+        [Flags]
+        public enum ProcessAccessFlags : uint
+        {
+            QueryLimitedInformation = 0x00001000
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool QueryFullProcessImageName(
+              [In] IntPtr hProcess,
+              [In] int dwFlags,
+              [Out] StringBuilder lpExeName,
+              ref int lpdwSize);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr OpenProcess(
+            ProcessAccessFlags processAccess,
+            bool bInheritHandle,
+            int processId);
     }
 }

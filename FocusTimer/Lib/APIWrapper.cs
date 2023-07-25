@@ -88,6 +88,25 @@ namespace FocusTimer.Lib
             return GetForegroundProcess().Id == Process.GetCurrentProcess().Id;
         }
 
+        public static String GetProcessFilename(Process p)
+        {
+            int capacity = 2000;
+            StringBuilder builder = new(capacity);
+
+            // Process.MainModule은 OpenProcess 호출에
+            // access 인자로 0x0410을 넘깁니다.
+            // 이는 PROCESS_QUERY_INFORMATION 과 PROCESS_VM_READ 이 합쳐진 것인데, (https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
+            // 대상 프로세스가 상승된 권한으로 실행되고 있을 때에 문제를 일으킵니다. (https://stackoverflow.com/questions/9501771/how-to-avoid-a-win32-exception-when-accessing-process-mainmodule-filename-in-c#comment96065027_34991822)
+            // 따라서 PROCESS_QUERY_LIMITED_INFORMATION access를 사용합니다.
+            IntPtr ptr = API.OpenProcess(API.ProcessAccessFlags.QueryLimitedInformation, false, p.Id);
+            if (!API.QueryFullProcessImageName(ptr, 0, builder, ref capacity))
+            {
+                return String.Empty;
+            }
+
+            return builder.ToString();
+        }
+
         #endregion
     }
 }
