@@ -3,8 +3,9 @@
 ; Key generator = a=[4, 4, 4, 4, 4, 3].map(c => Array.from({length: c}, (_, i) => Math.ceil(Math.random() * 15))); a[a.length-1].push(a.reduce((acc, cur) => acc.concat(cur)).reduce((acc, cur) => acc + (cur ^ 3) + 1, 3) % 16); a.map(i => i.map(n => n.toString(16).toUpperCase()).join('')).join('-');
 ; Test key = 3BCE-B983-D4E3-7B56-E575-471E
 
+#define MyAppId "{77E6B305-BB81-49FA-A456-6E485C0B0B95}"
 #define MyAppName "Focus Timer"
-#define MyAppVersion "0.3"
+#define MyAppVersion "0.4"
 #define MyAppPublisher "World Moment"
 #define MyAppURL "https://tumblbug.com/worldmoment_focus"
 #define MyAppExeName "FocusTimer.exe"
@@ -13,7 +14,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{77E6B305-BB81-49FA-A456-6E485C0B0B95}
+AppId={{#MyAppId}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -312,13 +313,32 @@ begin
   end;
 end;
 
+function GetUninstallString(): string;
+var
+  UninstallKey: string;
+begin
+  if IsWin64 then UninstallKey := 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\' + '{#MyAppId}' + '_is1'
+    else UninstallKey := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\' + '{#MyAppId}' + '_is1';
+
+  RegQueryStringValue(HKA, UninstallKey, 'UninstallString', Result);
+  Log(UninstallKey)
+  Log(Result)
+end;
+
 procedure CurPageChanged(CurPageID: Integer);
 begin
-  if CurPageID = SerialPage.ID then
-    WizardForm.NextButton.Enabled := IsValidInput;  
+  if GetUninstallString() = '' then
+  begin
+    if CurPageID = SerialPage.ID then
+      WizardForm.NextButton.Enabled := IsValidInput; 
+  end
 end;
 
 procedure InitializeWizard;
 begin
-  CreateSerialNumberPage;
+  if GetUninstallString() = '' then
+  begin
+    Log('Application is not installed yet, installing the first copy');
+    CreateSerialNumberPage;
+  end
 end;
