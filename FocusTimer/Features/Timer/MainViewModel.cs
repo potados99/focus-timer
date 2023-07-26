@@ -57,13 +57,8 @@ namespace FocusTimer.Features.Timer
 
         public void Loaded()
         {
-            RestoreApps();
-
-            RestoreFromLastUsage();
-            foreach (var slot in TimerSlots)
-            {
-                slot.CurrentApp?.RestoreFromLastUsage();
-            }
+            RestoreAppSlots();
+            RestoreStatesFromLastUsage();
 
             InitGlobalTimer();
             InitFocusLock();
@@ -176,7 +171,7 @@ namespace FocusTimer.Features.Timer
             UsageRepository.Save();
         }
 
-        public void RestoreFromLastUsage()
+        public void RestoreStatesFromLastUsage()
         {
             Usage = UsageRepository.GetLastTimerUsage();
 
@@ -187,6 +182,11 @@ namespace FocusTimer.Features.Timer
 
                 TicksStartOffset += Usage.Usage;
                 ActiveTicksStartOffset += Usage.ActiveUsage;
+            }
+
+            foreach (var slot in TimerSlots)
+            {
+                slot.CurrentApp?.RestoreFromLastUsage();
             }
         }
 
@@ -576,7 +576,7 @@ namespace FocusTimer.Features.Timer
             Settings.SetApps(TimerSlots.Select(s => s.GetAppExecutablePath()).ToList());
         }
 
-        public void RestoreApps()
+        public void RestoreAppSlots()
         {
             foreach (var (app, index) in Settings.GetApps().WithIndex())
             {
@@ -598,7 +598,7 @@ namespace FocusTimer.Features.Timer
             ActiveTicksStartOffset = 0;
             ActiveTicksElapsedOffset = 0;
 
-            RestoreApps();
+            RestoreAppSlots();
 
             TickAll();
             RenderAll();
