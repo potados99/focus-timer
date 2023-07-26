@@ -11,5 +11,7 @@ namespace FocusTimer.Features.Charting.Entity
         public DateTime UpdatedAt { get; set; }
 
         public long Usage { get; set; }
+
+        public long ActiveUsage { get; set; }
     }
 }

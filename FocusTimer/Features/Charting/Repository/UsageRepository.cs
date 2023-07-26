@@ -38,6 +38,11 @@ namespace FocusTimer.Features.Charting.Repository
             return usage;
         }
 
+        public static AppUsage GetLastAppUsage(string appPath)
+        {
+            return WritingContext.AppUsages.Where(u => u.AppPath == appPath).AsEnumerable().LastOrDefault();
+        }
+
         public static TimerUsage CreateTimerUsage()
         {
             var usage = new TimerUsage
@@ -48,6 +53,11 @@ namespace FocusTimer.Features.Charting.Repository
             WritingContext.AddTimerUsage(usage);
 
             return usage;
+        }
+
+        public static TimerUsage GetLastTimerUsage()
+        {
+            return WritingContext.TimerUsages.AsEnumerable().LastOrDefault();
         }
 
         public static void Save()

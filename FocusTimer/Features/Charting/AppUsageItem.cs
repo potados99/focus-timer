@@ -1,4 +1,5 @@
-﻿using FocusTimer.Lib.Utility;
+﻿using FocusTimer.Lib;
+using FocusTimer.Lib.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +24,7 @@ namespace FocusTimer.Features.Charting
         {
             get
             {
-                return Icon.ExtractAssociatedIcon(AppPath)?.ToImageSource();
+                return APIWrapper.ExtractAssociatedIcon(AppPath)?.ToImageSource();
             }
         }
         public string AppName

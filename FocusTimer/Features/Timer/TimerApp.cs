@@ -50,7 +50,7 @@ namespace FocusTimer.Features.Timer
         {
             get
             {
-                return ActiveStopwatch.ElapsedString();
+                return ActiveStopwatch.ElapsedString(TicksStartOffset);
             }
         }
 
@@ -68,7 +68,7 @@ namespace FocusTimer.Features.Timer
         {
             get
             {
-                return ActiveStopwatch.ElapsedTicks;
+                return TicksStartOffset + ActiveStopwatch.ElapsedTicks;
             }
         }
 
@@ -91,25 +91,38 @@ namespace FocusTimer.Features.Timer
         #region 사용량 집계
 
         private AppUsage? Usage;
-        private long ElapsedTicksOffset = 0;
+        private long TicksStartOffset = 0;
+        private long TicksElapsedOffset = 0;
 
         private void UpdateUsage()
         {
             if (Usage != null && Usage.RegisteredAt.Date < DateTime.Today)
             {
                 // 날짜가 지났습니다!
-                ElapsedTicksOffset += Usage.Usage;
+                TicksElapsedOffset += Usage.Usage;
                 Usage = null;
             }
 
             Usage ??= UsageRepository.CreateAppUsage();
 
             Usage.AppPath = ProcessExecutablePath;
-            Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
+            Usage.Usage = ElapsedTicks - TicksElapsedOffset;
             Usage.UpdatedAt = DateTime.Now;
             Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
 
             UsageRepository.Save();
+        }
+
+        public void RestoreFromLastUsage()
+        {
+            Usage = UsageRepository.GetLastAppUsage(ProcessExecutablePath);
+
+            if (Usage != null)
+            {
+                ActiveStopwatch.Restart();
+
+                TicksStartOffset += Usage.Usage;
+            }
         }
 
         #endregion

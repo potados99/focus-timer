@@ -59,6 +59,12 @@ namespace FocusTimer.Features.Timer
         {
             RestoreApps();
 
+            RestoreFromLastUsage();
+            foreach (var slot in TimerSlots)
+            {
+                slot.CurrentApp?.RestoreFromLastUsage();
+            }
+
             InitGlobalTimer();
             InitFocusLock();
 
@@ -104,7 +110,7 @@ namespace FocusTimer.Features.Timer
 
         public void Render()
         {
-            NotifyPropertyChanged(nameof(ElapsedTime));
+            NotifyPropertyChanged(nameof(ActiveElapsedTime));
             NotifyPropertyChanged(nameof(IsAnyAppActive));
             NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 
@@ -123,28 +129,65 @@ namespace FocusTimer.Features.Timer
         {
             get
             {
-                return AlwaysOnStopwatch.ElapsedTicks;
+                return TicksStartOffset + AlwaysOnStopwatch.ElapsedTicks;
+            }
+        }
+
+        public long ActiveElapsedTicks
+        {
+            get
+            {
+                return ActiveTicksStartOffset + ActiveStopwatch.ElapsedTicks;
+            }
+        }
+
+        public string ActiveElapsedTime
+        {
+            get
+            {
+                return ActiveStopwatch.ElapsedString(ActiveTicksStartOffset);
             }
         }
 
         private TimerUsage? Usage;
-        private long ElapsedTicksOffset = 0;
+
+        private long TicksStartOffset = 0;
+        private long TicksElapsedOffset = 0;
+
+        private long ActiveTicksStartOffset = 0;
+        private long ActiveTicksElapsedOffset = 0;
 
         private void UpdateUsage()
         {
             if (Usage != null && Usage.StartedAt.Date < DateTime.Today)
             {
                 // 날짜가 지났습니다!
-                ElapsedTicksOffset += Usage.Usage;
+                TicksElapsedOffset += Usage.Usage;
+                ActiveTicksElapsedOffset += Usage.ActiveUsage;
                 Usage = null;
             }
 
             Usage ??= UsageRepository.CreateTimerUsage();
 
-            Usage.Usage = ElapsedTicks - ElapsedTicksOffset;
+            Usage.Usage = ElapsedTicks - TicksElapsedOffset;
+            Usage.ActiveUsage = ActiveElapsedTicks - ActiveTicksElapsedOffset;
             Usage.UpdatedAt = DateTime.Now;
 
             UsageRepository.Save();
+        }
+
+        public void RestoreFromLastUsage()
+        {
+            Usage = UsageRepository.GetLastTimerUsage();
+
+            if (Usage != null)
+            {
+                AlwaysOnStopwatch.Restart();
+                ActiveStopwatch.Restart();
+
+                TicksStartOffset += Usage.Usage;
+                ActiveTicksStartOffset += Usage.ActiveUsage;
+            }
         }
 
         #endregion
@@ -256,14 +299,6 @@ namespace FocusTimer.Features.Timer
         private readonly Stopwatch ActiveStopwatch = new();
         private readonly Stopwatch AlwaysOnStopwatch = new();
         private readonly DispatcherTimer OneSecTickTimer = new();
-
-        public string ElapsedTime
-        {
-            get
-            {
-                return ActiveStopwatch.ElapsedString();
-            }
-        }
 
         #endregion
 
@@ -556,6 +591,13 @@ namespace FocusTimer.Features.Timer
         public void ResetTimer()
         {
             InitGlobalTimer();
+
+            Usage = null;
+            TicksStartOffset = 0;
+            TicksElapsedOffset = 0;
+            ActiveTicksStartOffset = 0;
+            ActiveTicksElapsedOffset = 0;
+
             RestoreApps();
 
             TickAll();
@@ -579,7 +621,7 @@ namespace FocusTimer.Features.Timer
                     return "0%";
                 }
 
-                double concentration = 100 * elapsedTotal / (AlwaysOnStopwatch.ElapsedTicks + 1);
+                double concentration = 100 * elapsedTotal / (ElapsedTicks + 1);
 
                 return concentration + "%";
             }
