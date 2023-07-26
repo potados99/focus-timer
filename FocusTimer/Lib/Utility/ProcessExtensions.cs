@@ -13,6 +13,7 @@ namespace FocusTimer.Lib.Utility
         {
             if (process.Id == 0)
             {
+                process.GetLogger().Warn("이 프로세스의 ID는 0입니다. 따라서 실행 파일의 경로를 가져올 수 없기에 null을 반환합니다.");
                 return null;
             }
 

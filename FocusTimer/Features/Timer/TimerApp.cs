@@ -15,7 +15,7 @@ namespace FocusTimer.Features.Timer
     /// </summary>
     public class TimerApp
     {
-        public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle).ExecutablePath())
+        public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle)?.ExecutablePath())
         { }
 
         public TimerApp(string? executablePath)

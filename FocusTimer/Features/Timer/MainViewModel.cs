@@ -3,6 +3,7 @@ using FocusTimer.Features.Charting.Repository;
 using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
+using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,7 +44,7 @@ namespace FocusTimer.Features.Timer
             {
                 if (CurrentRegisteringTimerSlot != null && !APIWrapper.IsThisProcessForeground())
                 {
-                    FinishRegisteringApp(new TimerApp(current));
+                    FinishRegisteringApp(current);
                 }
 
                 RestoreFocusIfNeeded(prev, current);
@@ -466,8 +467,21 @@ namespace FocusTimer.Features.Timer
             Render();
         }
 
-        private void FinishRegisteringApp(TimerApp app)
+        private void FinishRegisteringApp(IntPtr windowHandle)
         {
+            TimerApp app;
+
+            try
+            {
+                app = new TimerApp(windowHandle);
+            } catch (Exception e)
+            {
+                Crashes.TrackError(e);
+                e.GetLogger().Error("Window handle로부터 TimerApp을 만드는 데에 실패하였습니다. 앱 등록을 건너뜁니다.");
+                e.GetLogger().Error(e);
+                return;
+            }
+            
             if (TimerSlots.Select(s => s.CurrentApp?.ProcessExecutablePath).Contains(app.ProcessExecutablePath))
             {
                 UnableToRegisterApp("이미 등록된 프로그램이에요.");
