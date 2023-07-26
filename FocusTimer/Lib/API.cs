@@ -90,5 +90,8 @@ namespace FocusTimer.Lib
             ProcessAccessFlags processAccess,
             bool bInheritHandle,
             int processId);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr ExtractAssociatedIcon(IntPtr hInst, StringBuilder lpIconPath, out ushort lpiIcon);
     }
 }

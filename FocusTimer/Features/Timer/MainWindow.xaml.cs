@@ -24,7 +24,9 @@ namespace FocusTimer.Features.Timer
 
         public MainWindow()
         {
+#if !DEBUG
             HandleUnhandledExceptions();
+#endif
 
             InitializeComponent();
 

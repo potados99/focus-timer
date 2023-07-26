@@ -27,8 +27,8 @@ namespace FocusTimer.Features.Timer
 
             ProcessExecutablePath = executablePath!;
 
-            Image = Icon.ExtractAssociatedIcon(executablePath)?.ToImageSource();
-            AppName = FileVersionInfo.GetVersionInfo(executablePath).FileDescription;
+            Image = APIWrapper.ExtractAssociatedIcon(ProcessExecutablePath).ToImageSource();
+            AppName = FileVersionInfo.GetVersionInfo(ProcessExecutablePath).FileDescription;
         }
 
         ~TimerApp()

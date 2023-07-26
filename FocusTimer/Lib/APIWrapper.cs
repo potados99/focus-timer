@@ -1,8 +1,10 @@
 ﻿using FocusTimer.Lib.Utility;
 using log4net.Repository.Hierarchy;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -117,6 +119,28 @@ namespace FocusTimer.Lib
             }
 
             return builder.ToString();
+        }
+
+        #endregion
+
+        #region 아이콘
+
+        /// <summary>
+        /// 기존의 <see cref="Icon.ExtractAssociatedIcon(string)"/> 메소드는
+        /// 인자가 UNC이면 실행을 거부하는 문제가 있습니다.
+        /// 이 메소드는 그 문제를 해결합니다.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static Icon ExtractAssociatedIcon(string filePath)
+        {
+            ushort uicon;
+            StringBuilder strB = new StringBuilder(260); // Allocate MAX_PATH chars
+            strB.Append(filePath);
+            IntPtr handle = API.ExtractAssociatedIcon(IntPtr.Zero, strB, out uicon);
+            Icon ico = Icon.FromHandle(handle);
+
+            return ico;
         }
 
         #endregion
