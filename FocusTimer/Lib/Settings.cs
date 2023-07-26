@@ -10,7 +10,10 @@ namespace FocusTimer.Lib
             {
                 Properties.Settings.Default.App1,
                 Properties.Settings.Default.App2,
-                Properties.Settings.Default.App3
+                Properties.Settings.Default.App3,
+                Properties.Settings.Default.App4,
+                Properties.Settings.Default.App5,
+
             };
         }
 
@@ -19,6 +22,8 @@ namespace FocusTimer.Lib
             Properties.Settings.Default.App1 = apps[0];
             Properties.Settings.Default.App2 = apps[1];
             Properties.Settings.Default.App3 = apps[2];
+            Properties.Settings.Default.App4 = apps[3];
+            Properties.Settings.Default.App5 = apps[4];
 
             Properties.Settings.Default.Save();
         }

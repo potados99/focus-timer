@@ -18,7 +18,7 @@
         Title="MainWindow"
         Closed="Window_Closed"
         KeyDown="Window_KeyDown"
-        Height="{Binding Path=WindowHeight, FallbackValue=160, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        Height="{Binding Path=WindowHeight, FallbackValue=200, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
         ShowInTaskbar="False"
         Width="230">
 
@@ -154,7 +154,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{Binding FixedPartLength, FallbackValue=1.4*}" />
-                    <RowDefinition Height="{Binding ExpandablePartLength, FallbackValue=3*}" />
+                    <RowDefinition Height="{Binding ExpandablePartLength, FallbackValue=5*}" />
                 </Grid.RowDefinitions>
 
                 <!-- 항상 보이는 영역 -->
@@ -264,6 +264,8 @@
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
 
                         <local:TimerSlot Grid.Row="0"
@@ -272,6 +274,10 @@
                                          DataContext="{Binding TimerSlots[1]}" />
                         <local:TimerSlot Grid.Row="2"
                                          DataContext="{Binding TimerSlots[2]}" />
+                        <local:TimerSlot Grid.Row="3"
+                                         DataContext="{Binding TimerSlots[3]}" />
+                        <local:TimerSlot Grid.Row="4"
+                                         DataContext="{Binding TimerSlots[4]}" />
                     </Grid>
                 </Grid>
             </Grid>

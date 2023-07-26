@@ -177,7 +177,7 @@ namespace FocusTimer.Features.Timer
             Expanded = !Expanded;
         }
 
-        private readonly int windowHeight = 160;
+        private readonly int windowHeight = 40 * (1 + 5);
         public int WindowHeight
         {
             get
@@ -203,7 +203,7 @@ namespace FocusTimer.Features.Timer
         }
 
         private GridLength fixedPartLength = new GridLength(1.4, GridUnitType.Star);
-        private GridLength expadedLength = new GridLength(4, GridUnitType.Star);
+        private GridLength expadedLength = new GridLength(1 + 5, GridUnitType.Star);
         private GridLength collapsedLength = new GridLength(0);
 
         public GridLength FixedPartLength
@@ -437,6 +437,8 @@ namespace FocusTimer.Features.Timer
             new TimerSlotViewModel() { SlotNumber = 0 },
             new TimerSlotViewModel() { SlotNumber = 1 },
             new TimerSlotViewModel() { SlotNumber = 2 },
+            new TimerSlotViewModel() { SlotNumber = 3 },
+            new TimerSlotViewModel() { SlotNumber = 4 },
         };
 
         private TimerSlotViewModel? CurrentRegisteringTimerSlot

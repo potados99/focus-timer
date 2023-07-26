@@ -25,6 +25,30 @@ namespace FocusTimer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FocusLockHoldDuration {
+            get {
+                return ((int)(this["FocusLockHoldDuration"]));
+            }
+            set {
+                this["FocusLockHoldDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ActivityTimeout {
+            get {
+                return ((int)(this["ActivityTimeout"]));
+            }
+            set {
+                this["ActivityTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string App1 {
             get {
@@ -61,25 +85,25 @@ namespace FocusTimer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int FocusLockHoldDuration {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string App4 {
             get {
-                return ((int)(this["FocusLockHoldDuration"]));
+                return ((string)(this["App4"]));
             }
             set {
-                this["FocusLockHoldDuration"] = value;
+                this["App4"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ActivityTimeout {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string App5 {
             get {
-                return ((int)(this["ActivityTimeout"]));
+                return ((string)(this["App5"]));
             }
             set {
-                this["ActivityTimeout"] = value;
+                this["App5"] = value;
             }
         }
     }
