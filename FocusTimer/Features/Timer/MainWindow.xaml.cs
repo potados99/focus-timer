@@ -119,6 +119,11 @@ namespace FocusTimer.Features.Timer
             App.Current.Shutdown();
         }
 
+        private void ResetItem_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ResetTimer();
+        }
+
         private void ChartItem_Click(object sender, RoutedEventArgs e)
         {
             if (OpenedChartWindow == null)

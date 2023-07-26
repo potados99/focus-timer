@@ -78,6 +78,14 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Style="{StaticResource ModernMenuItem}"
+                      x:Name="ResetItem"
+                      Header="타이머 리셋"
+                      Click="ResetItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource ic_refresh}" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Style="{StaticResource ModernMenuItem}"
                       x:Name="ChartItem"
                       Header="통계 대시보드"
                       Click="ChartItem_Click">

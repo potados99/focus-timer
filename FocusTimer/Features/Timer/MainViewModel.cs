@@ -236,6 +236,11 @@ namespace FocusTimer.Features.Timer
 
         public void InitGlobalTimer()
         {
+            OneSecTickTimer.Stop();
+            OneSecTickTimer.RemoveHandlers();
+            AlwaysOnStopwatch.Reset();
+            ActiveStopwatch.Reset();
+
             OneSecTickTimer.Tick += (_, _) =>
             {
                 TickAll();
@@ -546,6 +551,19 @@ namespace FocusTimer.Features.Timer
 
         #endregion
 
+        #region 타이머의 리셋
+
+        public void ResetTimer()
+        {
+            InitGlobalTimer();
+            RestoreApps();
+
+            TickAll();
+            RenderAll();
+        }
+
+        #endregion
+
         #region 집중도
 
         public string Concentration
@@ -561,7 +579,7 @@ namespace FocusTimer.Features.Timer
                     return "0%";
                 }
 
-                double concentration = 100 * elapsedTotal / AlwaysOnStopwatch.ElapsedTicks;
+                double concentration = 100 * elapsedTotal / (AlwaysOnStopwatch.ElapsedTicks + 1);
 
                 return concentration + "%";
             }
