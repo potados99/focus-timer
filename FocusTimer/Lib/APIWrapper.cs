@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FocusTimer.Lib.Utility;
+using log4net.Repository.Hierarchy;
+using Microsoft.AppCenter.Crashes;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -71,21 +74,30 @@ namespace FocusTimer.Lib
 
         #region 프로세스
 
-        public static Process GetProcessByWindowHandle(IntPtr windowHandle)
+        public static Process? GetProcessByWindowHandle(IntPtr windowHandle)
         {
             API.GetWindowThreadProcessId(windowHandle, out var processId);
 
-            return Process.GetProcessById((int)processId);
+            try
+            {
+                return Process.GetProcessById((int)processId);
+            } catch (Exception e)
+            {
+                Crashes.TrackError(e);
+                e.GetLogger().Error($"주어진 프로세스 ID({processId})에 해당하는 프로세스를 찾을 수 없습니다.");
+                e.GetLogger().Error(e);
+                return null;
+            }
         }
 
-        public static Process GetForegroundProcess()
+        public static Process? GetForegroundProcess()
         {
             return GetProcessByWindowHandle(GetForegroundWindow());
         }
 
         public static bool IsThisProcessForeground()
         {
-            return GetForegroundProcess().Id == Process.GetCurrentProcess().Id;
+            return GetForegroundProcess()?.Id == Process.GetCurrentProcess().Id;
         }
 
         public static String GetProcessFilename(Process p)

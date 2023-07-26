@@ -58,7 +58,7 @@ namespace FocusTimer.Features.Timer
         {
             get
             {
-                return APIWrapper.GetForegroundProcess().ExecutablePath() == ProcessExecutablePath && UserActivityMonitor.Instance.IsActive;
+                return APIWrapper.GetForegroundProcess()?.ExecutablePath() == ProcessExecutablePath && UserActivityMonitor.Instance.IsActive;
             }
         }
 
