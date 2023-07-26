@@ -1,8 +1,12 @@
 ﻿using FocusTimer.Features.Charting.Processing;
+using FocusTimer.Lib.Utility;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -48,13 +52,21 @@ namespace FocusTimer.Features.Charting.Entity
                 return;
             }
 
-            if (!File.Exists(DbPath))
+            if (File.Exists(DbPath))
             {
-                PendingActions.Enqueue(() =>
+                try
                 {
-                    Database.EnsureCreated();
-                });
+                    TimerUsages.AsEnumerable().LastOrDefault();
+                } catch (SqliteException e)
+                {
+                    Crashes.TrackError(e);
+                    e.GetLogger().Warn("DB에 질의할 때에 SqliteException이 발생하여 DB를 새로 생성합니다.");
+                    e.GetLogger().Warn(e);
+                    Database.EnsureDeleted();
+                }
             }
+            
+            Database.EnsureCreated();
 
             new BackgroundWorker(this).StartWorking();
         }
