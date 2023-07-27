@@ -5,7 +5,7 @@
 
 #define MyAppId "{77E6B305-BB81-49FA-A456-6E485C0B0B95}"
 #define MyAppName "Focus Timer"
-#define MyAppVersion "0.5"
+#define MyAppVersion "0.6"
 #define MyAppPublisher "World Moment"
 #define MyAppURL "https://tumblbug.com/worldmoment_focus"
 #define MyAppExeName "FocusTimer.exe"
