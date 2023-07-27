@@ -15,6 +15,8 @@ namespace FocusTimer.Features.Charting.Entity
 {
     public class FocusTimerDatabaseContext : DbContext
     {
+        private readonly bool ReadOnly;
+
         public DbSet<AppUsage> AppUsages { get; set; }
         public DbSet<TimerUsage> TimerUsages { get; set; }
 
@@ -38,15 +40,21 @@ namespace FocusTimer.Features.Charting.Entity
 
         public FocusTimerDatabaseContext(bool readOnly)
         {
-            Initialize(readOnly);
+            this.ReadOnly = readOnly;
+
+            Initialize();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-            optionsBuilder.UseSqlite($"Data Source={DbPath}");
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder
+            .UseSqlite($"Data Source={DbPath}")
+            .UseQueryTrackingBehavior(ReadOnly ? 
+                QueryTrackingBehavior.NoTracking : // 읽기전용에서는 캐싱을 꺼야 DB에 생긴 변화를 제대로 가져옵니다.
+                QueryTrackingBehavior.TrackAll
+            ); 
 
-        public void Initialize(bool readOnly)
+        public void Initialize()
         {
-            if (readOnly)
+            if (ReadOnly)
             {
                 // 읽기 전용 컨텍스트이면 DB 생성과 백그라운드 워커 스레드 실행을 하지 않습니다.
                 return;
