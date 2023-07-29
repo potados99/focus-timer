@@ -1,4 +1,6 @@
-﻿using SkiaSharp;
+﻿using Microsoft.AppCenter.Crashes;
+using SkiaSharp;
+using System;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Interop;
@@ -23,18 +25,24 @@ namespace FocusTimer.Lib.Utility
 
         public static MColor ToColor(this Icon icon)
         {
-            var bitmap = icon.ToBitmap();
-            var x = bitmap.Size.Width / 2;
-            var y = bitmap.Size.Height / 2;
-
-            DColor p = bitmap.GetPixel(x, y);
-
-            while (p.A != 255)
+            try
             {
-                p = bitmap.GetPixel(++x, y);
-            }
+                var bitmap = icon.ToBitmap();
+                var x = bitmap.Size.Width / 2;
+                var y = bitmap.Size.Height / 2;
 
-            return MColor.FromRgb(p.R, p.G, p.B);
+                DColor p = bitmap.GetPixel(x, y);
+
+                while (p.A != 255)
+                {
+                    p = bitmap.GetPixel(++x, y);
+                }
+
+                return MColor.FromRgb(p.R, p.G, p.B);
+            } catch (Exception e) {
+                Crashes.TrackError(e);
+                return MColor.FromRgb(50, 50, 50);
+            }
         }
 
         public static SKColor ToSKColor(this Icon icon)
