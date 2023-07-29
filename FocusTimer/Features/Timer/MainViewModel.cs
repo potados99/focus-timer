@@ -159,10 +159,10 @@ namespace FocusTimer.Features.Timer
                 // 날짜가 지났습니다!
                 TicksElapsedOffset += Usage.Usage;
                 ActiveTicksElapsedOffset += Usage.ActiveUsage;
-                Usage = null;
+                Usage = UsageRepository.CreateTimerUsage(closeOthers: false/*이전 것과 이어집니다.*/);
             }
 
-            Usage ??= UsageRepository.CreateTimerUsage();
+            Usage ??= UsageRepository.CreateTimerUsage(closeOthers: true/*이전 것과 분리됩니다.*/);
 
             Usage.Usage = ElapsedTicks - TicksElapsedOffset;
             Usage.ActiveUsage = ActiveElapsedTicks - ActiveTicksElapsedOffset;
@@ -173,16 +173,19 @@ namespace FocusTimer.Features.Timer
 
         public void RestoreStatesFromLastUsage()
         {
-            Usage = UsageRepository.GetLastTimerUsage();
-
-            if (Usage != null)
+            var openUsages = UsageRepository.GetLastTimerUsages();
+            if (openUsages.Count() == 0)
             {
-                AlwaysOnStopwatch.Restart();
-                ActiveStopwatch.Restart();
-
-                TicksStartOffset += Usage.Usage;
-                ActiveTicksStartOffset += Usage.ActiveUsage;
+                return;
             }
+
+            Usage = openUsages.Last();
+
+            AlwaysOnStopwatch.Restart();
+            ActiveStopwatch.Restart();
+
+            TicksStartOffset += openUsages.Sum(u => u.Usage);
+            ActiveTicksStartOffset += openUsages.Sum(u => u.ActiveUsage);
 
             foreach (var slot in TimerSlots)
             {

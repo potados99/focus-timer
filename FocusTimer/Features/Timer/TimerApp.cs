@@ -5,6 +5,7 @@ using FocusTimer.Lib.Utility;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Media;
 
 namespace FocusTimer.Features.Timer
@@ -100,12 +101,11 @@ namespace FocusTimer.Features.Timer
             {
                 // 날짜가 지났습니다!
                 TicksElapsedOffset += Usage.Usage;
-                Usage = null;
+                Usage = UsageRepository.CreateAppUsage(ProcessExecutablePath, closeOthers: false/*이전 것과 이어집니다.*/);
             }
 
-            Usage ??= UsageRepository.CreateAppUsage();
+            Usage ??= UsageRepository.CreateAppUsage(ProcessExecutablePath, closeOthers: true/*이전 것과 분리됩니다.*/);
 
-            Usage.AppPath = ProcessExecutablePath;
             Usage.Usage = ElapsedTicks - TicksElapsedOffset;
             Usage.UpdatedAt = DateTime.Now;
             Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
@@ -115,15 +115,18 @@ namespace FocusTimer.Features.Timer
 
         public void RestoreFromLastUsage()
         {
-            Usage = UsageRepository.GetLastAppUsage(ProcessExecutablePath);
+            var openUsages = UsageRepository.GetLastAppUsages(ProcessExecutablePath);
+            if (openUsages.Count() == 0)
+            {
+                return;
+            }
+
+            Usage = openUsages.Last();
             IsCountedOnConcentrationCalculation = Usage.IsConcentrated;
 
-            if (Usage != null)
-            {
-                ActiveStopwatch.Restart();
+            ActiveStopwatch.Restart();
 
-                TicksStartOffset += Usage.Usage;
-            }
+            TicksStartOffset += openUsages.Sum(u => u.Usage);
         }
 
         #endregion

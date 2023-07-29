@@ -26,11 +26,18 @@ namespace FocusTimer.Features.Charting.Repository
             return ReadingContext.TimerUsages.Where(u => u.StartedAt >= then).OrderBy(u => u.StartedAt);
         }
 
-        public static AppUsage CreateAppUsage()
+        public static AppUsage CreateAppUsage(string appPath, bool closeOthers = true)
         {
+            if (closeOthers)
+            {
+                WritingContext.CloseAppUsages(appPath);
+            }
+
             var usage = new AppUsage
             {
-                RegisteredAt = DateTime.Now
+                AppPath = appPath,
+                RegisteredAt = DateTime.Now,
+                IsOpen = true
             };
 
             WritingContext.AddAppUsage(usage);
@@ -38,16 +45,22 @@ namespace FocusTimer.Features.Charting.Repository
             return usage;
         }
 
-        public static AppUsage GetLastAppUsage(string appPath)
+        public static IEnumerable<AppUsage> GetLastAppUsages(string appPath)
         {
-            return WritingContext.AppUsages.Where(u => u.AppPath == appPath).AsEnumerable().LastOrDefault();
+            return WritingContext.AppUsages.Where(u => u.AppPath == appPath && u.IsOpen).AsEnumerable();
         }
 
-        public static TimerUsage CreateTimerUsage()
+        public static TimerUsage CreateTimerUsage(bool closeOthers = true)
         {
+            if (closeOthers)
+            {
+                WritingContext.CloseTimerUsages();
+            }
+
             var usage = new TimerUsage
             {
-                StartedAt = DateTime.Now
+                StartedAt = DateTime.Now,
+                IsOpen = true
             };
 
             WritingContext.AddTimerUsage(usage);
@@ -55,9 +68,9 @@ namespace FocusTimer.Features.Charting.Repository
             return usage;
         }
 
-        public static TimerUsage GetLastTimerUsage()
+        public static IEnumerable<TimerUsage> GetLastTimerUsages()
         {
-            return WritingContext.TimerUsages.AsEnumerable().LastOrDefault();
+            return WritingContext.TimerUsages.Where(u => u.IsOpen).AsEnumerable();
         }
 
         public static void Save()

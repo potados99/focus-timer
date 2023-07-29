@@ -79,11 +79,37 @@ namespace FocusTimer.Features.Charting.Entity
             new BackgroundWorker(this).StartWorking();
         }
 
+        public void CloseAppUsages(string appPath)
+        {
+            PendingActions.Enqueue(() =>
+            {
+                var openUsages = AppUsages.Where(u => u.AppPath == appPath && u.IsOpen == true);
+                foreach (var u in openUsages)
+                {
+                    u.IsOpen = false;
+                }
+                AppUsages.UpdateRange(openUsages);
+            });
+        }
+
         public void AddAppUsage(AppUsage usage)
         {
             PendingActions.Enqueue(() =>
             {
                 AppUsages.Add(usage);
+            });
+        }
+
+        public void CloseTimerUsages()
+        {
+            PendingActions.Enqueue(() =>
+            {
+                var openUsages = TimerUsages.Where(u => u.IsOpen == true);
+                foreach (var u in openUsages)
+                {
+                    u.IsOpen = false;
+                }
+                TimerUsages.UpdateRange(openUsages);
             });
         }
 
