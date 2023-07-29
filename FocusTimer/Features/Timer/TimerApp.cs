@@ -116,6 +116,7 @@ namespace FocusTimer.Features.Timer
         public void RestoreFromLastUsage()
         {
             Usage = UsageRepository.GetLastAppUsage(ProcessExecutablePath);
+            IsCountedOnConcentrationCalculation = Usage.IsConcentrated;
 
             if (Usage != null)
             {
