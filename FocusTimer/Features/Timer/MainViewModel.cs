@@ -506,6 +506,13 @@ namespace FocusTimer.Features.Timer
             {
                 return;
             }
+            
+            if (IsFocusLocked)
+            {
+                StartAnimation("ShakeHorizontalAnimation");
+                return;
+            }
+
 
             slot.StartWaitingForApp();
 
@@ -559,6 +566,12 @@ namespace FocusTimer.Features.Timer
         {
             if (CurrentRegisteringTimerSlot != null)
             {
+                return;
+            }
+
+            if (IsFocusLocked)
+            {
+                StartAnimation("ShakeHorizontalAnimation");
                 return;
             }
 
