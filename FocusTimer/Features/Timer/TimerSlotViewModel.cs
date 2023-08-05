@@ -1,4 +1,6 @@
 ﻿using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Utility;
+using System.IO;
 using System.Windows;
 
 namespace FocusTimer.Features.Timer
@@ -80,6 +82,11 @@ namespace FocusTimer.Features.Timer
         {
             if (string.IsNullOrEmpty(executablePath))
             {
+                return;
+            }
+            if (!File.Exists(executablePath))
+            {
+                this.GetLogger().Warn($"Executable not found: {executablePath}");
                 return;
             }
 
