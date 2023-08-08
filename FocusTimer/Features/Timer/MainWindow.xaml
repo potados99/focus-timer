@@ -15,11 +15,11 @@
         ResizeMode="NoResize"
         Background="{x:Null}"
         AllowsTransparency="True"
-        Title="MainWindow"
+        Title="Focus"
         Closed="Window_Closed"
         KeyDown="Window_KeyDown"
         Height="{Binding Path=WindowHeight, FallbackValue=200, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        ShowInTaskbar="False"
+        ShowInTaskbar="True"
         Width="230">
 
     <Window.Resources>
