@@ -69,7 +69,7 @@ if ($OnlyBuild) {
 git clone $distRepo --depth 1 "distribution"
 
 # Enter the repository.
-Push-Location "distribution/ScreenTranslator"
+Push-Location "distribution/$appName"
 
 # Use CRLF only.
 # It will prevent hashes from being changed due to line-end converts.
