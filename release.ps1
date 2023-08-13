@@ -21,12 +21,18 @@ $msBuildPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vsw
 Write-Output "MSBuild: $((Get-Command $msBuildPath).Path)"
 
 # Load current Git tag.
-$tag = $(git describe --tags)
+$tag = $(git describe --tags) # v2.0.0-beta1
 Write-Output "Tag: $tag"
 
-# Parse tag into a three-number version.
-$version = $tag.Split('-')[0].TrimStart('v')
-$version = "$version.0"
+# Parse tag into a three-number-and-prerelease version.
+$splitted = $tag.Split('-')
+$version = $splitted[0].TrimStart('v')
+$preReleaseNum = $splitted[$splitted.Length - 1] -replace "[^0-9]" , ''
+if ([string]::IsNullOrEmpty($preReleaseNum))
+{
+    $preReleaseNum = "0"
+}
+$version = "$version.$preReleaseNum" # 2.0.0.1
 Write-Output "Version: $version"
 
 # Clean output directory.
@@ -47,8 +53,10 @@ try {
         $msBuildVerbosityArg = ""
     }
     & $msBuildPath /target:publish /p:PublishProfile=ClickOnceProfile `
-        /p:ApplicationVersion=$version /p:Configuration=Release `
-        /p:PublishDir=$publishDir /p:PublishUrl=$publishDir `
+        /p:ApplicationVersion=$version `
+        /p:Configuration=Release `
+        /p:PublishDir=$publishDir `
+        /p:PublishUrl=$publishDir `
         $msBuildVerbosityArg
 
     # Measure publish size.
