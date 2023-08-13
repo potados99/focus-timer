@@ -1,1 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿name: Release
+
+on:
+  push:
+    tags: [v*]
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Git
+        run: |
+          git config --global url."https://potados99:${{ secrets.PAT }}@github.com".insteadOf "https://github.com"
+          git config --global user.name potados99
+          git config --global user.email potados99@gmail.com        
+
+      - name: Run release script
+        shell: pwsh
+        run: ./release.ps1
