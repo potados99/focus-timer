@@ -2,10 +2,9 @@
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
     <UseWPF>true</UseWPF>
 	  
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows</TargetFrameworks>
 	  
     <AssemblyName>LiveChartsCore.SkiaSharpView.WPF</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WPF</RootNamespace>
