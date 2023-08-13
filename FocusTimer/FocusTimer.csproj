@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-	<PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
@@ -36,18 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="LiveChartsCore">
-      <HintPath>..\LiveChartsCore\bin\Debug\net472\LiveChartsCore.dll</HintPath>
-    </Reference>
-    <Reference Include="LiveChartsCore.SkiaSharpView">
-      <HintPath>..\skiasharp\LiveChartsCore.SkiaSharp\bin\Debug\net472\LiveChartsCore.SkiaSharpView.dll</HintPath>
-    </Reference>
-    <Reference Include="LiveChartsCore.SkiaSharpView.WPF">
-      <HintPath>..\skiasharp\LiveChartsCore.SkiaSharp.WPF\bin\Debug\net472\LiveChartsCore.SkiaSharpView.WPF.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Windows;
 
 [assembly: AssemblyVersion("0.10.*")]
@@ -12,3 +13,5 @@ using System.Windows;
                                               // app, or any theme specific resource dictionaries)
 )]
 [assembly: log4net.Config.XmlConfigurator(ConfigFile = "Resources\\log4net.config", Watch = true)]
+
+[assembly: SupportedOSPlatform("windows")]
