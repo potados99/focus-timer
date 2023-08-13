@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
     
-    <FontFamily x:Key="digital-7">pack://application:,,,/Resources/#digital-7 mono</FontFamily>
 	<FontFamily x:Key="DSEG7">pack://application:,,,/Resources/#DSEG7 Classic</FontFamily>
 
 </ResourceDictionary>
