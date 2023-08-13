@@ -39,7 +39,7 @@ namespace FocusTimer.Features.Charting
         {
             get
             {
-                return new SolidColorBrush(Icon.ExtractAssociatedIcon(AppPath).ToColor());
+                return new SolidColorBrush(APIWrapper.ExtractAssociatedIcon(AppPath).ToColor());
             }
         }
 

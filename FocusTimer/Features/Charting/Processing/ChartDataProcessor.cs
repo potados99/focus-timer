@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
+using FocusTimer.Lib;
 
 namespace FocusTimer.Features.Charting.Processing
 {
@@ -101,7 +102,7 @@ namespace FocusTimer.Features.Charting.Processing
                 return new
                 {
                     AppPath = path,
-                    FillColor = Icon.ExtractAssociatedIcon(path).ToSKColor(),
+                    FillColor = APIWrapper.ExtractAssociatedIcon(path).ToSKColor(),
                     AppUsagesPerDay = Dates.Select(d => new
                     {
                         Date = d,

@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -134,10 +135,15 @@ namespace FocusTimer.Lib
         /// <returns></returns>
         public static Icon ExtractAssociatedIcon(string filePath)
         {
-            ushort uicon;
+            if (!File.Exists(filePath))
+            {
+                filePath.GetLogger().Warn($"Executable not found: {filePath}. Use C:\\Windows\\System32\\cmd.exe for fallback.");
+                return ExtractAssociatedIcon("C:\\Windows\\System32\\cmd.exe");
+            }
+            
             StringBuilder strB = new StringBuilder(260); // Allocate MAX_PATH chars
             strB.Append(filePath);
-            IntPtr handle = API.ExtractAssociatedIcon(IntPtr.Zero, strB, out uicon);
+            IntPtr handle = API.ExtractAssociatedIcon(IntPtr.Zero, strB, out var uicon);
             Icon ico = Icon.FromHandle(handle);
 
             return ico;
