@@ -2,8 +2,6 @@ using System.Reflection;
 using System.Runtime.Versioning;
 using System.Windows;
 
-[assembly: AssemblyVersion("0.10.*")]
-
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
                                      //(used if a resource is not found in the page,
