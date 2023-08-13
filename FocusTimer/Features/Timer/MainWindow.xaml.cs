@@ -10,7 +10,6 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Deployment.Application;
 
 namespace FocusTimer.Features.Timer
 {
