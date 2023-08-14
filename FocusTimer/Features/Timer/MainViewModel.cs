@@ -15,11 +15,14 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using FocusTimer.Features.License;
 
 namespace FocusTimer.Features.Timer
 {
     internal class MainViewModel : BaseModel
     {
+        private readonly LicenseService _licenseService = new();
+
         public MainViewModel()
         {
             UserActivityMonitor.Instance.OnActivated += () =>
@@ -720,5 +723,10 @@ namespace FocusTimer.Features.Timer
         }
 
         #endregion
+
+        public bool ShouldAskForLicense()
+        {
+            return _licenseService.HasValidLicenseKey() == false;
+        }
     }
 }

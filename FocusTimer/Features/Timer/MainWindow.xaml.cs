@@ -10,6 +10,7 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using System.Threading;
 using System.Threading.Tasks;
+using FocusTimer.Features.License;
 
 namespace FocusTimer.Features.Timer
 {
@@ -19,13 +20,19 @@ namespace FocusTimer.Features.Timer
     public partial class MainWindow : Window
     {
         private log4net.ILog Logger => this.GetLogger();
-
+        
         public MainWindow()
         {
 #if !DEBUG
             HandleUnhandledExceptions();
 #endif
-
+            
+            if (!ViewModel.ShouldAskForLicense())
+            {
+                new LicenseWindow().Show();
+                Close();
+            }
+            
             InitializeComponent();
 
             DataContext = ViewModel;
