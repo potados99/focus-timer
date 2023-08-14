@@ -5,13 +5,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FocusTimer.Lib.Utility
+namespace FocusTimer.Lib.Utility;
+
+public static class ObjectExtensions
 {
-    public static class ObjectExtensions
+    public static log4net.ILog GetLogger(this object obj)
     {
-        public static log4net.ILog GetLogger(this object obj)
-        {
-            return log4net.LogManager.GetLogger(obj.GetType());
-        }
+        return log4net.LogManager.GetLogger(obj.GetType());
     }
 }

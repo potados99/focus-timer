@@ -5,22 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FocusTimer.Lib.Utility
+namespace FocusTimer.Lib.Utility;
+
+internal class LogExporter
 {
-    internal class LogExporter
+    public void ExportLogs()
     {
-        public void ExportLogs()
-        {
             
-        }
+    }
 
-        public string UploadLogsAndGetTicket()
-        {
-            ZipFile.CreateFromDirectory("logs", "logs.zip");
+    public string UploadLogsAndGetTicket()
+    {
+        ZipFile.CreateFromDirectory("logs", "logs.zip");
 
 
 
-            return "";
-        }
+        return "";
     }
 }

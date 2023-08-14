@@ -1,57 +1,56 @@
 ﻿using System;
 using System.Windows.Threading;
 
-namespace FocusTimer.Lib.Utility
+namespace FocusTimer.Lib.Utility;
+
+public class CountdownTimer
 {
-    public class CountdownTimer
+    public delegate void TickHandler();
+    public event TickHandler? OnFinish;
+
+    public TimeSpan Duration { get; set; }
+
+    public bool IsEnabled
     {
-        public delegate void TickHandler();
-        public event TickHandler? OnFinish;
-
-        public TimeSpan Duration { get; set; }
-
-        public bool IsEnabled
+        get
         {
-            get
+            return this.Timer.IsEnabled;
+        }
+    }
+
+    private readonly DispatcherTimer Timer = new();
+
+    public TimeSpan TimeLeft { get; private set; }
+
+    public CountdownTimer()
+    {
+        Prepare();
+    }
+
+    private void Prepare()
+    {
+        Timer.Tick += (_, _) =>
+        {
+            this.TimeLeft = this.TimeLeft.Subtract(TimeSpan.FromSeconds(1));
+
+            if (this.TimeLeft == TimeSpan.Zero || this.TimeLeft.TotalSeconds <= 0)
             {
-                return this.Timer.IsEnabled;
+                this.Timer.Stop();
+                this.OnFinish?.Invoke();
+                return;
             }
-        }
+        };
+        Timer.Interval = TimeSpan.FromSeconds(1);
+    }
 
-        private readonly DispatcherTimer Timer = new();
+    public void Start()
+    {
+        this.TimeLeft = new TimeSpan(Duration.Ticks);
+        this.Timer.Start();
+    }
 
-        public TimeSpan TimeLeft { get; private set; }
-
-        public CountdownTimer()
-        {
-            Prepare();
-        }
-
-        private void Prepare()
-        {
-            Timer.Tick += (_, _) =>
-            {
-                this.TimeLeft = this.TimeLeft.Subtract(TimeSpan.FromSeconds(1));
-
-                if (this.TimeLeft == TimeSpan.Zero || this.TimeLeft.TotalSeconds <= 0)
-                {
-                    this.Timer.Stop();
-                    this.OnFinish?.Invoke();
-                    return;
-                }
-            };
-            Timer.Interval = TimeSpan.FromSeconds(1);
-        }
-
-        public void Start()
-        {
-            this.TimeLeft = new TimeSpan(Duration.Ticks);
-            this.Timer.Start();
-        }
-
-        public void Stop()
-        {
-            this.Timer.Stop();
-        }
+    public void Stop()
+    {
+        this.Timer.Stop();
     }
 }

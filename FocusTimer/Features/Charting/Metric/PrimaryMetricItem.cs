@@ -1,8 +1,7 @@
-﻿namespace FocusTimer.Features.Charting.Metric
+﻿namespace FocusTimer.Features.Charting.Metric;
+
+public class PrimaryMetricItem
 {
-    public class PrimaryMetricItem
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-    }
+    public string Name { get; set; }
+    public string Value { get; set; }
 }

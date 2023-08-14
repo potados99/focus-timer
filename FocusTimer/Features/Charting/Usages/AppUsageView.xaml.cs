@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace FocusTimer.Features.Charting.Usages
+namespace FocusTimer.Features.Charting.Usages;
+
+/// <summary>
+/// Interaction logic for AppUsageView.xaml
+/// </summary>
+public partial class AppUsageView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for AppUsageView.xaml
-    /// </summary>
-    public partial class AppUsageView : UserControl
+    public AppUsageView()
     {
-        public AppUsageView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
