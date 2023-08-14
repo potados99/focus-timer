@@ -59,6 +59,11 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
   <Target Name="SetAssemblyVersion" BeforeTargets="BeforeCompile">
     <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
       <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion" />

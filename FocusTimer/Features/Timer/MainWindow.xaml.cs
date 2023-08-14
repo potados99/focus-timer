@@ -27,7 +27,7 @@ namespace FocusTimer.Features.Timer
             HandleUnhandledExceptions();
 #endif
             
-            if (!ViewModel.ShouldAskForLicense())
+            if (ViewModel.ShouldAskForLicense())
             {
                 new LicenseWindow().Show();
                 Close();
