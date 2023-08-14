@@ -11,6 +11,7 @@ using Microsoft.AppCenter.Crashes;
 using System.Threading;
 using System.Threading.Tasks;
 using FocusTimer.Features.License;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FocusTimer.Features.Timer
 {
@@ -19,6 +20,8 @@ namespace FocusTimer.Features.Timer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly MainViewModel ViewModel = App.Provider.GetService<MainViewModel>()!;
+
         private log4net.ILog Logger => this.GetLogger();
         
         public MainWindow()
@@ -92,8 +95,7 @@ namespace FocusTimer.Features.Timer
                 Application.Current.Shutdown();
             }
         }
-
-        private readonly MainViewModel ViewModel = new();
+        
 
         private ChartWindow? OpenedChartWindow = null;
 

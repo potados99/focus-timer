@@ -21,10 +21,12 @@ namespace FocusTimer.Features.Timer
 {
     internal class MainViewModel : BaseModel
     {
-        private readonly LicenseService _licenseService = new();
+        private readonly LicenseService _licenseService;
 
-        public MainViewModel()
+        public MainViewModel(LicenseService licenseService)
         {
+            _licenseService = licenseService;
+            
             UserActivityMonitor.Instance.OnActivated += () =>
             {
                 RenderAll();
