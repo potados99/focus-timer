@@ -1,9 +1,10 @@
-﻿using FocusTimer.Lib.Component;
-using FocusTimer.Lib.Utility;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
+using FocusTimer.Domain.Entities;
+using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Utility;
 
-namespace FocusTimer.Features.Timer
+namespace FocusTimer.Features.Timer.Slot
 {
     public class TimerSlotViewModel : BaseModel
     {

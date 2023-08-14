@@ -1,4 +1,4 @@
-﻿namespace FocusTimer.Features.Charting
+﻿namespace FocusTimer.Features.Charting.Metric
 {
     public class PrimaryMetricItem
     {

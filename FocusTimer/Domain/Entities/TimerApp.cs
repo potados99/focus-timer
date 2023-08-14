@@ -1,14 +1,12 @@
-﻿using FocusTimer.Features.Charting.Entity;
-using FocusTimer.Features.Charting.Repository;
-using FocusTimer.Lib;
-using FocusTimer.Lib.Utility;
-using System;
+﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Media;
+using FocusTimer.Data.Repositories;
+using FocusTimer.Lib;
+using FocusTimer.Lib.Utility;
 
-namespace FocusTimer.Features.Timer
+namespace FocusTimer.Domain.Entities
 {
     /// <summary>
     /// 타이머 슬롯에 등록되는 앱을 나타냅니다.

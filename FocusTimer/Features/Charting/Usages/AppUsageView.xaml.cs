@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace FocusTimer.Features.Charting
+namespace FocusTimer.Features.Charting.Usages
 {
     /// <summary>
     /// Interaction logic for AppUsageView.xaml

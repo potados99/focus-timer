@@ -1,9 +1,9 @@
-﻿using FocusTimer.Features.Charting.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FocusTimer.Domain.Entities;
 
-namespace FocusTimer.Features.Charting.Repository
+namespace FocusTimer.Data.Repositories
 {
     public static class UsageRepository
     {

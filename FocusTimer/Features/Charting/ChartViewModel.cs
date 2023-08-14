@@ -1,6 +1,4 @@
-﻿using FocusTimer.Features.Charting.Processing;
-using FocusTimer.Features.Charting.Repository;
-using FocusTimer.Lib.Component;
+﻿using FocusTimer.Lib.Component;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
@@ -12,6 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using FocusTimer.Data.Repositories;
+using FocusTimer.Domain.Services;
+using FocusTimer.Features.Charting.LiveCharts;
+using FocusTimer.Features.Charting.Metric;
+using FocusTimer.Features.Charting.Usages;
 
 namespace FocusTimer.Features.Charting
 {
@@ -22,7 +25,7 @@ namespace FocusTimer.Features.Charting
 
         public void Loaded()
         {
-            LiveCharts.Configure(config =>
+            LiveChartsCore.LiveCharts.Configure(config =>
                 config
                     // registers SkiaSharp as the library backend
                     // REQUIRED unless you build your own

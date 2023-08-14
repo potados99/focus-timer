@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using FocusTimer.Features.Charting.LiveCharts;
 
 namespace FocusTimer.Features.Charting
 {

@@ -2,7 +2,7 @@
 using System.Linq;
 using Meziantou.Framework.Win32;
 
-namespace FocusTimer.Features.License;
+namespace FocusTimer.Domain.Services;
 
 public class LicenseService
 {

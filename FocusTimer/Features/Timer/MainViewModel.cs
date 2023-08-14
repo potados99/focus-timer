@@ -1,6 +1,4 @@
-﻿using FocusTimer.Features.Charting.Entity;
-using FocusTimer.Features.Charting.Repository;
-using FocusTimer.Lib;
+﻿using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 using Microsoft.AppCenter.Crashes;
@@ -15,7 +13,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using FocusTimer.Data.Repositories;
+using FocusTimer.Domain.Entities;
+using FocusTimer.Domain.Services;
 using FocusTimer.Features.License;
+using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer
 {

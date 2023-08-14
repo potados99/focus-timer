@@ -1,6 +1,6 @@
 ﻿using LiveChartsCore.Defaults;
 
-namespace FocusTimer.Features.Charting
+namespace FocusTimer.Features.Charting.LiveCharts
 {
     class DataPoint : DateTimePoint
     {

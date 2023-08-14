@@ -1,9 +1,9 @@
-﻿using FocusTimer.Features.Charting.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FocusTimer.Domain.Entities;
 
-namespace FocusTimer.Features.Charting.Processing
+namespace FocusTimer.Domain.Services
 {
     public static class DummyDataGenerator
     {

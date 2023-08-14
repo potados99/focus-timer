@@ -1,18 +1,22 @@
-﻿using FocusTimer.Features.Charting.Entity;
-using FocusTimer.Features.Charting.Repository;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using FocusTimer.Data.Repositories;
+using FocusTimer.Domain.Entities;
+using FocusTimer.Features.Charting;
+using FocusTimer.Features.Charting.LiveCharts;
+using FocusTimer.Features.Charting.Metric;
+using FocusTimer.Features.Charting.Usages;
+using FocusTimer.Features.Charting.Usages.Detail;
+using FocusTimer.Lib;
 using FocusTimer.Lib.Utility;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Linq;
-using FocusTimer.Lib;
 
-namespace FocusTimer.Features.Charting.Processing
+namespace FocusTimer.Domain.Services
 {
     public static class ChartDataProcessor
     {

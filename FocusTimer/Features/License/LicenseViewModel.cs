@@ -1,4 +1,5 @@
-﻿using FocusTimer.Lib.Component;
+﻿using FocusTimer.Domain.Services;
+using FocusTimer.Lib.Component;
 
 namespace FocusTimer.Features.License;
 

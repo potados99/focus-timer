@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace FocusTimer.Features.Charting
+namespace FocusTimer.Features.Charting.Metric
 {
     /// <summary>
     /// Interaction logic for PrimaryMetricView.xaml

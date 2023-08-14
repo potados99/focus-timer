@@ -1,4 +1,4 @@
-﻿namespace FocusTimer.Features.Charting
+﻿namespace FocusTimer.Features.Charting.Usages.Detail
 {
     public class UsageByTimeItem
     {

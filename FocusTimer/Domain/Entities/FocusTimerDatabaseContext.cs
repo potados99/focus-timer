@@ -1,17 +1,16 @@
-﻿using FocusTimer.Features.Charting.Processing;
-using FocusTimer.Lib.Utility;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using FocusTimer.Lib.Utility;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-namespace FocusTimer.Features.Charting.Entity
+namespace FocusTimer.Domain.Entities
 {
     public class FocusTimerDatabaseContext : DbContext
     {

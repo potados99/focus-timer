@@ -1,12 +1,12 @@
-﻿using FocusTimer.Lib;
-using FocusTimer.Lib.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Media;
+using FocusTimer.Features.Charting.Usages.Detail;
+using FocusTimer.Lib;
+using FocusTimer.Lib.Utility;
 
-namespace FocusTimer.Features.Charting
+namespace FocusTimer.Features.Charting.Usages
 {
     public class AppUsageItem
     {

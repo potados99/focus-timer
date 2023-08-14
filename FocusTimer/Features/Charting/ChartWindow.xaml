@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FocusTimer.Features.Charting"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+        xmlns:usages="clr-namespace:FocusTimer.Features.Charting.Usages"
+        xmlns:metric="clr-namespace:FocusTimer.Features.Charting.Metric"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:ChartViewModel}"
         Title="Chart"
@@ -199,7 +201,7 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:PrimaryMetricView Margin="14, 0, 14, 0" />
+                        <metric:PrimaryMetricView Margin="14, 0, 14, 0" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -214,7 +216,7 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:AppUsageView Margin="14, 0, 14, 18" />
+                        <usages:AppUsageView Margin="14, 0, 14, 18" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

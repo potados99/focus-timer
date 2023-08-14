@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FocusTimer.Features.Charting.Entity
+namespace FocusTimer.Domain.Entities
 {
     public class AppUsage
     {
