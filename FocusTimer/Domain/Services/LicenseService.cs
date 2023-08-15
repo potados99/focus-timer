@@ -8,21 +8,21 @@ public class LicenseService
 {
     public bool ValidateLicenseKey(string key)
     {
-        var parts = key.Trim().Split("-");
+        var normalized = key.Replace("-", "");
 
-        return parts.All(ValidatePart);
+        return ValidatePart(normalized);
     }
 
     private bool ValidatePart(string part)
     {
-        var sum = 3 + part.Take(part.Length - 1).Sum(digit => ParseHex(digit) ^ 3 + 1);
+        var sum = 3 + part.Take(part.Length - 1).Sum(digit => (ParseHex(digit) ^ 3) + 1);
 
         return sum % 16 == ParseHex(part.Last());
     }
-
-    private int ParseHex(char c)
+    
+    private uint ParseHex(char c)
     {
-        return int.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
+        return uint.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
     }
 
     public void RegisterLicenseKey(string key)
