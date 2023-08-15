@@ -11,10 +11,6 @@ public class LicenseViewModel : BaseViewModel
     
     public LicenseViewModel(LicenseService licenseService) => _licenseService = licenseService;
 
-    public event Signal? OnLicenseAccepted;
-    
-    public string LicenseKeyInput { get; set; } = "";
-    
     public override void OnInitialize()
     {
         if (_licenseService.HasValidLicenseKey())
@@ -23,6 +19,10 @@ public class LicenseViewModel : BaseViewModel
         }
     }
     
+    public event Signal? OnLicenseAccepted;
+    
+    public string LicenseKeyInput { get; set; } = "";
+
     public void SubmitLicense()
     {
         if (_licenseService.ValidateLicenseKey(LicenseKeyInput) == false)
