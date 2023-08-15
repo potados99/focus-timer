@@ -1,25 +1,29 @@
 ﻿using System.Windows;
 using FocusTimer.Features.Timer;
-using Microsoft.Extensions.DependencyInjection;
+using FocusTimer.Lib.Component;
 
 namespace FocusTimer.Features.License;
 
-public partial class LicenseWindow : Window
+public partial class LicenseWindow : LicenseViewModelWindow
 {
-    private readonly LicenseViewModel _viewModel = App.Provider.GetService<LicenseViewModel>()!;
-
-    public LicenseWindow()
+    protected override void OnInitialize()
     {
         InitializeComponent();
 
-        if (_viewModel.HasLicense())
+        // stop execution and open Main when valid license exists
+        ViewModel.OnLicenseAccepted += () =>
         {
             new MainWindow().Show();
             Close();
-        }
-        
-        
-        
-        
+        };
     }
+
+    private void SubmitButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.SubmitLicense();
+    }
+}
+
+public abstract class LicenseViewModelWindow : BaseWindow<LicenseViewModel>
+{
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Meziantou.Framework.Win32;
 
@@ -19,10 +20,22 @@ public class LicenseService
 
         return sum % 16 == ParseHex(part.Last());
     }
-    
-    private uint ParseHex(char c)
+
+    private int ParseHex(char c)
     {
-        return uint.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
+        var succeeded = int.TryParse(
+            c.ToString(),
+            System.Globalization.NumberStyles.HexNumber,
+            NumberFormatInfo.CurrentInfo,
+            out var result
+        );
+
+        if (!succeeded)
+        {
+            return -1;
+        }
+
+        return result;
     }
 
     public void RegisterLicenseKey(string key)

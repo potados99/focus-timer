@@ -31,4 +31,14 @@ public class LicenseServiceTest
         
         Assert.That(actual, Is.False);
     }
+    
+    [Test]
+    public void ShouldSurviveNonHex()
+    {
+        const string invalidKey = "hello haha";
+
+        var actual = _service.ValidateLicenseKey(invalidKey);
+        
+        Assert.That(actual, Is.False);
+    }
 }
