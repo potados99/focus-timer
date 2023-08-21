@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace FocusTimer.Features.Timer;
+namespace FocusTimer.Features.Timer.Border;
 
 /// <summary>
 /// Interaction logic for BorderWindow.xaml
@@ -28,7 +28,7 @@ public partial class BorderWindow : Window
             ShowInTaskbar = false
         }; // Create helper window
         w.Show(); // We need to show window before set is as owner to our main window
-        this.Owner = w; // Okey, this will result to disappear icon for main window.
+        Owner = w; // Okay, this will result to disappear icon for main window.
         w.Hide(); // Hide helper window just in case
     }
 

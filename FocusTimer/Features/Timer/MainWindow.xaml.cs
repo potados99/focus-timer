@@ -11,6 +11,7 @@ using Microsoft.AppCenter.Crashes;
 using System.Threading;
 using System.Threading.Tasks;
 using FocusTimer.Features.License;
+using FocusTimer.Features.Timer.Border;
 using FocusTimer.Lib.Component;
 
 namespace FocusTimer.Features.Timer;
