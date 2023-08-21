@@ -1,7 +1,5 @@
 ﻿using FocusTimer.Lib.Utility;
-using log4net.Repository.Hierarchy;
 using Microsoft.AppCenter.Crashes;
-using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Drawing;

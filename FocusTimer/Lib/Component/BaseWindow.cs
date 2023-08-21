@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FocusTimer.Lib.Component;

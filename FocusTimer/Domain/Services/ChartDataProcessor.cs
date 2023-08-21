@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Entities;
-using FocusTimer.Features.Charting;
 using FocusTimer.Features.Charting.LiveCharts;
 using FocusTimer.Features.Charting.Metric;
 using FocusTimer.Features.Charting.Usages;
