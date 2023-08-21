@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
 using FocusTimer.Domain.Entities;
+using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 
@@ -9,12 +10,9 @@ namespace FocusTimer.Features.Timer.Slot;
 public class TimerSlotViewModel : BaseModel
 {
     #region 이벤트 핸들러 정의와 구현
-
-    public delegate void RegisterHandler();
-    public delegate void ClearHandler();
-
-    public event RegisterHandler? OnRegisterApplication;
-    public event ClearHandler? OnClearApplication;
+    
+    public event Signal? OnRegisterApplication;
+    public event Signal? OnClearApplication;
 
     public void FireAppRegisterEvent() => OnRegisterApplication?.Invoke();
     public void FireAppClearEvent() => OnClearApplication?.Invoke();
@@ -25,48 +23,18 @@ public class TimerSlotViewModel : BaseModel
 
     public int SlotNumber { get; set; }
 
-    public TimerApp? CurrentApp { get; private set; } = null;
-    public bool IsWaitingForApp { get; private set; } = false;
+    public TimerApp? CurrentApp { get; private set; }
+    public bool IsWaitingForApp { get; private set; }
 
-    public Visibility IsAppVisible
-    {
-        get
-        {
-            return !IsWaitingForApp && CurrentApp != null ? Visibility.Visible : Visibility.Hidden;
-        }
-    }
+    public Visibility IsAppVisible => !IsWaitingForApp && CurrentApp != null ? Visibility.Visible : Visibility.Hidden;
 
-    public Visibility IsSetButtonVisible
-    {
-        get
-        {
-            return !IsWaitingForApp && CurrentApp == null ? Visibility.Visible : Visibility.Hidden;
-        }
-    }
+    public Visibility IsSetButtonVisible => !IsWaitingForApp && CurrentApp == null ? Visibility.Visible : Visibility.Hidden;
 
-    public Visibility IsWaitLabelVisible
-    {
-        get
-        {
-            return IsWaitingForApp ? Visibility.Visible : Visibility.Hidden;
-        }
-    }
+    public Visibility IsWaitLabelVisible => IsWaitingForApp ? Visibility.Visible : Visibility.Hidden;
 
-    public bool IsAppActive
-    {
-        get
-        {
-            return CurrentApp != null && CurrentApp.IsActive;
-        }
-    }
+    public bool IsAppActive => CurrentApp is {IsActive: true};
 
-    public bool IsAppCountedOnConcentrationCalculation
-    {
-        get
-        {
-            return CurrentApp != null && CurrentApp.IsCountedOnConcentrationCalculation;
-        }
-    }
+    public bool IsAppCountedOnConcentrationCalculation => CurrentApp is {IsCountedOnConcentrationCalculation: true};
 
     public string WindowSelectPrompt { get; set; } = "창을 클릭해주세요";
 
