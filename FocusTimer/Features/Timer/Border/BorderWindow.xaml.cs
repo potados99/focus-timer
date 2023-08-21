@@ -34,7 +34,7 @@ public partial class BorderWindow : Window
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.System && e.SystemKey == Key.F4)
+        if (e is {Key: Key.System, SystemKey: Key.F4})
         {
             // ALT + F4가 떨어지면 앱을 종료합니다.
             Application.Current.Shutdown();
