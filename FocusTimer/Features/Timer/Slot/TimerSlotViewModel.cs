@@ -7,7 +7,7 @@ using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer.Slot;
 
-public class TimerSlotViewModel : BaseModel
+public class TimerSlotViewModel : BaseViewModel
 {
     #region 이벤트 핸들러 정의와 구현
     

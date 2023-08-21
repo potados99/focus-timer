@@ -57,7 +57,7 @@ public partial class MainViewModel : BaseViewModel
         watcher.StartListening();
     }
 
-    public override void OnWindowLoaded()
+    public override void OnLoaded()
     {
         RestoreAppSlots();
         RestoreStatesFromLastUsage();

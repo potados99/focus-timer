@@ -11,7 +11,7 @@ public abstract class BaseWindow<T> : Window where T : BaseViewModel
     {
         DataContext = ViewModel;
 
-        Loaded += (_, _) => ViewModel.OnWindowLoaded();
+        Loaded += (_, _) => ViewModel.OnLoaded();
         
         OnInitialize();
         ViewModel.OnInitialize();

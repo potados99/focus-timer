@@ -6,7 +6,7 @@ public abstract class BaseViewModel : BaseModel
     {
     }
 
-    public virtual void OnWindowLoaded()
+    public virtual void OnLoaded()
     {
     }
 

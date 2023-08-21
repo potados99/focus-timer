@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:FocusTimer.Features.Timer"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+        xmlns:slot="clr-namespace:FocusTimer.Features.Timer.Slot"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Topmost="True"
@@ -275,15 +276,15 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
 
-                        <local:TimerSlot Grid.Row="0"
+                        <slot:TimerSlotControl Grid.Row="0"
                                          DataContext="{Binding TimerSlots[0]}" />
-                        <local:TimerSlot Grid.Row="1"
+                        <slot:TimerSlotControl Grid.Row="1"
                                          DataContext="{Binding TimerSlots[1]}" />
-                        <local:TimerSlot Grid.Row="2"
+                        <slot:TimerSlotControl Grid.Row="2"
                                          DataContext="{Binding TimerSlots[2]}" />
-                        <local:TimerSlot Grid.Row="3"
+                        <slot:TimerSlotControl Grid.Row="3"
                                          DataContext="{Binding TimerSlots[3]}" />
-                        <local:TimerSlot Grid.Row="4"
+                        <slot:TimerSlotControl Grid.Row="4"
                                          DataContext="{Binding TimerSlots[4]}" />
                     </Grid>
                 </Grid>
