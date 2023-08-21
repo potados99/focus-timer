@@ -21,7 +21,7 @@ using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer;
 
-internal partial class MainViewModel : BaseModel
+public partial class MainViewModel
 {
     #region 기타 UI
 

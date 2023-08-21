@@ -21,7 +21,7 @@ using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer;
 
-internal partial class MainViewModel : BaseModel
+public partial class MainViewModel 
 {
     #region 사용량 집계
 

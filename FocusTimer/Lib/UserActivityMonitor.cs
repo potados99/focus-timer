@@ -11,7 +11,7 @@ public class UserActivityMonitor
     public event StateChangeHandler? OnActivated;
     public event StateChangeHandler? OnDeactivated;
 
-    private readonly DispatcherTimer Timer = new();
+    private readonly DispatcherTimer _timer = new();
 
     public int Timeout { get; set; }
 
@@ -19,32 +19,26 @@ public class UserActivityMonitor
     {
         Timeout = Settings.GetActivityTimeout();
 
-        Timer.Interval = TimeSpan.FromMilliseconds(500);
-        Timer.Tick += (_, _) =>
+        _timer.Interval = TimeSpan.FromMilliseconds(500);
+        _timer.Tick += (_, _) =>
         {
-            if (IsActive && !WasActive)
+            if (IsActive && !_wasActive)
             {
                 OnActivated?.Invoke();
             }
 
-            if (!IsActive && WasActive)
+            if (!IsActive && _wasActive)
             {
                 OnDeactivated?.Invoke();
             }
 
-            WasActive = IsActive;
+            _wasActive = IsActive;
         };
 
-        Timer.Start();
+        _timer.Start();
     }
 
-    private bool WasActive = true;
+    private bool _wasActive = true;
 
-    public bool IsActive
-    {
-        get
-        {
-            return APIWrapper.GetElapsedFromLastInput() < (Timeout * 1000);
-        }
-    }
+    public bool IsActive => APIWrapper.GetElapsedFromLastInput() < (Timeout * 1000);
 }

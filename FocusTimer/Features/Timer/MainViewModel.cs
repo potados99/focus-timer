@@ -21,30 +21,41 @@ using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer;
 
-internal partial class MainViewModel : BaseModel
+public partial class MainViewModel : BaseViewModel
 {
     private readonly LicenseService _licenseService;
+    private readonly UserActivityMonitor _activityMonitor;
 
-    public MainViewModel(LicenseService licenseService)
+    public MainViewModel(LicenseService licenseService, UserActivityMonitor activityMonitor)
     {
         _licenseService = licenseService;
-            
-        UserActivityMonitor.Instance.OnActivated += () =>
-        {
-            RenderAll();
-        };
+        _activityMonitor = activityMonitor;
+    }
 
-        UserActivityMonitor.Instance.OnDeactivated += () =>
-        {
-            RenderAll();
-        };
+    public override void OnInitialize()
+    {
+        SetupActivityMonitor();
+        SetupTimerSlots();
+        SetupWatcher();
+    }
 
+    private void SetupActivityMonitor()
+    {
+        _activityMonitor.OnActivated += RenderAll;
+        _activityMonitor.OnDeactivated += RenderAll;
+    }
+
+    private void SetupTimerSlots()
+    {
         foreach (var slot in TimerSlots)
         {
             slot.OnRegisterApplication += () => StartRegisteringApplication(slot);
             slot.OnClearApplication += () => ClearApplication(slot);
         }
+    }
 
+    private void SetupWatcher()
+    {
         WindowWatcher watcher = new();
 
         watcher.OnFocused += (prev, current) =>
@@ -62,7 +73,7 @@ internal partial class MainViewModel : BaseModel
         watcher.StartListening();
     }
 
-    public void Loaded()
+    public override void OnWindowLoaded()
     {
         RestoreAppSlots();
         RestoreStatesFromLastUsage();
@@ -76,7 +87,7 @@ internal partial class MainViewModel : BaseModel
         this.GetLogger().Info("ViewModel 시작!");
     }
 
-    public void TickAll()
+    private void TickAll()
     {
         Tick();
 
@@ -86,7 +97,7 @@ internal partial class MainViewModel : BaseModel
         }
     }
 
-    public void Tick()
+    private void Tick()
     {
         if (IsAnyAppActive)
         {
@@ -100,7 +111,7 @@ internal partial class MainViewModel : BaseModel
         UpdateUsage();
     }
 
-    public void RenderAll()
+    private void RenderAll()
     {
         Render();
 
@@ -110,7 +121,7 @@ internal partial class MainViewModel : BaseModel
         }
     }
 
-    public void Render()
+    private void Render()
     {
         NotifyPropertyChanged(nameof(ActiveElapsedTime));
         NotifyPropertyChanged(nameof(IsAnyAppActive));

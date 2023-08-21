@@ -21,9 +21,9 @@ using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer;
 
-internal partial class MainViewModel : BaseModel
+public partial class MainViewModel
 {
-       #region 타이머 슬롯의 등록, 초기화 및 상태
+    #region 타이머 슬롯의 등록, 초기화 및 상태
 
     public List<TimerSlotViewModel> TimerSlots { get; } = new List<TimerSlotViewModel>() {
         new TimerSlotViewModel() { SlotNumber = 0 },

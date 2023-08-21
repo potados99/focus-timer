@@ -21,7 +21,7 @@ using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer;
 
-internal partial class MainViewModel : BaseModel
+public partial class MainViewModel
 {
     #region 스탑워치와 글로벌 틱 타이머
 

@@ -11,31 +11,29 @@ using Microsoft.AppCenter.Crashes;
 using System.Threading;
 using System.Threading.Tasks;
 using FocusTimer.Features.License;
-using Microsoft.Extensions.DependencyInjection;
+using FocusTimer.Lib.Component;
 
 namespace FocusTimer.Features.Timer;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow : MainViewModelWindow
 {
-    private readonly MainViewModel ViewModel = App.Provider.GetService<MainViewModel>()!;
-
     private log4net.ILog Logger => this.GetLogger();
-        
-    public MainWindow()
+    
+    protected override void OnInitialize()
     {
 #if !DEBUG
             HandleUnhandledExceptions();
 #endif
-            
+
         if (ViewModel.ShouldAskForLicense())
         {
             new LicenseWindow().Show();
             Close();
         }
-            
+
         InitializeComponent();
 
         DataContext = ViewModel;
@@ -45,7 +43,7 @@ public partial class MainWindow : Window
             DataContext = ViewModel
         }.Show();
     }
-
+    
     private void HandleUnhandledExceptions()
     {
         AppDomain currentDomain = AppDomain.CurrentDomain;
@@ -95,16 +93,10 @@ public partial class MainWindow : Window
             Application.Current.Shutdown();
         }
     }
-        
 
     private ChartWindow? OpenedChartWindow = null;
 
     #region 이벤트 핸들러
-
-    private void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-        ViewModel.Loaded();
-    }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
     {
@@ -173,7 +165,10 @@ public partial class MainWindow : Window
     }
 
     #endregion
+}
 
+public abstract class MainViewModelWindow : BaseWindow<MainViewModel>
+{
     #region 드래그 오버라이드
 
     Point prepoint;

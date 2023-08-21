@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace FocusTimer.Lib.Utility;
 
-internal class BindableMenuItem
+public class BindableMenuItem
 {
     public delegate void ClickHandler(object sender, RoutedEventArgs e);
     public delegate void CheckHandler(bool isChecked);
