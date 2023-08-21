@@ -10,7 +10,6 @@ public partial class LicenseWindow : LicenseViewModelWindow
     {
         InitializeComponent();
 
-        // stop execution and open Main when valid license exists
         ViewModel.OnLicenseAccepted += () =>
         {
             new MainWindow().Show();
