@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using FocusTimer.Data.Repositories;
+using FocusTimer.Domain.Entities;
 using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting;
 using FocusTimer.Features.License;
@@ -24,11 +26,19 @@ public partial class App : Application
 
         // Services
         services
-            .AddSingleton<LicenseService>();
+            .AddSingleton<LicenseService>()
+            .AddSingleton<AppService>()
+            .AddSingleton<AppUsageService>()
+            .AddSingleton<TimerUsageService>();
+
+        // Repositories
+        services
+            .AddSingleton<UsageRepository>();
 
         // Others
         services
-            .AddSingleton<UserActivityMonitor>();
+            .AddSingleton<UserActivityMonitor>()
+            .AddSingleton<ChartDataProcessor>();
 
         return services;
     }
