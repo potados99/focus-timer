@@ -6,7 +6,7 @@
                         xmlns:local="clr-namespace:FocusTimer.Features.License"
                         mc:Ignorable="d"
                         d:DataContext="{d:DesignInstance Type=local:LicenseViewModel}"
-                        Title="License"
+                        Title="라이센스 등록"
                         Height="400" Width="400"
                         Background="{StaticResource Window.Background}">
 
@@ -27,7 +27,7 @@
                        HorizontalAlignment="Center"
                        FontSize="14"
                        FontWeight="Bold">
-                    Welcome.
+                    안녕하세요 :)
                 </Label>
                 <Separator Margin="0, 16"
                     ></Separator>
@@ -35,7 +35,7 @@
                            TextWrapping="Wrap"
                            FontSize="14"
                            >
-                    Thank you for purchasing Focus Timer. You can find your license key from the messages you received.
+                    Focus Timer를 구매하여 주셔서 감사합니다. 프로그램 다운로드 링크와 함께 제공된 라이센스 키를 아래에 입력하여 주세요.
                 </TextBlock>
             </StackPanel>
 
@@ -56,7 +56,7 @@
             <StackPanel Grid.Row="1"
                         Margin="12, 0"
                         VerticalAlignment="Center">
-                <TextBlock Text="Past your License key here..." 
+                <TextBlock Text="라이센스 키를 붙여넣어 주세요..." 
                            IsHitTestVisible="False"
                            VerticalAlignment="Center" Margin="15,10,10,10" 
                            HorizontalAlignment="Center">
@@ -93,7 +93,7 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    Submit License Key
+                    라이센스 키 등록
                 </Button>
             </StackPanel>
         </Grid>
