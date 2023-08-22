@@ -1,26 +1,21 @@
 ﻿using System.Windows;
 using FocusTimer.Features.Charting.LiveCharts;
+using FocusTimer.Lib.Component;
 
 namespace FocusTimer.Features.Charting;
 
 /// <summary>
 /// Interaction logic for ChartWindow.xaml
 /// </summary>
-public partial class ChartWindow : Window
+public partial class ChartWindow : ChartViewModelWindow
 {
-    public ChartWindow()
+    protected override void OnInitialize()
     {
         InitializeComponent();
-
-        DataContext = ViewModel;
     }
 
-    private readonly ChartViewModel ViewModel = new();
-
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    protected override void OnLoaded()
     {
-        ViewModel.Loaded();
-
         LowerChart.Tooltip = new CustomTooltip();
 
         ViewModel.OnChartNeedsUpdate += () =>
@@ -32,11 +27,16 @@ public partial class ChartWindow : Window
 
     private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
     {
-        this.WindowState = WindowState.Minimized;
+        WindowState = WindowState.Minimized;
     }
 
     private void OnCloseButtonClick(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
+}
+
+public abstract class ChartViewModelWindow : BaseWindow<ChartViewModel>
+{
+    
 }

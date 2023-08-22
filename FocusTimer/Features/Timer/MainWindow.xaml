@@ -199,7 +199,7 @@
                                HorizontalAlignment="Center" />
                     </Button>
                     <Label Grid.Column="1"
-                           Content="{Binding ActiveElapsedTime, FallbackValue=06:36:12}"
+                           Content="{Binding Timer.ActiveElapsedString, FallbackValue=06:36:12}"
                            Style="{StaticResource BigTimerLabel}"
                            IsEnabled="{Binding IsAnyAppActive}"
                            VerticalAlignment="Center"

@@ -5,75 +5,60 @@ using FocusTimer.Domain.Entities;
 
 namespace FocusTimer.Data.Repositories;
 
-public static class UsageRepository
+public class UsageRepository
 {
-    private static readonly FocusTimerDatabaseContext ReadingContext = new(true);
-    private static readonly FocusTimerDatabaseContext WritingContext = new(false);
+    private readonly FocusTimerDatabaseContext ReadingContext = new(true);
+    private readonly FocusTimerDatabaseContext WritingContext = new(false);
 
-    private static readonly int LastHowManyDays = 21;
+    private readonly int LastHowManyDays = 21;
 
-    public static IEnumerable<AppUsage> GetAppUsages()
+
+    public Domain.Entities.App? FindAppByPath(string path)
+    {
+        return ReadingContext.Apps.FirstOrDefault(a => a.ExecutablePath == path);
+    }
+
+    public AppUsage? FindAppUsageById(int id)
+    {
+        return ReadingContext.AppUsages.Find(id);
+    }
+
+    public AppUsage? FindLastAppUsageByApp(Domain.Entities.App app)
+    {
+        return ReadingContext.AppUsages.LastOrDefault(u => u.App == app);
+    }
+    
+    public TimerUsage? FindLastTimerUsage()
+    {
+        return ReadingContext.TimerUsages.LastOrDefault();
+    }
+
+    public void StartTracking(AppUsage usage)
+    {
+        WritingContext.AddAppUsage(usage);
+    }
+
+    public void StartTracking(TimerUsage usage)
+    {
+        WritingContext.AddTimerUsage(usage);
+    }
+
+    public IEnumerable<AppUsage> GetAppUsages()
     {
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
-        return ReadingContext.AppUsages.Where(u => u.RegisteredAt >= then).OrderBy(u => u.RegisteredAt);
-    } 
+        return ReadingContext.AppUsages.Where(u => u.StartedAt >= then).OrderBy(u => u.StartedAt);
+    }
 
-    public static IEnumerable<TimerUsage> GetTimerUsages()
+    public IEnumerable<TimerUsage> GetTimerUsages()
     {
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
         return ReadingContext.TimerUsages.Where(u => u.StartedAt >= then).OrderBy(u => u.StartedAt);
     }
+    
 
-    public static AppUsage CreateAppUsage(string appPath, bool closeOthers = true)
-    {
-        if (closeOthers)
-        {
-            WritingContext.CloseAppUsages(appPath);
-        }
-
-        var usage = new AppUsage
-        {
-            AppPath = appPath,
-            RegisteredAt = DateTime.Now,
-            IsOpen = true
-        };
-
-        WritingContext.AddAppUsage(usage);
-
-        return usage;
-    }
-
-    public static IEnumerable<AppUsage> GetLastAppUsages(string appPath)
-    {
-        return WritingContext.AppUsages.Where(u => u.AppPath == appPath && u.IsOpen).AsEnumerable();
-    }
-
-    public static TimerUsage CreateTimerUsage(bool closeOthers = true)
-    {
-        if (closeOthers)
-        {
-            WritingContext.CloseTimerUsages();
-        }
-
-        var usage = new TimerUsage
-        {
-            StartedAt = DateTime.Now,
-            IsOpen = true
-        };
-
-        WritingContext.AddTimerUsage(usage);
-
-        return usage;
-    }
-
-    public static IEnumerable<TimerUsage> GetLastTimerUsages()
-    {
-        return WritingContext.TimerUsages.Where(u => u.IsOpen).AsEnumerable();
-    }
-
-    public static void Save()
+    public void Save()
     {
         WritingContext.Save();
     }

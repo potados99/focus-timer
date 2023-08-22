@@ -2,6 +2,7 @@
 using SkiaSharp;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -13,6 +14,13 @@ namespace FocusTimer.Lib.Utility;
 
 public static class IconExtensions
 {
+    public static byte[] ToBytes(this Icon icon)
+    {
+        using var ms = new MemoryStream();
+        icon.Save(ms);
+        return ms.ToArray();
+    }
+    
     public static ImageSource ToImageSource(this Icon icon)
     {
         ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(

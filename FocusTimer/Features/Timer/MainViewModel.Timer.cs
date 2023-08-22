@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using FocusTimer.Lib;
+using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer;
@@ -19,9 +20,6 @@ public partial class MainViewModel
     {
         _oneSecTickTimer.Stop();
         _oneSecTickTimer.RemoveHandlers();
-        _alwaysOnStopwatch.Reset();
-        _activeStopwatch.Reset();
-
         _oneSecTickTimer.Tick += (_, _) =>
         {
             TickAll();
@@ -29,13 +27,11 @@ public partial class MainViewModel
         };
         _oneSecTickTimer.Interval = TimeSpan.FromSeconds(1);
         _oneSecTickTimer.Start();
-
-        _alwaysOnStopwatch.Start();
-        _activeStopwatch.Start();
+        
+        Timer.Reset();
     }
 
-    private readonly Stopwatch _activeStopwatch = new();
-    private readonly Stopwatch _alwaysOnStopwatch = new();
+    private readonly OffsetStopwatch _activeStopwatch = new();
     private readonly DispatcherTimer _oneSecTickTimer = new();
 
     #endregion
@@ -214,13 +210,7 @@ public partial class MainViewModel
     public void ResetTimer()
     {
         InitGlobalTimer();
-
-        _usage = null;
-        _ticksStartOffset = 0;
-        _ticksElapsedOffset = 0;
-        _activeTicksStartOffset = 0;
-        _activeTicksElapsedOffset = 0;
-
+        
         RestoreAppSlots();
 
         TickAll();

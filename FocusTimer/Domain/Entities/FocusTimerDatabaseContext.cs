@@ -16,8 +16,13 @@ public class FocusTimerDatabaseContext : DbContext
 {
     private readonly bool ReadOnly;
 
+    public DbSet<App> Apps { get; set; }
+    
     public DbSet<AppUsage> AppUsages { get; set; }
+    public DbSet<AppActiveUsage> AppActiveUsages { get; set; }
+    
     public DbSet<TimerUsage> TimerUsages { get; set; }
+    public DbSet<TimerActiveUsage> TimerActiveUsages { get; set; }
 
     private readonly Queue<Action> PendingActions = new();
 
@@ -33,7 +38,7 @@ public class FocusTimerDatabaseContext : DbContext
                 Directory.CreateDirectory(thisAppData);
             }
 
-            return Path.Combine(thisAppData, "usages.db");
+            return Path.Combine(thisAppData, "FocusTimer.db");
         }
     }
 
@@ -77,19 +82,7 @@ public class FocusTimerDatabaseContext : DbContext
 
         new BackgroundWorker(this).StartWorking();
     }
-
-    public void CloseAppUsages(string appPath)
-    {
-        PendingActions.Enqueue(() =>
-        {
-            var openUsages = AppUsages.Where(u => u.AppPath == appPath && u.IsOpen == true);
-            foreach (var u in openUsages)
-            {
-                u.IsOpen = false;
-            }
-            AppUsages.UpdateRange(openUsages);
-        });
-    }
+    
 
     public void AddAppUsage(AppUsage usage)
     {
@@ -98,20 +91,7 @@ public class FocusTimerDatabaseContext : DbContext
             AppUsages.Add(usage);
         });
     }
-
-    public void CloseTimerUsages()
-    {
-        PendingActions.Enqueue(() =>
-        {
-            var openUsages = TimerUsages.Where(u => u.IsOpen == true);
-            foreach (var u in openUsages)
-            {
-                u.IsOpen = false;
-            }
-            TimerUsages.UpdateRange(openUsages);
-        });
-    }
-
+    
     public void AddTimerUsage(TimerUsage usage)
     {
         PendingActions.Enqueue(() =>

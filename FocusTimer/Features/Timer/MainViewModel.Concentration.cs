@@ -15,14 +15,14 @@ public partial class MainViewModel
         {
             var elapsedTotal = TimerSlots
                 .Where(s => s.CurrentApp?.IsCountedOnConcentrationCalculation ?? false)
-                .Sum(s => s.CurrentApp?.ElapsedTicks ?? 0);
+                .Sum(s => s.CurrentApp?.ActiveElapsedTicks ?? 0);
 
             if (elapsedTotal == 0)
             {
                 return "0%";
             }
 
-            double concentration = 100 * elapsedTotal / (ElapsedTicks + 1);
+            double concentration = 100 * elapsedTotal / (Timer.ElapsedTicks + 1);
 
             return concentration + "%";
         }

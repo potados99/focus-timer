@@ -66,7 +66,6 @@ public partial class MainViewModel : BaseViewModel
     public override void OnLoaded()
     {
         RestoreAppSlots();
-        RestoreStatesFromLastUsage();
 
         InitGlobalTimer();
         InitFocusLock();
@@ -89,16 +88,7 @@ public partial class MainViewModel : BaseViewModel
 
     private void Tick()
     {
-        if (IsAnyAppActive)
-        {
-            _activeStopwatch.Start();
-        }
-        else
-        {
-            _activeStopwatch.Stop();
-        }
-
-        UpdateUsage();
+        Timer.Tick(IsAnyAppActive);
     }
 
     private void RenderAll()
@@ -113,7 +103,7 @@ public partial class MainViewModel : BaseViewModel
 
     private void Render()
     {
-        NotifyPropertyChanged(nameof(ActiveElapsedTime));
+        NotifyPropertyChanged(nameof(Timer));
         NotifyPropertyChanged(nameof(IsAnyAppActive));
         NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 

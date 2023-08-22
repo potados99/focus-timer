@@ -15,13 +15,22 @@ using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting.LiveCharts;
 using FocusTimer.Features.Charting.Metric;
 using FocusTimer.Features.Charting.Usages;
+using FocusTimer.Lib;
 
 namespace FocusTimer.Features.Charting;
 
-internal class ChartViewModel : BaseModel
+public class ChartViewModel : BaseViewModel
 {
-    public delegate void ChartNeedsUpdateEventHandler();
-    public event ChartNeedsUpdateEventHandler? OnChartNeedsUpdate;
+    private readonly ChartDataProcessor _processor;
+    private readonly UsageRepository _repository;
+    
+    public ChartViewModel(ChartDataProcessor processor, UsageRepository repository)
+    {
+        _processor = processor;
+        _repository = repository;
+    }
+
+    public event Signal? OnChartNeedsUpdate;
 
     public void Loaded()
     {
@@ -36,13 +45,13 @@ internal class ChartViewModel : BaseModel
                 .AddDarkTheme()
         );
 
-        SeriesCollection1 = ChartDataProcessor.GetUpperChartSeries(
-            UsageRepository.GetAppUsages(),
-            UsageRepository.GetTimerUsages()
+        SeriesCollection1 = _processor.GetUpperChartSeries(
+            _repository.GetAppUsages(),
+            _repository.GetTimerUsages()
         );
-        SeriesCollection2 = ChartDataProcessor.GetLowerChartSeries(
-            UsageRepository.GetAppUsages(),
-            UsageRepository.GetTimerUsages()
+        SeriesCollection2 = _processor.GetLowerChartSeries(
+            _repository.GetAppUsages(),
+            _repository.GetTimerUsages()
         );
 
         (SeriesCollection1.Last() as ColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
@@ -153,7 +162,7 @@ internal class ChartViewModel : BaseModel
     {
         get
         {
-            return ChartDataProcessor.GetPrimaryMetrics(SelectedDate);
+            return _processor.GetPrimaryMetrics(SelectedDate);
         }
     }
 
@@ -161,7 +170,7 @@ internal class ChartViewModel : BaseModel
     {
         get
         {
-            return ChartDataProcessor.GetAppUsagesAtDate(SelectedDate);
+            return _processor.GetAppUsagesAtDate(SelectedDate);
         }
     }
 }
