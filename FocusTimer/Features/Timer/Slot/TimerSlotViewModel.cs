@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Windows;
-using FocusTimer.Domain.Entities;
 using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;

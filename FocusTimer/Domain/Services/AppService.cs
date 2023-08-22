@@ -1,6 +1,4 @@
-﻿using System;
-using FocusTimer.Data.Repositories;
-using FocusTimer.Domain.Entities;
+﻿using FocusTimer.Data.Repositories;
 
 namespace FocusTimer.Domain.Services;
 

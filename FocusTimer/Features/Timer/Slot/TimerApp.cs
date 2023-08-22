@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Windows.Media;
-using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Entities;
 using FocusTimer.Domain.Services;
 using FocusTimer.Lib;
-using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 using Microsoft.Extensions.DependencyInjection;
 

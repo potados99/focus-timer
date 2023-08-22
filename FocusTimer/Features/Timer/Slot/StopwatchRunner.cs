@@ -1,9 +1,6 @@
 ﻿using System;
-using FocusTimer.Domain.Entities;
-using FocusTimer.Domain.Services;
 using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FocusTimer.Features.Timer.Slot;
 

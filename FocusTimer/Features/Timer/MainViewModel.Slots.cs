@@ -4,7 +4,6 @@ using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FocusTimer.Domain.Entities;
 using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer;

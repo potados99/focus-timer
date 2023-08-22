@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using FocusTimer.Data.Repositories;
-using FocusTimer.Domain.Entities;
 using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting;
 using FocusTimer.Features.License;
