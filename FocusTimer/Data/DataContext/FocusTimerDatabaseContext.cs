@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using FocusTimer.Domain.Entities;
 using FocusTimer.Lib.Utility;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Data.Sqlite;
@@ -10,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-namespace FocusTimer.Domain.Entities;
+namespace FocusTimer.Data.DataContext;
 
 public class FocusTimerDatabaseContext : DbContext
 {
-    private readonly bool ReadOnly;
+    private readonly bool _readOnly;
 
-    public DbSet<App> Apps { get; set; }
+    public DbSet<Domain.Entities.App> Apps { get; set; }
     
     public DbSet<AppUsage> AppUsages { get; set; }
     public DbSet<AppActiveUsage> AppActiveUsages { get; set; }
@@ -24,7 +25,7 @@ public class FocusTimerDatabaseContext : DbContext
     public DbSet<TimerUsage> TimerUsages { get; set; }
     public DbSet<TimerActiveUsage> TimerActiveUsages { get; set; }
 
-    private readonly Queue<Action> PendingActions = new();
+    private readonly Queue<Action> _pendingActions = new();
 
     private string DbPath
     {
@@ -44,21 +45,21 @@ public class FocusTimerDatabaseContext : DbContext
 
     public FocusTimerDatabaseContext(bool readOnly)
     {
-        this.ReadOnly = readOnly;
+        this._readOnly = readOnly;
 
         Initialize();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder
         .UseSqlite($"Data Source={DbPath}")
-        .UseQueryTrackingBehavior(ReadOnly ? 
+        .UseQueryTrackingBehavior(_readOnly ? 
             QueryTrackingBehavior.NoTracking : // 읽기전용에서는 캐싱을 꺼야 DB에 생긴 변화를 제대로 가져옵니다.
             QueryTrackingBehavior.TrackAll
         ); 
 
     public void Initialize()
     {
-        if (ReadOnly)
+        if (_readOnly)
         {
             // 읽기 전용 컨텍스트이면 DB 생성과 백그라운드 워커 스레드 실행을 하지 않습니다.
             return;
@@ -86,7 +87,7 @@ public class FocusTimerDatabaseContext : DbContext
 
     public void AddAppUsage(AppUsage usage)
     {
-        PendingActions.Enqueue(() =>
+        _pendingActions.Enqueue(() =>
         {
             AppUsages.Add(usage);
         });
@@ -94,7 +95,7 @@ public class FocusTimerDatabaseContext : DbContext
     
     public void AddTimerUsage(TimerUsage usage)
     {
-        PendingActions.Enqueue(() =>
+        _pendingActions.Enqueue(() =>
         {
             TimerUsages.Add(usage);
         });
@@ -102,7 +103,7 @@ public class FocusTimerDatabaseContext : DbContext
 
     public void Save()
     {
-        PendingActions.Enqueue(() =>
+        _pendingActions.Enqueue(() =>
         {
             SaveChanges();
         });
@@ -131,9 +132,9 @@ public class FocusTimerDatabaseContext : DbContext
         {
             while (true)
             {
-                while (Context.PendingActions.Count > 0)
+                while (Context._pendingActions.Count > 0)
                 {
-                    Context.PendingActions.Dequeue()();
+                    Context._pendingActions.Dequeue()();
                 }
 
                 Thread.Sleep(1000);
