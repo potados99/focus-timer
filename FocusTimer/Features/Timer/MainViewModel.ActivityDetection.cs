@@ -8,10 +8,7 @@ public partial class MainViewModel
 
     public int ActivityTimeout
     {
-        get
-        {
-            return Settings.GetActivityTimeout();
-        }
+        get => Settings.GetActivityTimeout();
         set
         {
             Settings.SetActivityTimeout(value);

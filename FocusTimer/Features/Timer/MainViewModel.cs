@@ -16,6 +16,8 @@ public partial class MainViewModel : BaseViewModel
         _activityMonitor = activityMonitor;
     }
 
+    #region 생성자 시점 초기화
+    
     public override void OnInitialize()
     {
         SetupActivityMonitor();
@@ -56,6 +58,10 @@ public partial class MainViewModel : BaseViewModel
 
         watcher.StartListening();
     }
+    
+    #endregion
+
+    #region 컨트롤 로드 시점 초기화
 
     public override void OnLoaded()
     {
@@ -85,11 +91,11 @@ public partial class MainViewModel : BaseViewModel
     {
         if (IsAnyAppActive)
         {
-            ActiveStopwatch.Start();
+            _activeStopwatch.Start();
         }
         else
         {
-            ActiveStopwatch.Stop();
+            _activeStopwatch.Stop();
         }
 
         UpdateUsage();
@@ -117,6 +123,8 @@ public partial class MainViewModel : BaseViewModel
         NotifyPropertyChanged(nameof(LockButtonToolTip));
 
         NotifyPropertyChanged(nameof(Concentration));
-        NotifyPropertyChanged(nameof(IsOnConcentraion));
+        NotifyPropertyChanged(nameof(IsOnConcentration));
     }
+
+    #endregion
 }

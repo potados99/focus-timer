@@ -13,29 +13,17 @@ public partial class MainViewModel
 {
     #region 타이머 슬롯의 등록, 초기화 및 상태
 
-    public List<TimerSlotViewModel> TimerSlots { get; } = new List<TimerSlotViewModel>() {
-        new TimerSlotViewModel() { SlotNumber = 0 },
-        new TimerSlotViewModel() { SlotNumber = 1 },
-        new TimerSlotViewModel() { SlotNumber = 2 },
-        new TimerSlotViewModel() { SlotNumber = 3 },
-        new TimerSlotViewModel() { SlotNumber = 4 },
+    public List<TimerSlotViewModel> TimerSlots { get; } = new() {
+        new TimerSlotViewModel { SlotNumber = 0 },
+        new TimerSlotViewModel { SlotNumber = 1 },
+        new TimerSlotViewModel { SlotNumber = 2 },
+        new TimerSlotViewModel { SlotNumber = 3 },
+        new TimerSlotViewModel { SlotNumber = 4 },
     };
 
-    private TimerSlotViewModel? CurrentRegisteringTimerSlot
-    {
-        get
-        {
-            return TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
-        }
-    }
+    private TimerSlotViewModel? CurrentRegisteringTimerSlot => TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
 
-    public bool IsAnyAppActive
-    {
-        get
-        {
-            return TimerSlots.Any(s => s.IsAppActive);
-        }
-    }
+    public bool IsAnyAppActive => TimerSlots.Any(s => s.IsAppActive);
 
     private void StartRegisteringApplication(TimerSlotViewModel slot)
     {
@@ -49,8 +37,7 @@ public partial class MainViewModel
             StartAnimation("ShakeHorizontalAnimation");
             return;
         }
-
-
+        
         slot.StartWaitingForApp();
 
         Render();
@@ -124,12 +111,12 @@ public partial class MainViewModel
 
     #region 타이머 슬롯의 저장 및 복구
 
-    public void SaveApps()
+    private void SaveApps()
     {
         Settings.SetApps(TimerSlots.Select(s => s.GetAppExecutablePath()).ToList());
     }
 
-    public void RestoreAppSlots()
+    private void RestoreAppSlots()
     {
         foreach (var (app, index) in Settings.GetApps().WithIndex())
         {
@@ -138,5 +125,4 @@ public partial class MainViewModel
     }
 
     #endregion
-
 }

@@ -248,7 +248,7 @@
                         <Label Grid.Row="1"
                                Content="{Binding Concentration, FallbackValue=92%}"
                                Style="{StaticResource ConcentrationLabel}"
-                               IsEnabled="{Binding IsOnConcentraion}"
+                               IsEnabled="{Binding IsOnConcentration}"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Center" />
                     </Grid>

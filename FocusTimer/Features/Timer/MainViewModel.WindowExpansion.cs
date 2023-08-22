@@ -5,18 +5,18 @@ namespace FocusTimer.Features.Timer;
 
 public partial class MainViewModel
 {
-       #region Main Window의 확장 및 축소
+    #region Main Window의 확장 및 축소
 
-    private bool expanded = true;
+    private bool _expanded = true;
     public bool Expanded
     {
         get
         {
-            return expanded;
+            return _expanded;
         }
         set
         {
-            expanded = value;
+            _expanded = value;
             NotifyPropertyChanged(nameof(Expanded));
             NotifyPropertyChanged(nameof(ExpandablePartLength)); // 얘가 WindowHeight보다 먼저 바뀌어야 탈이 없습니다.
             NotifyPropertyChanged(nameof(WindowHeight));
@@ -33,58 +33,37 @@ public partial class MainViewModel
         Expanded = !Expanded;
     }
 
-    private readonly int windowHeight = 40 * (1 + 5);
+    private const int WINDOW_HEIGHT = 40 * (1 + 5);
+
     public int WindowHeight
     {
         get
         {
             if (Expanded)
             {
-                return windowHeight;
+                return WINDOW_HEIGHT;
             }
-            else
-            {
-                int borderThickness = 1;
-                int separatorThickness = 1;
-                double contentGridRowLengthStar = fixedPartLength.Value;
-                double expandableGridRowLengthStar = expadedLength.Value;
-                double expandableGridRowLength = windowHeight / (contentGridRowLengthStar + expandableGridRowLengthStar) * contentGridRowLengthStar;
-                return (int)expandableGridRowLength + borderThickness + separatorThickness;
-            }
+
+            const int borderThickness = 1;
+            const int separatorThickness = 1;
+            var contentGridRowLengthStar = FixedPartLength.Value;
+            var expandableGridRowLengthStar = _expandedLength.Value;
+            var expandableGridRowLength = WINDOW_HEIGHT / (contentGridRowLengthStar + expandableGridRowLengthStar) * contentGridRowLengthStar;
+            return (int)expandableGridRowLength + borderThickness + separatorThickness;
         }
+        // ReSharper disable once ValueParameterNotUsed
         set
         {
             // 왜인지는 모르겠는데 이 WindowHeight은 양방향 바인딩으로 넣어 주어야 잘 돌아갑니다...
+            // 그래서 setter를 둡니다,,,
         }
     }
 
-    private GridLength fixedPartLength = new GridLength(1.4, GridUnitType.Star);
-    private GridLength expadedLength = new GridLength(1 + 5, GridUnitType.Star);
-    private GridLength collapsedLength = new GridLength(0);
+    private readonly GridLength _expandedLength = new(1 + 5, GridUnitType.Star);
+    private readonly GridLength _collapsedLength = new(0);
 
-    public GridLength FixedPartLength
-    {
-        get
-        {
-            return fixedPartLength;
-        }
-        set
-        {
-
-        }
-    }
-
-    public GridLength ExpandablePartLength
-    {
-        get
-        {
-            return Expanded ? expadedLength : collapsedLength;
-        }
-        set
-        {
-
-        }
-    }
+    public GridLength FixedPartLength { get; } = new(1.4, GridUnitType.Star);
+    public GridLength ExpandablePartLength => Expanded ? _expandedLength : _collapsedLength;
 
     #endregion
 }

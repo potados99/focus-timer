@@ -1,67 +1,55 @@
-﻿using FocusTimer.Lib.Utility;
-using System;
+﻿using System;
 using System.Linq;
 using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Entities;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer;
 
 public partial class MainViewModel 
 {
-    #region 사용량 집계
+    #region 사용량 집계와 복구
 
-    public long ElapsedTicks
-    {
-        get
-        {
-            return TicksStartOffset + AlwaysOnStopwatch.ElapsedTicks;
-        }
-    }
+    private long ElapsedTicks => _ticksStartOffset + _alwaysOnStopwatch.ElapsedTicks;
 
-    public long ActiveElapsedTicks
-    {
-        get
-        {
-            return ActiveTicksStartOffset + ActiveStopwatch.ElapsedTicks;
-        }
-    }
+    private long ActiveElapsedTicks => _activeTicksStartOffset + _activeStopwatch.ElapsedTicks;
 
     public string ActiveElapsedTime
     {
         get
         {
-            return ActiveStopwatch.ElapsedString(ActiveTicksStartOffset);
+            return _activeStopwatch.ElapsedString(_activeTicksStartOffset);
         }
     }
 
-    private TimerUsage? Usage;
+    private TimerUsage? _usage;
 
-    private long TicksStartOffset = 0;
-    private long TicksElapsedOffset = 0;
+    private long _ticksStartOffset;
+    private long _ticksElapsedOffset;
 
-    private long ActiveTicksStartOffset = 0;
-    private long ActiveTicksElapsedOffset = 0;
+    private long _activeTicksStartOffset;
+    private long _activeTicksElapsedOffset;
 
     private void UpdateUsage()
     {
-        if (Usage != null && Usage.StartedAt.Date < DateTime.Today)
+        if (_usage != null && _usage.StartedAt.Date < DateTime.Today)
         {
             // 날짜가 지났습니다!
-            TicksElapsedOffset += Usage.Usage;
-            ActiveTicksElapsedOffset += Usage.ActiveUsage;
-            Usage = UsageRepository.CreateTimerUsage(closeOthers: false/*이전 것과 이어집니다.*/);
+            _ticksElapsedOffset += _usage.Usage;
+            _activeTicksElapsedOffset += _usage.ActiveUsage;
+            _usage = UsageRepository.CreateTimerUsage(closeOthers: false/*이전 것과 이어집니다.*/);
         }
 
-        Usage ??= UsageRepository.CreateTimerUsage(closeOthers: true/*이전 것과 분리됩니다.*/);
+        _usage ??= UsageRepository.CreateTimerUsage(closeOthers: true/*이전 것과 분리됩니다.*/);
 
-        Usage.Usage = ElapsedTicks - TicksElapsedOffset;
-        Usage.ActiveUsage = ActiveElapsedTicks - ActiveTicksElapsedOffset;
-        Usage.UpdatedAt = DateTime.Now;
+        _usage.Usage = ElapsedTicks - _ticksElapsedOffset;
+        _usage.ActiveUsage = ActiveElapsedTicks - _activeTicksElapsedOffset;
+        _usage.UpdatedAt = DateTime.Now;
 
         UsageRepository.Save();
     }
 
-    public void RestoreStatesFromLastUsage()
+    private void RestoreStatesFromLastUsage()
     {
         var openUsages = UsageRepository.GetLastTimerUsages();
         if (openUsages.Count() == 0)
@@ -69,13 +57,13 @@ public partial class MainViewModel
             return;
         }
 
-        Usage = openUsages.Last();
+        _usage = openUsages.Last();
 
-        AlwaysOnStopwatch.Restart();
-        ActiveStopwatch.Restart();
+        _alwaysOnStopwatch.Restart();
+        _activeStopwatch.Restart();
 
-        TicksStartOffset += openUsages.Sum(u => u.Usage);
-        ActiveTicksStartOffset += openUsages.Sum(u => u.ActiveUsage);
+        _ticksStartOffset += openUsages.Sum(u => u.Usage);
+        _activeTicksStartOffset += openUsages.Sum(u => u.ActiveUsage);
 
         foreach (var slot in TimerSlots)
         {

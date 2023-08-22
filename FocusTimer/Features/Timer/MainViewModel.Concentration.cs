@@ -28,36 +28,28 @@ public partial class MainViewModel
         }
     }
 
-    public bool IsOnConcentraion
+    public bool IsOnConcentration
     {
         get
         {
             return TimerSlots.Any(s => s.IsAppActive && s.IsAppCountedOnConcentrationCalculation);
         }
     }
-
-    public BindableMenuItem WhichAppToIncludeMenuItem = new()
-    {
-        IsCheckable = false,
-        IsChecked = false,
-        Icon = new System.Windows.Controls.Image() { Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage },
-        Header = "집중도 계산에 포함할 프로그램  ",
-    };
-
+    
     public BindableMenuItem[] ConcentrationContextMenu
     {
         get
         {
-            WhichAppToIncludeMenuItem.Children = TimerSlots
+            _whichAppToIncludeMenuItem.Children = TimerSlots
                 .Where(s => s.CurrentApp != null)
                 .Select(s =>
                 {
-                    var app = s.CurrentApp;
+                    var app = s.CurrentApp!;
                     var item = new BindableMenuItem()
                     {
                         IsCheckable = true,
                         IsChecked = app.IsCountedOnConcentrationCalculation,
-                        Header = app.AppName
+                        Header = app.AppName!
                     };
 
                     item.OnCheck += (isChecked) =>
@@ -70,9 +62,17 @@ public partial class MainViewModel
                 })
                 .ToArray();
 
-            return new BindableMenuItem[] { WhichAppToIncludeMenuItem };
+            return new[] { _whichAppToIncludeMenuItem };
         }
     }
+
+    private readonly BindableMenuItem _whichAppToIncludeMenuItem = new()
+    {
+        IsCheckable = false,
+        IsChecked = false,
+        Icon = new System.Windows.Controls.Image() { Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage },
+        Header = "집중도 계산에 포함할 프로그램  ",
+    };
 
     #endregion
 }

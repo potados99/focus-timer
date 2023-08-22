@@ -1,6 +1,4 @@
-﻿using FocusTimer.Lib;
-using FocusTimer.Lib.Utility;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using FocusTimer.Lib;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer;
 
@@ -15,50 +15,50 @@ public partial class MainViewModel
 {
     #region 스탑워치와 글로벌 틱 타이머
 
-    public void InitGlobalTimer()
+    private void InitGlobalTimer()
     {
-        OneSecTickTimer.Stop();
-        OneSecTickTimer.RemoveHandlers();
-        AlwaysOnStopwatch.Reset();
-        ActiveStopwatch.Reset();
+        _oneSecTickTimer.Stop();
+        _oneSecTickTimer.RemoveHandlers();
+        _alwaysOnStopwatch.Reset();
+        _activeStopwatch.Reset();
 
-        OneSecTickTimer.Tick += (_, _) =>
+        _oneSecTickTimer.Tick += (_, _) =>
         {
             TickAll();
             RenderAll();
         };
-        OneSecTickTimer.Interval = TimeSpan.FromSeconds(1);
-        OneSecTickTimer.Start();
+        _oneSecTickTimer.Interval = TimeSpan.FromSeconds(1);
+        _oneSecTickTimer.Start();
 
-        AlwaysOnStopwatch.Start();
-        ActiveStopwatch.Start();
+        _alwaysOnStopwatch.Start();
+        _activeStopwatch.Start();
     }
 
-    private readonly Stopwatch ActiveStopwatch = new();
-    private readonly Stopwatch AlwaysOnStopwatch = new();
-    private readonly DispatcherTimer OneSecTickTimer = new();
+    private readonly Stopwatch _activeStopwatch = new();
+    private readonly Stopwatch _alwaysOnStopwatch = new();
+    private readonly DispatcherTimer _oneSecTickTimer = new();
 
     #endregion
 
     #region 포커스 잠금과 홀드 타이머
 
-    public void InitFocusLock()
+    private void InitFocusLock()
     {
-        FocusLockTimer.OnFinish += () =>
+        _focusLockTimer.OnFinish += () =>
         {
             UnlockFocus();
         };
     }
 
-    private readonly CountdownTimer FocusLockTimer = new();
+    private readonly CountdownTimer _focusLockTimer = new();
 
-    public bool IsFocusLocked { get; set; } = false;
+    public bool IsFocusLocked { get; set; }
 
     public bool IsFocusLockHold
     {
         get
         {
-            return FocusLockTimer.IsEnabled;
+            return _focusLockTimer.IsEnabled;
         }
     }
 
@@ -96,14 +96,14 @@ public partial class MainViewModel
         }
     }
 
-    private readonly ToolTip _LockButtonToolTip = new();
+    private readonly ToolTip _lockButtonToolTip = new();
     public ToolTip? LockButtonToolTip
     {
         get
         {
-            _LockButtonToolTip.Content = $"{(int)Math.Ceiling(FocusLockTimer.TimeLeft.TotalMinutes)}분 남았습니다.";
+            _lockButtonToolTip.Content = $"{(int)Math.Ceiling(_focusLockTimer.TimeLeft.TotalMinutes)}분 남았습니다.";
 
-            return IsFocusLockHold ? _LockButtonToolTip : null;
+            return IsFocusLockHold ? _lockButtonToolTip : null;
         }
     }
 
@@ -123,8 +123,8 @@ public partial class MainViewModel
     }
     private void LockFocusWithHold()
     {
-        FocusLockTimer.Duration = TimeSpan.FromMinutes(FocusLockHoldDuration);
-        FocusLockTimer.Start();
+        _focusLockTimer.Duration = TimeSpan.FromMinutes(FocusLockHoldDuration);
+        _focusLockTimer.Start();
 
         IsFocusLocked = true;
         StartAnimation("LockingAnimation");
@@ -146,7 +146,7 @@ public partial class MainViewModel
 
     private void LockFocus()
     {
-        FocusLockTimer.Stop();
+        _focusLockTimer.Stop();
         IsFocusLocked = true;
 
         StartAnimation("LockingAnimation");
@@ -156,11 +156,11 @@ public partial class MainViewModel
     {
         if (IsFocusLockHold)
         {
-            _LockButtonToolTip.IsOpen = true;
-            Task.Delay(700).ContinueWith(_ => Application.Current.Dispatcher.Invoke(new Action(() =>
+            _lockButtonToolTip.IsOpen = true;
+            Task.Delay(700).ContinueWith(_ => Application.Current.Dispatcher.Invoke(() =>
             {
-                _LockButtonToolTip.IsOpen = false;
-            })));
+                _lockButtonToolTip.IsOpen = false;
+            }));
 
             StartAnimation("ShakeHorizontalAnimation");
 
@@ -215,11 +215,11 @@ public partial class MainViewModel
     {
         InitGlobalTimer();
 
-        Usage = null;
-        TicksStartOffset = 0;
-        TicksElapsedOffset = 0;
-        ActiveTicksStartOffset = 0;
-        ActiveTicksElapsedOffset = 0;
+        _usage = null;
+        _ticksStartOffset = 0;
+        _ticksElapsedOffset = 0;
+        _activeTicksStartOffset = 0;
+        _activeTicksElapsedOffset = 0;
 
         RestoreAppSlots();
 

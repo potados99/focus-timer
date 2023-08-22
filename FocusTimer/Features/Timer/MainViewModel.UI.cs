@@ -9,7 +9,7 @@ public partial class MainViewModel
 
     private void StartAnimation(string name)
     {
-        Storyboard? sb = Application.Current.MainWindow.Resources[name] as Storyboard;
+        var sb = Application.Current.MainWindow?.Resources[name] as Storyboard;
         sb?.Begin();
     }
 
