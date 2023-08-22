@@ -33,7 +33,7 @@ public class AppUsage
     /// <summary>
     /// 앱의 실제 사용 기록들입니다.
     /// </summary>
-    public ICollection<AppActiveUsage> ActiveUsages { get; }
+    public ICollection<AppActiveUsage> ActiveUsages { get; } = new List<AppActiveUsage>();
 
     /// <summary>
     /// 이 앱이 슬롯에서 "집중도 계산에 포함"하도록 설정되어 있는지 여부입니다.

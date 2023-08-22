@@ -28,7 +28,7 @@ public class TimerUsage
     /// <summary>
     /// 타이머의 실제 사용 기록들입니다.
     /// </summary>
-    public ICollection<TimerActiveUsage> ActiveUsages { get; }
+    public ICollection<TimerActiveUsage> ActiveUsages { get; } = new List<TimerActiveUsage>();
     
     [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
 

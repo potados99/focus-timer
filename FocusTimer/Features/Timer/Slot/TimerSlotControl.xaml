@@ -38,7 +38,7 @@
             </Label>
             <Label Grid.Column="2"
                    Style="{StaticResource SmallTimerLabel}"
-                   Content="{Binding CurrentApp.ActiveElapsedTicks, FallbackValue=00:00:00}"
+                   Content="{Binding CurrentApp.ActiveElapsedString, FallbackValue=00:00:00}"
                    IsEnabled="{Binding IsAppActive}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center" />

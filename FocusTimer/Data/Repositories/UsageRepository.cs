@@ -26,12 +26,12 @@ public class UsageRepository
 
     public AppUsage? FindLastAppUsageByApp(Domain.Entities.App app)
     {
-        return ReadingContext.AppUsages.LastOrDefault(u => u.App == app);
+        return ReadingContext.AppUsages.OrderBy(u => u.StartedAt).LastOrDefault(u => u.App == app);
     }
     
     public TimerUsage? FindLastTimerUsage()
     {
-        return ReadingContext.TimerUsages.LastOrDefault();
+        return ReadingContext.TimerUsages.OrderBy(u => u.StartedAt).LastOrDefault();
     }
 
     public void StartTracking(AppUsage usage)
