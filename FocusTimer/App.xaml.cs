@@ -28,7 +28,8 @@ public partial class App : Application
             .AddSingleton<LicenseService>()
             .AddSingleton<AppService>()
             .AddSingleton<AppUsageService>()
-            .AddSingleton<TimerUsageService>();
+            .AddSingleton<TimerUsageService>()
+            .AddSingleton<SlotService>();
 
         // Repositories
         services

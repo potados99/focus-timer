@@ -36,6 +36,14 @@ public class TimerApp : StopwatchRunner
         LoadUsage();
     }
 
+    public TimerApp(Domain.Entities.App app)
+    {
+        _app = app;
+        _watcher.OnFocused += OnFocusChanged;
+        
+        LoadUsage();        
+    }
+
     ~TimerApp()
     {
         _watcher.OnFocused -= OnFocusChanged;
@@ -44,6 +52,8 @@ public class TimerApp : StopwatchRunner
     private readonly Domain.Entities.App _app;
     private AppUsage? _usage;
 
+    public Domain.Entities.App AppEntity => _app;
+    
     public string ProcessExecutablePath => _app.ExecutablePath;
 
     public string AppName => _app.Title;

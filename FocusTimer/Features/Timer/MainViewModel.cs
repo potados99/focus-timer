@@ -10,12 +10,19 @@ public partial class MainViewModel : BaseViewModel
     private readonly LicenseService _licenseService;
     private readonly UserActivityMonitor _activityMonitor;
     private readonly WindowWatcher _watcher;
+    private readonly SlotService _slotService;
 
-    public MainViewModel(LicenseService licenseService, UserActivityMonitor activityMonitor, WindowWatcher watcher)
+    public MainViewModel(
+        LicenseService licenseService,
+        UserActivityMonitor activityMonitor,
+        WindowWatcher watcher,
+        SlotService slotService
+    )
     {
         _licenseService = licenseService;
         _activityMonitor = activityMonitor;
         _watcher = watcher;
+        _slotService = slotService;
     }
 
     #region 생성자 시점 초기화

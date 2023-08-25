@@ -18,12 +18,9 @@ public class FocusTimerDatabaseContext : DbContext
     private readonly bool _readOnly;
 
     public DbSet<Domain.Entities.App> Apps { get; set; }
-    
     public DbSet<AppUsage> AppUsages { get; set; }
-    public DbSet<AppActiveUsage> AppActiveUsages { get; set; }
-    
     public DbSet<TimerUsage> TimerUsages { get; set; }
-    public DbSet<TimerActiveUsage> TimerActiveUsages { get; set; }
+    public DbSet<SlotStatus> SlotStatuses { get; set; }
 
     private readonly Queue<Action> _pendingActions = new();
 
@@ -52,10 +49,11 @@ public class FocusTimerDatabaseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder
         .UseSqlite($"Data Source={DbPath}")
-        .UseQueryTrackingBehavior(_readOnly ? 
-            QueryTrackingBehavior.NoTracking : // 읽기전용에서는 캐싱을 꺼야 DB에 생긴 변화를 제대로 가져옵니다.
+        .UseQueryTrackingBehavior(_readOnly
+            ? QueryTrackingBehavior.NoTracking
+            : // 읽기전용에서는 캐싱을 꺼야 DB에 생긴 변화를 제대로 가져옵니다.
             QueryTrackingBehavior.TrackAll
-        ); 
+        );
 
     public void Initialize()
     {
@@ -70,7 +68,8 @@ public class FocusTimerDatabaseContext : DbContext
             try
             {
                 TimerUsages.AsEnumerable().LastOrDefault();
-            } catch (SqliteException e)
+            }
+            catch (SqliteException e)
             {
                 Crashes.TrackError(e);
                 e.GetLogger().Warn("DB에 질의할 때에 SqliteException이 발생하여 DB를 새로 생성합니다.");
@@ -78,35 +77,31 @@ public class FocusTimerDatabaseContext : DbContext
                 Database.EnsureDeleted();
             }
         }
-            
+
         Database.EnsureCreated();
 
         new BackgroundWorker(this).StartWorking();
     }
-    
+
 
     public void AddAppUsage(AppUsage usage)
     {
-        _pendingActions.Enqueue(() =>
-        {
-            AppUsages.Add(usage);
-        });
+        _pendingActions.Enqueue(() => { AppUsages.Add(usage); });
     }
-    
+
     public void AddTimerUsage(TimerUsage usage)
     {
-        _pendingActions.Enqueue(() =>
-        {
-            TimerUsages.Add(usage);
-        });
+        _pendingActions.Enqueue(() => { TimerUsages.Add(usage); });
+    }
+
+    public void AddSlotStatus(SlotStatus status)
+    {
+        _pendingActions.Enqueue(() => { SlotStatuses.Add(status); });
     }
 
     public void Save()
     {
-        _pendingActions.Enqueue(() =>
-        {
-            SaveChanges();
-        });
+        _pendingActions.Enqueue(() => { SaveChanges(); });
     }
 
     class BackgroundWorker

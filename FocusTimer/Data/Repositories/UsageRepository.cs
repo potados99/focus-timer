@@ -19,7 +19,7 @@ public class UsageRepository
     {
         return ReadingContext.Apps.FirstOrDefault(a => a.ExecutablePath == path);
     }
-    
+
     public AppUsage? FindLastAppUsageByApp(Domain.Entities.App app)
     {
         return ReadingContext.AppUsages
@@ -37,6 +37,13 @@ public class UsageRepository
             .LastOrDefault();
     }
 
+    public SlotStatus? FindSlotStatusBySlotNumber(long slotNumber)
+    {
+        return ReadingContext.SlotStatuses
+            .Include(s => s.App)
+            .FirstOrDefault(s => s.SlotNumber == slotNumber);
+    }
+
     public void StartTracking(AppUsage usage)
     {
         WritingContext.AddAppUsage(usage);
@@ -45,6 +52,11 @@ public class UsageRepository
     public void StartTracking(TimerUsage usage)
     {
         WritingContext.AddTimerUsage(usage);
+    }
+
+    public void StartTracking(SlotStatus status)
+    {
+        WritingContext.AddSlotStatus(status);
     }
 
     public IEnumerable<AppUsage> GetAppUsages()
@@ -67,7 +79,14 @@ public class UsageRepository
             .Where(u => u.StartedAt >= then)
             .OrderBy(u => u.StartedAt);
     }
-    
+
+    public IEnumerable<SlotStatus> GetSlotStatuses()
+    {
+        return ReadingContext.SlotStatuses
+            .Include(s => s.App)
+            .AsEnumerable();
+    }
+
     public void Save()
     {
         WritingContext.Save();

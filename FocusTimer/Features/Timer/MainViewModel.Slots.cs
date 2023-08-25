@@ -59,7 +59,6 @@ public partial class MainViewModel
 
         CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(app);
 
-        SaveApps();
         Render();
 
         NotifyPropertyChanged(nameof(ConcentrationContextMenu));
@@ -94,7 +93,6 @@ public partial class MainViewModel
 
         slot.ClearRegisteredApp();
 
-        SaveApps();
         Render();
 
         NotifyPropertyChanged(nameof(ConcentrationContextMenu));
@@ -104,16 +102,11 @@ public partial class MainViewModel
 
     #region 타이머 슬롯의 저장 및 복구
 
-    private void SaveApps()
-    {
-        Settings.SetApps(TimerSlots.Select(s => s.GetAppExecutablePath()).ToList());
-    }
-
     private void RestoreAppSlots()
     {
-        foreach (var (app, index) in Settings.GetApps().WithIndex())
+        foreach (var slot in TimerSlots)
         {
-            TimerSlots[index].RestoreApp(app);
+            slot.RestoreApp();
         }
     }
 

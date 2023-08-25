@@ -12,8 +12,7 @@ class Settings
             Properties.Settings.Default.App2,
             Properties.Settings.Default.App3,
             Properties.Settings.Default.App4,
-            Properties.Settings.Default.App5,
-
+            Properties.Settings.Default.App5
         };
     }
 
