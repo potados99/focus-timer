@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
 
             <Image Grid.Column="0"
-                   Source="{Binding CurrentApp.Image}"
+                   Source="{Binding CurrentAppItem.Image}"
                    d:Source="{StaticResource ic_chart_bar}"
                    Width="20"
                    VerticalAlignment="Center"
@@ -32,13 +32,13 @@
                    Style="{StaticResource PrimaryTextLabel}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
-                   ToolTip="{Binding CurrentApp.AppName}">
+                   ToolTip="{Binding CurrentAppItem.AppName}">
                 <TextBlock TextTrimming="CharacterEllipsis"
-                           Text="{Binding CurrentApp.AppName, FallbackValue=Chrome}" />
+                           Text="{Binding CurrentAppItem.AppName, FallbackValue=Chrome}" />
             </Label>
             <Label Grid.Column="2"
                    Style="{StaticResource SmallTimerLabel}"
-                   Content="{Binding CurrentApp.ActiveElapsedString, FallbackValue=00:00:00}"
+                   Content="{Binding CurrentAppItem.ActiveElapsedString, FallbackValue=00:00:00}"
                    IsEnabled="{Binding IsAppActive}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center" />

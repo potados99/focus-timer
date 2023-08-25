@@ -5,23 +5,22 @@ using FocusTimer.Domain.Entities;
 using FocusTimer.Domain.Services;
 using FocusTimer.Lib;
 using FocusTimer.Lib.Utility;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FocusTimer.Features.Timer.Slot;
 
-public class ThisTimer : StopwatchRunner
+public class TimerItem : StopwatchRunner
 {
-    private readonly TimerUsageService _timerUsageService = App.Provider.GetService<TimerUsageService>()!;
-    private readonly WindowWatcher _watcher = App.Provider.GetService<WindowWatcher>()!;
+    private readonly TimerUsageService _timerUsageService = Modules.Get<TimerUsageService>();
+    private readonly WindowWatcher _watcher = Modules.Get<WindowWatcher>();
 
-    public ThisTimer()
+    public TimerItem()
     {
         _watcher.OnFocused += OnFocusChanged;
 
         LoadUsage();
     }
 
-    ~ThisTimer()
+    ~TimerItem()
     {
         _watcher.OnFocused -= OnFocusChanged;
     }

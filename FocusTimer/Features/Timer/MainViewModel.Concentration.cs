@@ -14,15 +14,15 @@ public partial class MainViewModel
         get
         {
             var elapsedTotal = TimerSlots
-                .Where(s => s.CurrentApp?.IsCountedOnConcentrationCalculation ?? false)
-                .Sum(s => s.CurrentApp?.ActiveElapsedTicks ?? 0);
+                .Where(s => s.CurrentAppItem?.IsCountedOnConcentrationCalculation ?? false)
+                .Sum(s => s.CurrentAppItem?.ActiveElapsedTicks ?? 0);
 
             if (elapsedTotal == 0)
             {
                 return "0%";
             }
 
-            double concentration = 100 * elapsedTotal / (Timer.ElapsedTicks + 1);
+            double concentration = 100 * elapsedTotal / (TimerItem.ElapsedTicks + 1);
 
             return concentration + "%";
         }
@@ -41,15 +41,15 @@ public partial class MainViewModel
         get
         {
             _whichAppToIncludeMenuItem.Children = TimerSlots
-                .Where(s => s.CurrentApp != null)
+                .Where(s => s.CurrentAppItem != null)
                 .Select(s =>
                 {
-                    var app = s.CurrentApp!;
+                    var app = s.CurrentAppItem!;
                     var item = new BindableMenuItem()
                     {
                         IsCheckable = true,
                         IsChecked = app.IsCountedOnConcentrationCalculation,
-                        Header = app.AppName!
+                        Header = app.AppName
                     };
 
                     item.OnCheck += (isChecked) =>

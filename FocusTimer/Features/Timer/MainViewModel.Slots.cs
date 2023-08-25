@@ -1,5 +1,4 @@
-﻿using FocusTimer.Lib;
-using FocusTimer.Lib.Utility;
+﻿using FocusTimer.Lib.Utility;
 using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
@@ -12,11 +11,11 @@ public partial class MainViewModel
 {
     #region 타이머 슬롯의 등록, 초기화 및 상태
 
-    public List<TimerSlotViewModel> TimerSlots => Timer.TimerSlots;
+    public List<TimerSlotViewModel> TimerSlots => TimerItem.TimerSlots;
 
     private TimerSlotViewModel? CurrentRegisteringTimerSlot => TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
 
-    public bool IsAnyAppActive => Timer.IsAnyAppActive;
+    public bool IsAnyAppActive => TimerItem.IsAnyAppActive;
 
     private void StartRegisteringApplication(TimerSlotViewModel slot)
     {
@@ -38,11 +37,11 @@ public partial class MainViewModel
 
     private void FinishRegisteringApp(IntPtr windowHandle)
     {
-        TimerApp app;
+        AppItem appItem;
 
         try
         {
-            app = new TimerApp(windowHandle);
+            appItem = new AppItem(windowHandle);
         } catch (Exception e)
         {
             Crashes.TrackError(e);
@@ -51,13 +50,13 @@ public partial class MainViewModel
             return;
         }
             
-        if (TimerSlots.Select(s => s.CurrentApp?.ProcessExecutablePath).Contains(app.ProcessExecutablePath))
+        if (TimerSlots.Select(s => s.CurrentAppItem?.ProcessExecutablePath).Contains(appItem.ProcessExecutablePath))
         {
             UnableToRegisterApp("이미 등록된 프로그램이에요.");
             return;
         }
 
-        CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(app);
+        CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(appItem);
 
         Render();
 
@@ -106,7 +105,7 @@ public partial class MainViewModel
     {
         foreach (var slot in TimerSlots)
         {
-            slot.RestoreApp();
+            slot.LoadSlot();
         }
     }
 

@@ -33,6 +33,13 @@ public class AppUsageService
         return _repository.FindLastAppUsageByApp(app);
     }
 
+    public void AddResetHistory()
+    {
+        var history = ResetHistory.OfNow();
+        
+        _repository.StartTracking(history);
+    }
+
     public void SaveRepository()
     {
         _repository.Save();

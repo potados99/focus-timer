@@ -1,146 +1,74 @@
-﻿using System.IO;
-using System.Windows;
-using FocusTimer.Domain.Entities;
-using FocusTimer.Domain.Services;
+﻿using FocusTimer.Domain.Services;
 using FocusTimer.Lib;
-using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
-using log4net.Repository.Hierarchy;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FocusTimer.Features.Timer.Slot;
 
-public class TimerSlotViewModel : BaseViewModel
+public partial class TimerSlotViewModel
 {
-    private readonly SlotService _slotService = App.Provider.GetService<SlotService>()!;
+    // 특이하게, 이 ViewModel은 외부에서 직접 instantiate 합니다.
+    // 밖에서 생성자로 이것저것 넣어줄 여유가 없기 때문에,
+    // 필요한 것들은 안에서 직접 받아옵니다.
+    private readonly SlotService _slotService = Modules.Get<SlotService>();
 
-    #region 이벤트 핸들러 정의와 구현
+    public override void OnLoaded()
+    {
+        LoadSlot();
+    }
 
     public event Signal? OnRegisterApplication;
     public event Signal? OnClearApplication;
 
     public void FireAppRegisterEvent() => OnRegisterApplication?.Invoke();
     public void FireAppClearEvent() => OnClearApplication?.Invoke();
-
-    #endregion
-
-    #region 속성들
-
+    
     public int SlotNumber { get; init; }
+    
+    public AppItem? CurrentAppItem { get; private set; }
 
-    private SlotStatus? _status;
-
-    public TimerApp? CurrentApp { get; private set; }
-    public bool IsWaitingForApp { get; private set; }
-
-    public Visibility IsAppVisible => !IsWaitingForApp && CurrentApp != null ? Visibility.Visible : Visibility.Hidden;
-
-    public Visibility IsSetButtonVisible =>
-        !IsWaitingForApp && CurrentApp == null ? Visibility.Visible : Visibility.Hidden;
-
-    public Visibility IsWaitLabelVisible => IsWaitingForApp ? Visibility.Visible : Visibility.Hidden;
-
-    public bool IsAppActive => CurrentApp is {IsActive: true};
-
-    public bool IsAppCountedOnConcentrationCalculation => CurrentApp is {IsCountedOnConcentrationCalculation: true};
-
-    public string WindowSelectPrompt { get; set; } = "창을 클릭해주세요";
-
-    #endregion
-
-    #region 외부에 노출하는 제어용 메소드
+    private Domain.Entities.Slot? _slot;
 
     public string? GetAppExecutablePath()
     {
-        return CurrentApp?.ProcessExecutablePath;
+        return CurrentAppItem?.ProcessExecutablePath;
     }
 
-    public Domain.Entities.App? GetAppEntity()
+    public void LoadSlot()
     {
-        return CurrentApp?.AppEntity;
-    }
+        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 앱 정보를 불러옵니다.");
 
-    public void RestoreApp()
-    {
-        _status = _slotService.GetOrCreateStatus(SlotNumber);
+        _slot = _slotService.GetOrCreateStatus(SlotNumber);
 
-        if (_status.App != null)
+        if (_slot.App != null)
         {
-            StopWaitingAndRegisterApp(new TimerApp(_status.App));
+            this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)에 등록된 앱({_slot.App.Title})을 복구합니다.");
+
+            StopWaitingAndRegisterApp(new AppItem(_slot.App));
+        }
+        else
+        {
+            this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)에 등록된 앱이 없습니다.");
         }
     }
 
+   /* public void ResetTimerAndUsage()
+    {
+        CurrentAppItem?.ResetTimerAndUsage();
+    }*/
+
     public void StartWaitingForApp()
     {
-        CurrentApp = null;
+        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에서 사용자의 창 선택을 기다립니다.");
+
+        CurrentAppItem = null;
         IsWaitingForApp = true;
         WindowSelectPrompt = "창을 클릭해주세요";
 
         Render();
     }
-
-    public void StopWaitingAndRegisterApp(TimerApp app)
-    {
-        this.GetLogger().Info($"{SlotNumber}번 슬롯에 앱({app.ProcessExecutablePath})을 등록합니다.");
-
-        CurrentApp = app;
-        IsWaitingForApp = false;
-
-        if (_status != null)
-        {
-            _status.App = app.AppEntity;
-            _slotService.SaveRepository();
-        }
-
-        Render();
-    }
-
-    public void UnableToHandleRegistering(string reason)
-    {
-        WindowSelectPrompt = reason;
-
-        Render();
-    }
-
-    public void CancelRegisteringApp()
-    {
-        IsWaitingForApp = false;
-
-        Render();
-    }
-
-    public void ClearRegisteredApp()
-    {
-        this.GetLogger().Info($"{SlotNumber}번 슬롯에서 앱을 제거합니다.");
-
-        CurrentApp = null;
-
-        if (_status != null)
-        {
-            _status.App = null;
-            _slotService.SaveRepository();
-        }
-
-        Render();
-    }
-
+    
     public void Tick()
     {
-        CurrentApp?.Tick();
+        CurrentAppItem?.Tick();
     }
-
-    public void Render()
-    {
-        NotifyPropertyChanged(nameof(CurrentApp));
-
-        NotifyPropertyChanged(nameof(IsAppVisible));
-        NotifyPropertyChanged(nameof(IsSetButtonVisible));
-        NotifyPropertyChanged(nameof(IsWaitLabelVisible));
-
-        NotifyPropertyChanged(nameof(IsAppActive));
-
-        NotifyPropertyChanged(nameof(WindowSelectPrompt));
-    }
-
-    #endregion
 }

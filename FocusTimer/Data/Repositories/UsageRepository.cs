@@ -9,37 +9,43 @@ namespace FocusTimer.Data.Repositories;
 
 public class UsageRepository
 {
-    private readonly FocusTimerDatabaseContext ReadingContext = new(true);
     private readonly FocusTimerDatabaseContext WritingContext = new(false);
 
     private readonly int LastHowManyDays = 21;
-
-
+    
     public Domain.Entities.App? FindAppByPath(string path)
     {
-        return ReadingContext.Apps.FirstOrDefault(a => a.ExecutablePath == path);
+        return WritingContext.Apps.FirstOrDefault(a => a.ExecutablePath == path);
     }
 
     public AppUsage? FindLastAppUsageByApp(Domain.Entities.App app)
     {
-        return ReadingContext.AppUsages
+        // 마지막으로 리셋이 진행된 시각을 알아내서
+        var lastResetAt = WritingContext.ResetHistories
+            .OrderBy(h => h.ResetAt)
+            .LastOrDefault()
+            ?.ResetAt ?? DateTime.MinValue;
+
+        // 그보다 이후에 시작된 기록 중에서만 가져옵니다.
+        return WritingContext.AppUsages
             .Include(u => u.App)
             .Include(u => u.ActiveUsages)
+            .Where(u => u.StartedAt > lastResetAt)
             .OrderBy(u => u.StartedAt)
             .LastOrDefault(u => u.App == app);
     }
 
     public TimerUsage? FindLastTimerUsage()
     {
-        return ReadingContext.TimerUsages
+        return WritingContext.TimerUsages
             .Include(u => u.ActiveUsages)
             .OrderBy(u => u.StartedAt)
             .LastOrDefault();
     }
 
-    public SlotStatus? FindSlotStatusBySlotNumber(long slotNumber)
+    public Slot? FindSlotStatusBySlotNumber(long slotNumber)
     {
-        return ReadingContext.SlotStatuses
+        return WritingContext.SlotStatuses
             .Include(s => s.App)
             .FirstOrDefault(s => s.SlotNumber == slotNumber);
     }
@@ -54,16 +60,21 @@ public class UsageRepository
         WritingContext.AddTimerUsage(usage);
     }
 
-    public void StartTracking(SlotStatus status)
+    public void StartTracking(Slot status)
     {
         WritingContext.AddSlotStatus(status);
+    }
+
+    public void StartTracking(ResetHistory history)
+    {
+        WritingContext.AddResetHistory(history);
     }
 
     public IEnumerable<AppUsage> GetAppUsages()
     {
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
-        return ReadingContext.AppUsages
+        return WritingContext.AppUsages
             .Include(u => u.App)
             .Include(u => u.ActiveUsages)
             .Where(u => u.StartedAt >= then)
@@ -74,15 +85,15 @@ public class UsageRepository
     {
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
-        return ReadingContext.TimerUsages
+        return WritingContext.TimerUsages
             .Include(u => u.ActiveUsages)
             .Where(u => u.StartedAt >= then)
             .OrderBy(u => u.StartedAt);
     }
 
-    public IEnumerable<SlotStatus> GetSlotStatuses()
+    public IEnumerable<Slot> GetSlotStatuses()
     {
-        return ReadingContext.SlotStatuses
+        return WritingContext.SlotStatuses
             .Include(s => s.App)
             .AsEnumerable();
     }

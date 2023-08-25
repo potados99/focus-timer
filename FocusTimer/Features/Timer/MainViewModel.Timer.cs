@@ -27,7 +27,7 @@ public partial class MainViewModel
         _oneSecTickTimer.Interval = TimeSpan.FromSeconds(1);
         _oneSecTickTimer.Start();
         
-        Timer.Reset();
+        TimerItem.Reset();
     }
 
     private readonly OffsetStopwatch _activeStopwatch = new();
@@ -209,12 +209,19 @@ public partial class MainViewModel
     public void ResetTimer()
     {
         InitGlobalTimer();
-        
+
+        AddResetHistory();
         RestoreAppSlots();
 
         TickAll();
         RenderAll();
     }
 
+    private void AddResetHistory()
+    {
+        _appUsageService.AddResetHistory();
+        _appUsageService.SaveRepository();
+    }
+    
     #endregion
 }

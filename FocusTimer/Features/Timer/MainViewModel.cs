@@ -10,19 +10,19 @@ public partial class MainViewModel : BaseViewModel
     private readonly LicenseService _licenseService;
     private readonly UserActivityMonitor _activityMonitor;
     private readonly WindowWatcher _watcher;
-    private readonly SlotService _slotService;
+    private readonly AppUsageService _appUsageService;
 
     public MainViewModel(
         LicenseService licenseService,
         UserActivityMonitor activityMonitor,
         WindowWatcher watcher,
-        SlotService slotService
+        AppUsageService appUsageService
     )
     {
         _licenseService = licenseService;
         _activityMonitor = activityMonitor;
         _watcher = watcher;
-        _slotService = slotService;
+        _appUsageService = appUsageService;
     }
 
     #region 생성자 시점 초기화
@@ -95,7 +95,7 @@ public partial class MainViewModel : BaseViewModel
 
     private void Tick()
     {
-        Timer.Tick(IsAnyAppActive);
+        TimerItem.Tick(IsAnyAppActive);
     }
 
     private void RenderAll()
@@ -110,7 +110,7 @@ public partial class MainViewModel : BaseViewModel
 
     private void Render()
     {
-        NotifyPropertyChanged(nameof(Timer));
+        NotifyPropertyChanged(nameof(TimerItem));
         NotifyPropertyChanged(nameof(IsAnyAppActive));
         NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 

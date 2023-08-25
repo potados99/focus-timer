@@ -6,7 +6,7 @@ public partial class MainViewModel
 {
     #region 사용량 집계와 복구
 
-    public ThisTimer Timer { get; } = new();
+    public TimerItem TimerItem { get; } = new();
 
     #endregion
 }

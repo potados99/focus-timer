@@ -13,21 +13,21 @@ public class SlotService
         _repository = repository;
     }
 
-    public IEnumerable<SlotStatus> GetSlotStatuses()
+    public IEnumerable<Slot> GetSlotStatuses()
     {
         return _repository.GetSlotStatuses();
     }
 
-    public SlotStatus GetOrCreateStatus(long slotNumber)
+    public Slot GetOrCreateStatus(long slotNumber)
     {
         var existing = _repository.FindSlotStatusBySlotNumber(slotNumber);
 
         return existing ?? CreateNewStatus(slotNumber);
     }
 
-    public SlotStatus CreateNewStatus(long slotNumber)
+    public Slot CreateNewStatus(long slotNumber)
     {
-        var status = SlotStatus.OfEmpty(slotNumber);
+        var status = Slot.OfEmpty(slotNumber);
         
         _repository.StartTracking(status);
 

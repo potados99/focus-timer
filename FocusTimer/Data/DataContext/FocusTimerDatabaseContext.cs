@@ -20,7 +20,9 @@ public class FocusTimerDatabaseContext : DbContext
     public DbSet<Domain.Entities.App> Apps { get; set; }
     public DbSet<AppUsage> AppUsages { get; set; }
     public DbSet<TimerUsage> TimerUsages { get; set; }
-    public DbSet<SlotStatus> SlotStatuses { get; set; }
+    public DbSet<Slot> SlotStatuses { get; set; }
+
+    public DbSet<ResetHistory> ResetHistories { get; set; }
 
     private readonly Queue<Action> _pendingActions = new();
 
@@ -86,22 +88,27 @@ public class FocusTimerDatabaseContext : DbContext
 
     public void AddAppUsage(AppUsage usage)
     {
-        _pendingActions.Enqueue(() => { AppUsages.Add(usage); });
+        AppUsages.Add(usage);
     }
 
     public void AddTimerUsage(TimerUsage usage)
     {
-        _pendingActions.Enqueue(() => { TimerUsages.Add(usage); });
+        TimerUsages.Add(usage);
     }
 
-    public void AddSlotStatus(SlotStatus status)
+    public void AddSlotStatus(Slot status)
     {
-        _pendingActions.Enqueue(() => { SlotStatuses.Add(status); });
+        SlotStatuses.Add(status);
+    }
+
+    public void AddResetHistory(ResetHistory history)
+    {
+        ResetHistories.Add(history);
     }
 
     public void Save()
     {
-        _pendingActions.Enqueue(() => { SaveChanges(); });
+        SaveChanges();
     }
 
     class BackgroundWorker

@@ -1,49 +1,10 @@
 ﻿using System;
 using System.Windows;
-using FocusTimer.Data.Repositories;
-using FocusTimer.Domain.Services;
-using FocusTimer.Features.Charting;
-using FocusTimer.Features.License;
-using FocusTimer.Features.Timer;
-using FocusTimer.Lib;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FocusTimer;
 
 public partial class App : Application
 {
-    public static readonly ServiceProvider Provider =
-        ConfigureServices(new ServiceCollection()).BuildServiceProvider();
-
-    private static IServiceCollection ConfigureServices(IServiceCollection services)
-    {
-        // ViewModels
-        services
-            .AddTransient<MainViewModel>()
-            .AddTransient<ChartViewModel>()
-            .AddTransient<LicenseViewModel>();
-
-        // Services
-        services
-            .AddSingleton<LicenseService>()
-            .AddSingleton<AppService>()
-            .AddSingleton<AppUsageService>()
-            .AddSingleton<TimerUsageService>()
-            .AddSingleton<SlotService>();
-
-        // Repositories
-        services
-            .AddSingleton<UsageRepository>();
-
-        // Others
-        services
-            .AddSingleton<UserActivityMonitor>()
-            .AddSingleton<ChartDataProcessor>()
-            .AddSingleton<WindowWatcher>();
-
-        return services;
-    }
-
     [STAThread]
     public static void Main()
     {
