@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FocusTimer.Data.DataContext;
 using FocusTimer.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FocusTimer.Data.Repositories;
 
@@ -18,20 +19,22 @@ public class UsageRepository
     {
         return ReadingContext.Apps.FirstOrDefault(a => a.ExecutablePath == path);
     }
-
-    public AppUsage? FindAppUsageById(int id)
-    {
-        return ReadingContext.AppUsages.Find(id);
-    }
-
+    
     public AppUsage? FindLastAppUsageByApp(Domain.Entities.App app)
     {
-        return ReadingContext.AppUsages.OrderBy(u => u.StartedAt).LastOrDefault(u => u.App == app);
+        return ReadingContext.AppUsages
+            .Include(u => u.App)
+            .Include(u => u.ActiveUsages)
+            .OrderBy(u => u.StartedAt)
+            .LastOrDefault(u => u.App == app);
     }
-    
+
     public TimerUsage? FindLastTimerUsage()
     {
-        return ReadingContext.TimerUsages.OrderBy(u => u.StartedAt).LastOrDefault();
+        return ReadingContext.TimerUsages
+            .Include(u => u.ActiveUsages)
+            .OrderBy(u => u.StartedAt)
+            .LastOrDefault();
     }
 
     public void StartTracking(AppUsage usage)
@@ -48,17 +51,23 @@ public class UsageRepository
     {
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
-        return ReadingContext.AppUsages.Where(u => u.StartedAt >= then).OrderBy(u => u.StartedAt);
+        return ReadingContext.AppUsages
+            .Include(u => u.App)
+            .Include(u => u.ActiveUsages)
+            .Where(u => u.StartedAt >= then)
+            .OrderBy(u => u.StartedAt);
     }
 
     public IEnumerable<TimerUsage> GetTimerUsages()
     {
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
 
-        return ReadingContext.TimerUsages.Where(u => u.StartedAt >= then).OrderBy(u => u.StartedAt);
+        return ReadingContext.TimerUsages
+            .Include(u => u.ActiveUsages)
+            .Where(u => u.StartedAt >= then)
+            .OrderBy(u => u.StartedAt);
     }
     
-
     public void Save()
     {
         WritingContext.Save();

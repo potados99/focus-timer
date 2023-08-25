@@ -21,7 +21,7 @@ public class StopwatchRunner
         _alwaysOnStopwatch.AddOffset(alwaysOnOffset);
     }
     
-    public void ActiveStatusChanged(bool active)
+    public void StartOrStopActiveTimer(bool active)
     {
         if (active)
         {

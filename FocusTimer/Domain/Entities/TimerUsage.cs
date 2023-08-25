@@ -33,4 +33,24 @@ public class TimerUsage
     [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
 
     [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
+    
+    public TimerActiveUsage OpenNewActiveUsage()
+    {
+        var usage = new TimerActiveUsage
+        {
+            StartedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            TimerUsage = this
+        };
+        ActiveUsages.Add(usage);
+
+        return usage;
+    }
+    
+    public void TouchActiveUsage()
+    {
+        var usage = ActiveUsages.LastOrDefault() ?? OpenNewActiveUsage();
+
+        usage.UpdatedAt = DateTime.Now;
+    }
 }

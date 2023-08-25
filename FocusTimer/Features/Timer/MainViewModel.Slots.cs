@@ -12,17 +12,11 @@ public partial class MainViewModel
 {
     #region 타이머 슬롯의 등록, 초기화 및 상태
 
-    public List<TimerSlotViewModel> TimerSlots { get; } = new() {
-        new TimerSlotViewModel { SlotNumber = 0 },
-        new TimerSlotViewModel { SlotNumber = 1 },
-        new TimerSlotViewModel { SlotNumber = 2 },
-        new TimerSlotViewModel { SlotNumber = 3 },
-        new TimerSlotViewModel { SlotNumber = 4 },
-    };
+    public List<TimerSlotViewModel> TimerSlots => Timer.TimerSlots;
 
     private TimerSlotViewModel? CurrentRegisteringTimerSlot => TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
 
-    public bool IsAnyAppActive => TimerSlots.Any(s => s.IsAppActive);
+    public bool IsAnyAppActive => Timer.IsAnyAppActive;
 
     private void StartRegisteringApplication(TimerSlotViewModel slot)
     {

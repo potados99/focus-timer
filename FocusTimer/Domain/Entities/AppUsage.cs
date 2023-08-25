@@ -43,7 +43,7 @@ public class AppUsage
     [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
     [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
 
-    public void OpenNewActiveUsage()
+    public AppActiveUsage OpenNewActiveUsage()
     {
         var usage = new AppActiveUsage
         {
@@ -53,22 +53,13 @@ public class AppUsage
             AppUsage = this
         };
         ActiveUsages.Add(usage);
+
+        return usage;
     }
     
     public void TouchActiveUsage()
     {
-        var usage = ActiveUsages.LastOrDefault();
-        if (usage == null)
-        {
-            usage = new AppActiveUsage
-            {
-                App = App,
-                StartedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                AppUsage = this
-            };
-            ActiveUsages.Add(usage);
-        }
+        var usage = ActiveUsages.LastOrDefault() ?? OpenNewActiveUsage();
 
         usage.UpdatedAt = DateTime.Now;
     }

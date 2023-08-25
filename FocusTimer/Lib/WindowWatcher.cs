@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Threading;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Lib;
 
@@ -10,9 +12,9 @@ public class WindowWatcher
 
     public event FocusedEventHandler? OnFocused;
 
-    private readonly DispatcherTimer Timer = new();
+    private readonly DispatcherTimer _timer = new();
 
-    public static readonly string[] SkipList = new string[] {
+    public static readonly string[] SkipList = {
         "TaskListThumbnailWnd", // 윈도우가 여러 개일 때 작업표시줄에 표시되는 작은 썸네일
         "ForegroundStaging", // Alt + Tab으로 보이는 UI
         "MultitaskingViewFrame", // Alt + Tab으로 보이는 UI
@@ -24,24 +26,26 @@ public class WindowWatcher
         "NotifyIconOverflowWindow", // 작업표시줄에 아이콘이 몰려있는 곳 위로가는 쉐브론 누르면 나오는 UI
     };
 
-    public IntPtr FocusedWindow { get; private set; } = IntPtr.Zero;
-
+    public string? ForegroundAppPath => APIWrapper.GetForegroundProcess()?.ExecutablePath();
+    
+    private IntPtr _focusedWindow = IntPtr.Zero;
+    
     public void StartListening()
     {
-        Timer.Tick += (_, _) => Tick();
-        Timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+        _timer.Tick += (_, _) => Tick();
+        _timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
 
-        Timer.Start();
+        _timer.Start();
     }
 
     public void StopListening()
     {
-        Timer.Stop();
+        _timer.Stop();
     }
 
     private void Tick()
     {
-        IntPtr nowFocused = APIWrapper.GetForegroundWindow();
+        var nowFocused = APIWrapper.GetForegroundWindow();
 
         if (nowFocused == IntPtr.Zero)
         {
@@ -49,7 +53,7 @@ public class WindowWatcher
             return;
         }
 
-        if (FocusedWindow == nowFocused)
+        if (_focusedWindow == nowFocused)
         {
             // 변화가 없으면 취급하지 않습니다.
             return;
@@ -60,9 +64,9 @@ public class WindowWatcher
             // 특정 시스템 UI는 다루지 않습니다.
             return;
         }
-
-        OnFocused?.Invoke(FocusedWindow, nowFocused);
-
-        FocusedWindow = nowFocused;
+        
+        OnFocused?.Invoke(_focusedWindow, nowFocused);
+        
+        _focusedWindow = nowFocused;
     }
 }

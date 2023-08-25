@@ -17,6 +17,7 @@ public class TimerApp : StopwatchRunner
     private readonly AppService _appService = App.Provider.GetService<AppService>()!;
     private readonly AppUsageService _appUsageService = App.Provider.GetService<AppUsageService>()!;
     private readonly UserActivityMonitor _activityMonitor = App.Provider.GetService<UserActivityMonitor>()!;
+    private readonly WindowWatcher _watcher = App.Provider.GetService<WindowWatcher>()!;
 
     public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle)?.ExecutablePath())
     {
@@ -30,10 +31,16 @@ public class TimerApp : StopwatchRunner
         }
 
         _app = _appService.GetOrCreateApp(executablePath);
-
+        _watcher.OnFocused += OnFocusChanged;
+        
         LoadUsage();
     }
 
+    ~TimerApp()
+    {
+        _watcher.OnFocused -= OnFocusChanged;
+    }
+    
     private readonly Domain.Entities.App _app;
     private AppUsage? _usage;
 
@@ -45,14 +52,21 @@ public class TimerApp : StopwatchRunner
 
     public bool IsCountedOnConcentrationCalculation { get; set; } = true;
 
-    public bool IsActive => APIWrapper.GetForegroundProcess()?.ExecutablePath() == ProcessExecutablePath &&
+    public bool IsActive => _watcher.ForegroundAppPath == ProcessExecutablePath &&
                             _activityMonitor.IsActive;
 
     public void Tick()
     {
-        // IsActive 상태가 바뀔 때에 새 ActiveUsage를 시작해야 합니다...TODO
-        ActiveStatusChanged(IsActive);
+        StartOrStopActiveTimer(IsActive);
         UpdateUsage();
+    }
+    
+    private void OnFocusChanged(IntPtr prev, IntPtr current)
+    {
+        if (IsActive)
+        {
+            _usage?.OpenNewActiveUsage();
+        }
     }
 
     private void LoadUsage()

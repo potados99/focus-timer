@@ -9,15 +9,17 @@ public partial class MainViewModel : BaseViewModel
 {
     private readonly LicenseService _licenseService;
     private readonly UserActivityMonitor _activityMonitor;
+    private readonly WindowWatcher _watcher;
 
-    public MainViewModel(LicenseService licenseService, UserActivityMonitor activityMonitor)
+    public MainViewModel(LicenseService licenseService, UserActivityMonitor activityMonitor, WindowWatcher watcher)
     {
         _licenseService = licenseService;
         _activityMonitor = activityMonitor;
+        _watcher = watcher;
     }
 
     #region 생성자 시점 초기화
-    
+
     public override void OnInitialize()
     {
         SetupActivityMonitor();
@@ -42,9 +44,7 @@ public partial class MainViewModel : BaseViewModel
 
     private void SetupWatcher()
     {
-        WindowWatcher watcher = new();
-
-        watcher.OnFocused += (prev, current) =>
+        _watcher.OnFocused += (prev, current) =>
         {
             if (CurrentRegisteringTimerSlot != null && !APIWrapper.IsThisProcessForeground())
             {
@@ -56,9 +56,9 @@ public partial class MainViewModel : BaseViewModel
             RenderAll();
         };
 
-        watcher.StartListening();
+        _watcher.StartListening();
     }
-    
+
     #endregion
 
     #region 컨트롤 로드 시점 초기화

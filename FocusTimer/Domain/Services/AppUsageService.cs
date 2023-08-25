@@ -27,11 +27,6 @@ public class AppUsageService
         
         return usage;
     }
-    
-    public AppUsage? GetUsage(int id)
-    {
-        return _repository.FindAppUsageById(id);
-    }
 
     public AppUsage? GetLastUsage(Entities.App app)
     {

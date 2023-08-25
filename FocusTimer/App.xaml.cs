@@ -37,7 +37,8 @@ public partial class App : Application
         // Others
         services
             .AddSingleton<UserActivityMonitor>()
-            .AddSingleton<ChartDataProcessor>();
+            .AddSingleton<ChartDataProcessor>()
+            .AddSingleton<WindowWatcher>();
 
         return services;
     }
