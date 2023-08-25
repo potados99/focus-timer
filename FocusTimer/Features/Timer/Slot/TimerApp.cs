@@ -16,9 +16,11 @@ public class TimerApp : StopwatchRunner
 {
     private readonly AppService _appService = App.Provider.GetService<AppService>()!;
     private readonly AppUsageService _appUsageService = App.Provider.GetService<AppUsageService>()!;
-    
+    private readonly UserActivityMonitor _activityMonitor = App.Provider.GetService<UserActivityMonitor>()!;
+
     public TimerApp(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle)?.ExecutablePath())
-    { }
+    {
+    }
 
     public TimerApp(string? executablePath)
     {
@@ -28,13 +30,13 @@ public class TimerApp : StopwatchRunner
         }
 
         _app = _appService.GetOrCreateApp(executablePath);
-        
+
         LoadUsage();
     }
 
     private readonly Domain.Entities.App _app;
     private AppUsage? _usage;
-    
+
     public string ProcessExecutablePath => _app.ExecutablePath;
 
     public string AppName => _app.Title;
@@ -42,20 +44,21 @@ public class TimerApp : StopwatchRunner
     public ImageSource Image => _app.Icon.ToImageSource();
 
     public bool IsCountedOnConcentrationCalculation { get; set; } = true;
-    
-    public bool IsActive => APIWrapper.GetForegroundProcess()?.ExecutablePath() == ProcessExecutablePath && UserActivityMonitor.Instance.IsActive;
+
+    public bool IsActive => APIWrapper.GetForegroundProcess()?.ExecutablePath() == ProcessExecutablePath &&
+                            _activityMonitor.IsActive;
 
     public void Tick()
     {
+        // IsActive 상태가 바뀔 때에 새 ActiveUsage를 시작해야 합니다...TODO
         ActiveStatusChanged(IsActive);
-
         UpdateUsage();
     }
 
     private void LoadUsage()
     {
         _usage = _appUsageService.GetLastUsage(_app) ?? _appUsageService.CreateNewUsage(_app);
-        
+
         IsCountedOnConcentrationCalculation = _usage.IsConcentrated;
 
         Restart();
@@ -68,9 +71,14 @@ public class TimerApp : StopwatchRunner
         {
             return;
         }
-        
+
         _usage.UpdatedAt = DateTime.Now;
         _usage.IsConcentrated = IsCountedOnConcentrationCalculation;
+
+        if (IsActive)
+        {
+            _usage.TouchActiveUsage();
+        }
 
         _appUsageService.SaveRepository();
     }

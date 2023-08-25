@@ -5,11 +5,8 @@ namespace FocusTimer.Lib;
 
 public class UserActivityMonitor
 {
-    public static UserActivityMonitor Instance = new();
-
-    public delegate void StateChangeHandler();
-    public event StateChangeHandler? OnActivated;
-    public event StateChangeHandler? OnDeactivated;
+    public event Signal? OnActivated;
+    public event Signal? OnDeactivated;
 
     private readonly DispatcherTimer _timer = new();
 
