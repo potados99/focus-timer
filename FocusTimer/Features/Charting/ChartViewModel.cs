@@ -22,9 +22,9 @@ namespace FocusTimer.Features.Charting;
 public class ChartViewModel : BaseViewModel
 {
     private readonly ChartDataProcessor _processor;
-    private readonly UsageRepository _repository;
+    private readonly FocusRepository _repository;
     
-    public ChartViewModel(ChartDataProcessor processor, UsageRepository repository)
+    public ChartViewModel(ChartDataProcessor processor, FocusRepository repository)
     {
         _processor = processor;
         _repository = repository;

@@ -6,9 +6,9 @@ namespace FocusTimer.Domain.Services;
 
 public class TimerUsageService
 {
-    private readonly UsageRepository _repository;
+    private readonly FocusRepository _repository;
     
-    public TimerUsageService(UsageRepository repository)
+    public TimerUsageService(FocusRepository repository)
     {
         _repository = repository;
     }

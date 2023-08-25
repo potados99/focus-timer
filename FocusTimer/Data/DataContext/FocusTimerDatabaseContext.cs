@@ -15,17 +15,13 @@ namespace FocusTimer.Data.DataContext;
 
 public class FocusTimerDatabaseContext : DbContext
 {
-    private readonly bool _readOnly;
-
     public DbSet<Domain.Entities.App> Apps { get; set; }
     public DbSet<AppUsage> AppUsages { get; set; }
     public DbSet<TimerUsage> TimerUsages { get; set; }
     public DbSet<Slot> SlotStatuses { get; set; }
 
     public DbSet<ResetHistory> ResetHistories { get; set; }
-
-    private readonly Queue<Action> _pendingActions = new();
-
+    
     private string DbPath
     {
         get
@@ -42,29 +38,16 @@ public class FocusTimerDatabaseContext : DbContext
         }
     }
 
-    public FocusTimerDatabaseContext(bool readOnly)
+    public FocusTimerDatabaseContext()
     {
-        this._readOnly = readOnly;
-
         Initialize();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder
-        .UseSqlite($"Data Source={DbPath}")
-        .UseQueryTrackingBehavior(_readOnly
-            ? QueryTrackingBehavior.NoTracking
-            : // 읽기전용에서는 캐싱을 꺼야 DB에 생긴 변화를 제대로 가져옵니다.
-            QueryTrackingBehavior.TrackAll
-        );
+        .UseSqlite($"Data Source={DbPath}");
 
-    public void Initialize()
+    private void Initialize()
     {
-        if (_readOnly)
-        {
-            // 읽기 전용 컨텍스트이면 DB 생성과 백그라운드 워커 스레드 실행을 하지 않습니다.
-            return;
-        }
-
         if (File.Exists(DbPath))
         {
             try
@@ -81,66 +64,10 @@ public class FocusTimerDatabaseContext : DbContext
         }
 
         Database.EnsureCreated();
-
-        new BackgroundWorker(this).StartWorking();
-    }
-
-
-    public void AddAppUsage(AppUsage usage)
-    {
-        AppUsages.Add(usage);
-    }
-
-    public void AddTimerUsage(TimerUsage usage)
-    {
-        TimerUsages.Add(usage);
-    }
-
-    public void AddSlotStatus(Slot status)
-    {
-        SlotStatuses.Add(status);
-    }
-
-    public void AddResetHistory(ResetHistory history)
-    {
-        ResetHistories.Add(history);
     }
 
     public void Save()
     {
         SaveChanges();
-    }
-
-    class BackgroundWorker
-    {
-        private readonly FocusTimerDatabaseContext Context;
-
-        public BackgroundWorker(FocusTimerDatabaseContext context)
-        {
-            Context = context;
-        }
-
-        public void StartWorking()
-        {
-            ThreadStart start = new(Work);
-            Thread thread = new(start)
-            {
-                IsBackground = true
-            };
-            thread.Start();
-        }
-
-        private void Work()
-        {
-            while (true)
-            {
-                while (Context._pendingActions.Count > 0)
-                {
-                    Context._pendingActions.Dequeue()();
-                }
-
-                Thread.Sleep(1000);
-            }
-        }
     }
 }

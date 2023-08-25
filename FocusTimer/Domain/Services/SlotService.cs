@@ -6,9 +6,9 @@ namespace FocusTimer.Domain.Services;
 
 public class SlotService
 {
-    private readonly UsageRepository _repository;
+    private readonly FocusRepository _repository;
 
-    public SlotService(UsageRepository repository)
+    public SlotService(FocusRepository repository)
     {
         _repository = repository;
     }

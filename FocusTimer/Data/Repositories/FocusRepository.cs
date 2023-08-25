@@ -7,27 +7,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FocusTimer.Data.Repositories;
 
-public class UsageRepository
+public class FocusRepository
 {
-    private readonly FocusTimerDatabaseContext WritingContext = new(false);
-
-    private readonly int LastHowManyDays = 21;
+    private readonly FocusTimerDatabaseContext _context;
     
+    public FocusRepository(FocusTimerDatabaseContext context)
+    {
+        _context = context;
+    }
+
+    private const int LAST_HOW_MANY_DAYS = 21;
+
     public Domain.Entities.App? FindAppByPath(string path)
     {
-        return WritingContext.Apps.FirstOrDefault(a => a.ExecutablePath == path);
+        return _context.Apps.FirstOrDefault(a => a.ExecutablePath == path);
     }
 
     public AppUsage? FindLastAppUsageByApp(Domain.Entities.App app)
     {
         // 마지막으로 리셋이 진행된 시각을 알아내서
-        var lastResetAt = WritingContext.ResetHistories
+        var lastResetAt = _context.ResetHistories
             .OrderBy(h => h.ResetAt)
             .LastOrDefault()
             ?.ResetAt ?? DateTime.MinValue;
 
         // 그보다 이후에 시작된 기록 중에서만 가져옵니다.
-        return WritingContext.AppUsages
+        return _context.AppUsages
             .Include(u => u.App)
             .Include(u => u.ActiveUsages)
             .Where(u => u.StartedAt > lastResetAt)
@@ -37,44 +42,32 @@ public class UsageRepository
 
     public TimerUsage? FindLastTimerUsage()
     {
-        return WritingContext.TimerUsages
+        // 마지막으로 리셋이 진행된 시각을 알아내서
+        var lastResetAt = _context.ResetHistories
+            .OrderBy(h => h.ResetAt)
+            .LastOrDefault()
+            ?.ResetAt ?? DateTime.MinValue;
+
+        // 그보다 이후에 시작된 기록 중에서만 가져옵니다.
+        return _context.TimerUsages
             .Include(u => u.ActiveUsages)
+            .Where(u => u.StartedAt > lastResetAt)
             .OrderBy(u => u.StartedAt)
             .LastOrDefault();
     }
 
     public Slot? FindSlotStatusBySlotNumber(long slotNumber)
     {
-        return WritingContext.SlotStatuses
+        return _context.SlotStatuses
             .Include(s => s.App)
             .FirstOrDefault(s => s.SlotNumber == slotNumber);
     }
-
-    public void StartTracking(AppUsage usage)
-    {
-        WritingContext.AddAppUsage(usage);
-    }
-
-    public void StartTracking(TimerUsage usage)
-    {
-        WritingContext.AddTimerUsage(usage);
-    }
-
-    public void StartTracking(Slot status)
-    {
-        WritingContext.AddSlotStatus(status);
-    }
-
-    public void StartTracking(ResetHistory history)
-    {
-        WritingContext.AddResetHistory(history);
-    }
-
+    
     public IEnumerable<AppUsage> GetAppUsages()
     {
-        var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
+        var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LAST_HOW_MANY_DAYS - 1));
 
-        return WritingContext.AppUsages
+        return _context.AppUsages
             .Include(u => u.App)
             .Include(u => u.ActiveUsages)
             .Where(u => u.StartedAt >= then)
@@ -83,9 +76,9 @@ public class UsageRepository
 
     public IEnumerable<TimerUsage> GetTimerUsages()
     {
-        var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LastHowManyDays - 1));
+        var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LAST_HOW_MANY_DAYS - 1));
 
-        return WritingContext.TimerUsages
+        return _context.TimerUsages
             .Include(u => u.ActiveUsages)
             .Where(u => u.StartedAt >= then)
             .OrderBy(u => u.StartedAt);
@@ -93,13 +86,18 @@ public class UsageRepository
 
     public IEnumerable<Slot> GetSlotStatuses()
     {
-        return WritingContext.SlotStatuses
+        return _context.SlotStatuses
             .Include(s => s.App)
             .AsEnumerable();
     }
 
+    public void StartTracking(object entity)
+    {
+        _context.Add(entity);
+    }
+
     public void Save()
     {
-        WritingContext.Save();
+        _context.Save();
     }
 }

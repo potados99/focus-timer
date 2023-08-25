@@ -1,4 +1,5 @@
-﻿using FocusTimer.Data.Repositories;
+﻿using FocusTimer.Data.DataContext;
+using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting;
 using FocusTimer.Features.License;
@@ -35,10 +36,11 @@ public static class Modules
 
         // Repositories
         services
-            .AddSingleton<UsageRepository>();
+            .AddSingleton<FocusRepository>();
 
         // Others
         services
+            .AddSingleton<FocusTimerDatabaseContext>()
             .AddSingleton<UserActivityMonitor>()
             .AddSingleton<ChartDataProcessor>()
             .AddSingleton<WindowWatcher>();

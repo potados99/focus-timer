@@ -4,9 +4,9 @@ namespace FocusTimer.Domain.Services;
 
 public class AppService
 {
-    private readonly UsageRepository _repository;
+    private readonly FocusRepository _repository;
     
-    public AppService(UsageRepository repository)
+    public AppService(FocusRepository repository)
     {
         _repository = repository;
     }

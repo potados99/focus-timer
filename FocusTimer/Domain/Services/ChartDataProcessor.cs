@@ -19,9 +19,9 @@ namespace FocusTimer.Domain.Services;
 
 public class ChartDataProcessor
 {
-    private readonly UsageRepository _repository;
+    private readonly FocusRepository _repository;
     
-    public ChartDataProcessor(UsageRepository repository)
+    public ChartDataProcessor(FocusRepository repository)
     {
         _repository = repository;
     }
