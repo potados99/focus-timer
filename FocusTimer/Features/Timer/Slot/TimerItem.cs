@@ -11,18 +11,12 @@ namespace FocusTimer.Features.Timer.Slot;
 public partial class TimerItem : StopwatchRunner
 {
     private readonly TimerUsageService _timerUsageService = Modules.Get<TimerUsageService>();
-    private readonly WindowWatcher _watcher = Modules.Get<WindowWatcher>();
     private readonly EventService _eventService = Modules.Get<EventService>();
 
     public TimerItem()
     {
         RegisterEvents();
         LoadUsage();
-    }
-
-    ~TimerItem()
-    {
-        UnregisterEvents();
     }
 
     public List<TimerSlotViewModel> TimerSlots { get; } = new()
@@ -39,19 +33,22 @@ public partial class TimerItem : StopwatchRunner
     private void RegisterEvents()
     {
         _eventService.OnTick += OnTick;
-        _watcher.OnFocused += OnFocusChanged;
-    }
-
-    private void UnregisterEvents()
-    {
-        _eventService.OnTick -= OnTick;
-        _watcher.OnFocused -= OnFocusChanged;
+        _eventService.OnActivated += OnActivated;
+        _eventService.OnFocusChanged += OnFocusChanged;
     }
 
     private void OnTick()
     {
         StartOrStopActiveTimer(IsAnyAppActive);
         UpdateUsage();
+    }
+    
+    private void OnActivated()
+    {
+        if (IsAnyAppActive)
+        {
+            _usage?.OpenNewActiveUsage();
+        }
     }
 
     private void OnFocusChanged(IntPtr prev, IntPtr current)

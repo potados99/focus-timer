@@ -10,6 +10,7 @@ public partial class TimerSlotViewModel
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에서 사용자의 창 선택을 기다립니다.");
 
+        CurrentAppItem?.Dispose();
         CurrentAppItem = null;
         IsWaitingForApp = true;
         WindowSelectPrompt = "창을 클릭해주세요";
@@ -21,6 +22,7 @@ public partial class TimerSlotViewModel
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 사용자가 선택한 앱({appItem.ProcessExecutablePath})을 등록합니다.");
 
+        CurrentAppItem?.Dispose();
         CurrentAppItem = appItem;
         IsWaitingForApp = false;
 
@@ -57,6 +59,7 @@ public partial class TimerSlotViewModel
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 등록된 앱을 제거합니다.");
 
+        CurrentAppItem?.Dispose();
         CurrentAppItem = null;
 
         if (_slot != null)

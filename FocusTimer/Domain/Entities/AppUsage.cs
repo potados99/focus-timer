@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Domain.Entities;
 
@@ -43,8 +44,21 @@ public class AppUsage
     [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
     [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
 
+    private AppActiveUsage? GetLastActiveUsage()
+    {
+        var usage = ActiveUsages.LastOrDefault();
+        if (usage != null)
+        {
+            this.GetLogger().Info("기존의 AppActiveUsage를 가져왔습니다.");
+        }
+
+        return usage;
+    }
+    
     public AppActiveUsage OpenNewActiveUsage()
     {
+        this.GetLogger().Info("새로운 AppActiveUsage를 생성합니다.");
+        
         var usage = new AppActiveUsage
         {
             App = App,
@@ -56,10 +70,10 @@ public class AppUsage
 
         return usage;
     }
-    
+
     public void TouchActiveUsage()
     {
-        var usage = ActiveUsages.LastOrDefault() ?? OpenNewActiveUsage();
+        var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
 
         usage.UpdatedAt = DateTime.Now;
     }

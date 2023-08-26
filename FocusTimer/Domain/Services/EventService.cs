@@ -22,8 +22,16 @@ public class EventService
         };
 
         _activityMonitor = activityMonitor;
-        _activityMonitor.OnActivated += OnRender;
-        _activityMonitor.OnDeactivated += OnRender;
+        _activityMonitor.OnActivated += () =>
+        {
+            OnRender?.Invoke();
+            OnActivated?.Invoke();
+        };
+        _activityMonitor.OnDeactivated += () =>
+        {
+            OnRender?.Invoke();
+            OnDeactivated?.Invoke();
+        };
         
         _windowWatcher = windowWatcher;
         _windowWatcher.OnFocused += (p, n) =>
@@ -36,6 +44,9 @@ public class EventService
     public event Signal? OnTick;
     public event Signal? OnRender;
     public event Signal? OnReload;
+    public event Signal? OnActivated;
+    public event Signal? OnDeactivated;
+
     public event WindowWatcher.FocusedEventHandler? OnFocusChanged;
     
     public void EmitRender()
