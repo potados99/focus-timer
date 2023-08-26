@@ -56,7 +56,7 @@ public class TimerUsage
         var usage = ActiveUsages.LastOrDefault();
         if (usage != null)
         {
-            this.GetLogger().Debug("기존의 TimerActiveUsage를 가져왔습니다.");
+            this.GetLogger().Debug($"기존의 TimerActiveUsage를 가져왔습니다: {usage}");
         }
 
         return usage;
@@ -76,5 +76,10 @@ public class TimerUsage
         ActiveUsages.Add(usage);
 
         return usage;
+    }
+    
+    public override string ToString()
+    {
+        return $"TimerUsage(Id={Id}, Elapsed={Elapsed.ToSixDigits()}, ActiveElapsed={ActiveElapsed.ToSixDigits()})";
     }
 }

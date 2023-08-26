@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Domain.Entities;
 
@@ -34,4 +35,9 @@ public class AppActiveUsage
     public AppUsage AppUsage { get; set; }
     
     [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
+    
+    public override string ToString()
+    {
+        return $"AppActiveUsage(Id={Id}, Elapsed={Elapsed.ToSixDigits()})";
+    }
 }

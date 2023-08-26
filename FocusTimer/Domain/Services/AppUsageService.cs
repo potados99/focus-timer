@@ -19,7 +19,7 @@ public class AppUsageService
         var usage = _repository.FindLastAppUsageByApp(app);
         if (usage != null)
         {
-            this.GetLogger().Debug("기존의 AppUsage를 가져왔습니다.");
+            this.GetLogger().Debug($"기존의 AppUsage를 가져왔습니다: {usage}");
         }
         
         return usage;

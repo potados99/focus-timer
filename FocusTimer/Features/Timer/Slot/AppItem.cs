@@ -27,6 +27,8 @@ public partial class AppItem : StopwatchRunner, IDisposable
 
     private AppItem(string? executablePath)
     {
+        this.GetLogger().Info("AppItem을 초기화합니다.");
+
         if (string.IsNullOrEmpty(executablePath))
         {
             throw new Exception("TimerApp의 생성자에 executablePath가 null로 들어왔습니다. 이래서는 안 됩니다!");

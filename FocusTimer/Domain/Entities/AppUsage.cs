@@ -66,7 +66,7 @@ public class AppUsage
         var usage = ActiveUsages.LastOrDefault();
         if (usage != null)
         {
-            this.GetLogger().Debug("기존의 AppActiveUsage를 가져왔습니다.");
+            this.GetLogger().Debug($"기존의 AppActiveUsage를 가져왔습니다: {usage}");
         }
 
         return usage;
@@ -87,5 +87,10 @@ public class AppUsage
         ActiveUsages.Add(usage);
 
         return usage;
+    }
+
+    public override string ToString()
+    {
+        return $"AppUsage(Id={Id}, Elapsed={Elapsed.ToSixDigits()}, ActiveElapsed={ActiveElapsed.ToSixDigits()})";
     }
 }

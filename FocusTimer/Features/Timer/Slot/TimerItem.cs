@@ -15,6 +15,8 @@ public partial class TimerItem : StopwatchRunner
 
     public TimerItem()
     {
+        this.GetLogger().Info("TimerItem을 초기화합니다.");
+        
         RegisterEvents();
         LoadUsage();
     }
