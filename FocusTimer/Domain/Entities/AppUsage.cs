@@ -64,8 +64,7 @@ public class AppUsage
 
         var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
 
-        usage.UpdatedAt = DateTime.Now;
-        usage.ElapsedTicks += TimeSpan.TicksPerSecond;
+        usage.TouchUsage();
     }
     
     private AppActiveUsage? GetLastActiveUsage()

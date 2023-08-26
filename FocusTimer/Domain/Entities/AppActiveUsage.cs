@@ -41,6 +41,18 @@ public class AppActiveUsage
 
     [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
     
+    public void TouchUsage()
+    {
+        if (UpdatedAt - StartedAt > Elapsed + TimeSpan.FromSeconds(5))
+        {
+            throw new InvalidOperationException(
+                "이 AppActiveUsage에는 중간에 5초 이상 downtime이 있었던 것으로 보입니다. 시작 이후 흐른 시간이 실제 유효 시간보다 1분 넘게 큽니다.");
+        }
+
+        UpdatedAt = DateTime.Now;
+        ElapsedTicks += TimeSpan.TicksPerSecond;
+    }
+    
     public override string ToString()
     {
         return $"AppActiveUsage(Id={Id}, Elapsed={Elapsed.ToSixDigits()})";

@@ -52,9 +52,8 @@ public class TimerUsage
         this.GetLogger().Debug("TimerActiveUsage를 갱신합니다.");
 
         var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
-
-        usage.UpdatedAt = DateTime.Now;
-        usage.ElapsedTicks += TimeSpan.TicksPerSecond;
+        
+        usage.TouchUsage();
     }
     
     private TimerActiveUsage? GetLastActiveUsage()
