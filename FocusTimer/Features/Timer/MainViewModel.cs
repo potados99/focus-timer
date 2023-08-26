@@ -1,117 +1,54 @@
-﻿using FocusTimer.Lib;
+﻿using System;
+using FocusTimer.Lib;
 using FocusTimer.Lib.Component;
-using FocusTimer.Lib.Utility;
 using FocusTimer.Domain.Services;
+using FocusTimer.Features.Timer.Slot;
 
 namespace FocusTimer.Features.Timer;
 
 public partial class MainViewModel : BaseViewModel
 {
     private readonly LicenseService _licenseService;
-    private readonly UserActivityMonitor _activityMonitor;
     private readonly WindowWatcher _watcher;
     private readonly AppUsageService _appUsageService;
+    private readonly EventService _eventService;
 
     public MainViewModel(
         LicenseService licenseService,
-        UserActivityMonitor activityMonitor,
         WindowWatcher watcher,
-        AppUsageService appUsageService
-    )
+        AppUsageService appUsageService,
+        EventService eventService)
     {
         _licenseService = licenseService;
-        _activityMonitor = activityMonitor;
         _watcher = watcher;
         _appUsageService = appUsageService;
+        _eventService = eventService;
     }
-
-    #region 생성자 시점 초기화
+    
+    public TimerItem TimerItem { get; } = new();
 
     public override void OnInitialize()
     {
-        SetupActivityMonitor();
-        SetupTimerSlots();
-        SetupWatcher();
+        RegisterEvents();
     }
 
-    private void SetupActivityMonitor()
+    private void RegisterEvents()
     {
-        _activityMonitor.OnActivated += RenderAll;
-        _activityMonitor.OnDeactivated += RenderAll;
-    }
+        _focusLockTimer.OnFinish += UnlockFocus;
+        
+        _eventService.OnRender += OnRender;
+        _eventService.OnFocusChanged += OnFocusChanged;
 
-    private void SetupTimerSlots()
-    {
         foreach (var slot in TimerSlots)
         {
             slot.OnRegisterApplication += () => StartRegisteringApplication(slot);
             slot.OnClearApplication += () => ClearApplication(slot);
         }
     }
-
-    private void SetupWatcher()
-    {
-        _watcher.OnFocused += (prev, current) =>
-        {
-            if (CurrentRegisteringTimerSlot != null && !APIWrapper.IsThisProcessForeground())
-            {
-                FinishRegisteringApp(current);
-            }
-
-            RestoreFocusIfNeeded(prev, current);
-
-            RenderAll();
-        };
-
-        _watcher.StartListening();
-    }
-
-    #endregion
-
-    #region 컨트롤 로드 시점 초기화
-
-    public override void OnLoaded()
-    {
-        RestoreAppSlots();
-
-        InitGlobalTimer();
-        InitFocusLock();
-
-        TickAll();
-        RenderAll();
-
-        this.GetLogger().Info("ViewModel 시작!");
-    }
-
-    private void TickAll()
-    {
-        Tick();
-
-        foreach (var slot in TimerSlots)
-        {
-            slot.Tick();
-        }
-    }
-
-    private void Tick()
-    {
-        TimerItem.Tick(IsAnyAppActive);
-    }
-
-    private void RenderAll()
-    {
-        Render();
-
-        foreach (var slot in TimerSlots)
-        {
-            slot.Render();
-        }
-    }
-
-    private void Render()
+    
+    private void OnRender()
     {
         NotifyPropertyChanged(nameof(TimerItem));
-        NotifyPropertyChanged(nameof(IsAnyAppActive));
         NotifyPropertyChanged(nameof(IsWarningBorderVisible));
 
         NotifyPropertyChanged(nameof(IsFocusLocked));
@@ -123,5 +60,13 @@ public partial class MainViewModel : BaseViewModel
         NotifyPropertyChanged(nameof(IsOnConcentration));
     }
 
-    #endregion
+    private void OnFocusChanged(IntPtr prev, IntPtr current)
+    {
+        if (CurrentRegisteringTimerSlot != null && !APIWrapper.IsThisProcessForeground())
+        {
+            FinishRegisteringApp(current);
+        }
+
+        RestoreFocusIfNeeded(prev, current);
+    }
 }

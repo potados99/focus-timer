@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using FocusTimer.Domain.Entities;
 using FocusTimer.Lib.Utility;
 using Microsoft.AppCenter.Crashes;

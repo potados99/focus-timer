@@ -1,7 +1,6 @@
 ﻿using FocusTimer.Lib.Utility;
 using Microsoft.AppCenter.Crashes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using FocusTimer.Features.Timer.Slot;
 
@@ -9,14 +8,6 @@ namespace FocusTimer.Features.Timer;
 
 public partial class MainViewModel
 {
-    #region 타이머 슬롯의 등록, 초기화 및 상태
-
-    public List<TimerSlotViewModel> TimerSlots => TimerItem.TimerSlots;
-
-    private TimerSlotViewModel? CurrentRegisteringTimerSlot => TimerSlots.FirstOrDefault(s => s.IsWaitingForApp);
-
-    public bool IsAnyAppActive => TimerItem.IsAnyAppActive;
-
     private void StartRegisteringApplication(TimerSlotViewModel slot)
     {
         if (CurrentRegisteringTimerSlot != null)
@@ -32,7 +23,7 @@ public partial class MainViewModel
         
         slot.StartWaitingForApp();
 
-        Render();
+        OnRender();
     }
 
     private void FinishRegisteringApp(IntPtr windowHandle)
@@ -58,7 +49,7 @@ public partial class MainViewModel
 
         CurrentRegisteringTimerSlot?.StopWaitingAndRegisterApp(appItem);
 
-        Render();
+        OnRender();
 
         NotifyPropertyChanged(nameof(ConcentrationContextMenu));
     }
@@ -67,14 +58,14 @@ public partial class MainViewModel
     {
         CurrentRegisteringTimerSlot?.UnableToHandleRegistering(reason);
 
-        Render();
+        OnRender();
     }
 
     public void CancelRegisteringApp()
     {
         CurrentRegisteringTimerSlot?.CancelRegisteringApp();
 
-        Render();
+        OnRender();
     }
 
     private void ClearApplication(TimerSlotViewModel slot)
@@ -92,22 +83,8 @@ public partial class MainViewModel
 
         slot.ClearRegisteredApp();
 
-        Render();
+        OnRender();
 
         NotifyPropertyChanged(nameof(ConcentrationContextMenu));
     }
-
-    #endregion
-
-    #region 타이머 슬롯의 저장 및 복구
-
-    private void RestoreAppSlots()
-    {
-        foreach (var slot in TimerSlots)
-        {
-            slot.LoadSlot();
-        }
-    }
-
-    #endregion
 }

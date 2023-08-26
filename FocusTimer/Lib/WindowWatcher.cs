@@ -7,6 +7,11 @@ namespace FocusTimer.Lib;
 
 public class WindowWatcher
 {
+    public WindowWatcher()
+    {
+        StartListening();
+    }
+    
     public delegate void FocusedEventHandler(IntPtr prev, IntPtr current);
 
     public event FocusedEventHandler? OnFocused;
@@ -24,24 +29,17 @@ public class WindowWatcher
         "WorkerW", // 작업표시줄 오른쪽 눌러서 나오는 바탕화면 UI
         "NotifyIconOverflowWindow", // 작업표시줄에 아이콘이 몰려있는 곳 위로가는 쉐브론 누르면 나오는 UI
     };
-
-    public string? ForegroundAppPath => APIWrapper.GetForegroundProcess()?.ExecutablePath();
     
     private IntPtr _focusedWindow = IntPtr.Zero;
-    
-    public void StartListening()
+
+    private void StartListening()
     {
         _timer.Tick += (_, _) => Tick();
         _timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
 
         _timer.Start();
     }
-
-    public void StopListening()
-    {
-        _timer.Stop();
-    }
-
+    
     private void Tick()
     {
         var nowFocused = APIWrapper.GetForegroundWindow();

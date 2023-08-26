@@ -28,6 +28,7 @@ public static class Modules
 
         // Services
         services
+            .AddSingleton<EventService>()
             .AddSingleton<LicenseService>()
             .AddSingleton<AppService>()
             .AddSingleton<AppUsageService>()
@@ -40,6 +41,7 @@ public static class Modules
 
         // Others
         services
+            .AddSingleton<ClockGenerator>()
             .AddSingleton<FocusTimerDatabaseContext>()
             .AddSingleton<UserActivityMonitor>()
             .AddSingleton<ChartDataProcessor>()

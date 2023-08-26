@@ -10,9 +10,11 @@ public partial class TimerSlotViewModel
     // 밖에서 생성자로 이것저것 넣어줄 여유가 없기 때문에,
     // 필요한 것들은 안에서 직접 받아옵니다.
     private readonly SlotService _slotService = Modules.Get<SlotService>();
+    private readonly EventService _eventService = Modules.Get<EventService>();
 
     public override void OnLoaded()
     {
+        RegisterEvents();
         LoadSlot();
     }
 
@@ -33,7 +35,13 @@ public partial class TimerSlotViewModel
         return CurrentAppItem?.ProcessExecutablePath;
     }
 
-    public void LoadSlot()
+    private void RegisterEvents()
+    {
+        _eventService.OnReload += LoadSlot;
+        _eventService.OnRender += OnRender;
+    }
+    
+    private void LoadSlot()
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 앱 정보를 불러옵니다.");
 
@@ -50,25 +58,17 @@ public partial class TimerSlotViewModel
             this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)에 등록된 앱이 없습니다.");
         }
     }
-
-   /* public void ResetTimerAndUsage()
-    {
-        CurrentAppItem?.ResetTimerAndUsage();
-    }*/
-
-    public void StartWaitingForApp()
-    {
-        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에서 사용자의 창 선택을 기다립니다.");
-
-        CurrentAppItem = null;
-        IsWaitingForApp = true;
-        WindowSelectPrompt = "창을 클릭해주세요";
-
-        Render();
-    }
     
-    public void Tick()
+    private void OnRender()
     {
-        CurrentAppItem?.Tick();
+        NotifyPropertyChanged(nameof(CurrentAppItem));
+
+        NotifyPropertyChanged(nameof(IsAppVisible));
+        NotifyPropertyChanged(nameof(IsSetButtonVisible));
+        NotifyPropertyChanged(nameof(IsWaitLabelVisible));
+
+        NotifyPropertyChanged(nameof(IsAppActive));
+
+        NotifyPropertyChanged(nameof(WindowSelectPrompt));
     }
 }

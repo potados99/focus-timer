@@ -1,27 +1,22 @@
-﻿using System.Windows;
-using FocusTimer.Lib.Component;
-using FocusTimer.Lib.Utility;
+﻿using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer.Slot;
 
-public partial class TimerSlotViewModel : BaseViewModel
+public partial class TimerSlotViewModel
 {
     public bool IsWaitingForApp { get; private set; }
+    
+    public void StartWaitingForApp()
+    {
+        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에서 사용자의 창 선택을 기다립니다.");
 
-    public Visibility IsAppVisible =>
-        !IsWaitingForApp && CurrentAppItem != null ? Visibility.Visible : Visibility.Hidden;
+        CurrentAppItem = null;
+        IsWaitingForApp = true;
+        WindowSelectPrompt = "창을 클릭해주세요";
 
-    public Visibility IsSetButtonVisible =>
-        !IsWaitingForApp && CurrentAppItem == null ? Visibility.Visible : Visibility.Hidden;
-
-    public Visibility IsWaitLabelVisible => IsWaitingForApp ? Visibility.Visible : Visibility.Hidden;
-
-    public bool IsAppActive => CurrentAppItem is {IsActive: true};
-
-    public bool IsAppCountedOnConcentrationCalculation => CurrentAppItem is {IsCountedOnConcentrationCalculation: true};
-
-    public string WindowSelectPrompt { get; set; } = "창을 클릭해주세요";
-
+        OnRender();
+    }
+    
     public void StopWaitingAndRegisterApp(AppItem appItem)
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 사용자가 선택한 앱({appItem.ProcessExecutablePath})을 등록합니다.");
@@ -37,7 +32,7 @@ public partial class TimerSlotViewModel : BaseViewModel
             _slotService.SaveRepository();
         }
 
-        Render();
+        OnRender();
     }
 
     public void UnableToHandleRegistering(string reason)
@@ -46,7 +41,7 @@ public partial class TimerSlotViewModel : BaseViewModel
 
         WindowSelectPrompt = reason;
 
-        Render();
+        OnRender();
     }
 
     public void CancelRegisteringApp()
@@ -55,7 +50,7 @@ public partial class TimerSlotViewModel : BaseViewModel
 
         IsWaitingForApp = false;
 
-        Render();
+        OnRender();
     }
 
     public void ClearRegisteredApp()
@@ -72,19 +67,6 @@ public partial class TimerSlotViewModel : BaseViewModel
             _slotService.SaveRepository();
         }
 
-        Render();
-    }
-
-    public void Render()
-    {
-        NotifyPropertyChanged(nameof(CurrentAppItem));
-
-        NotifyPropertyChanged(nameof(IsAppVisible));
-        NotifyPropertyChanged(nameof(IsSetButtonVisible));
-        NotifyPropertyChanged(nameof(IsWaitLabelVisible));
-
-        NotifyPropertyChanged(nameof(IsAppActive));
-
-        NotifyPropertyChanged(nameof(WindowSelectPrompt));
+        OnRender();
     }
 }

@@ -2,118 +2,22 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Threading;
 using FocusTimer.Lib;
-using FocusTimer.Lib.Component;
 using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer;
 
 public partial class MainViewModel
 {
-    #region 스탑워치와 글로벌 틱 타이머
-
-    private void InitGlobalTimer()
-    {
-        _oneSecTickTimer.Stop();
-        _oneSecTickTimer.RemoveHandlers();
-        _oneSecTickTimer.Tick += (_, _) =>
-        {
-            TickAll();
-            RenderAll();
-        };
-        _oneSecTickTimer.Interval = TimeSpan.FromSeconds(1);
-        _oneSecTickTimer.Start();
-    }
-
-    private readonly OffsetStopwatch _activeStopwatch = new();
-    private readonly DispatcherTimer _oneSecTickTimer = new();
-
-    #endregion
-
-    #region 포커스 잠금과 홀드 타이머
-
-    private void InitFocusLock()
-    {
-        _focusLockTimer.OnFinish += () =>
-        {
-            UnlockFocus();
-        };
-    }
-
     private readonly CountdownTimer _focusLockTimer = new();
-
-    public bool IsFocusLocked { get; set; }
-
-    public bool IsFocusLockHold
-    {
-        get
-        {
-            return _focusLockTimer.IsEnabled;
-        }
-    }
-
-    public int FocusLockHoldDuration
-    {
-        get
-        {
-            return Settings.GetFocusLockHoldDuration();
-        }
-        set
-        {
-            Settings.SetFocusLockHoldDuration(value);
-
-            // 양방향 바인딩되는 속성으로, UI에 의해 변경시 여기에서 NotifyPropertyChanged를 트리거해요.
-            NotifyPropertyChanged(nameof(FocusLockHoldDuration));
-            NotifyPropertyChanged(nameof(StartFocusLockItemLabel));
-        }
-    }
-
-    public Visibility IsWarningBorderVisible
-    {
-        get
-        {
-            return !IsFocusLocked || IsAnyAppActive ? Visibility.Hidden : Visibility.Visible;
-        }
-    }
-
-    public DrawingImage? LockImage
-    {
-        get
-        {
-            string resourceName = IsFocusLocked ? "ic_lock" : "ic_lock_open_outline";
-
-            return Application.Current.FindResource(resourceName) as DrawingImage;
-        }
-    }
-
-    private readonly ToolTip _lockButtonToolTip = new();
-    public ToolTip? LockButtonToolTip
-    {
-        get
-        {
-            _lockButtonToolTip.Content = $"{(int)Math.Ceiling(_focusLockTimer.TimeLeft.TotalMinutes)}분 남았습니다.";
-
-            return IsFocusLockHold ? _lockButtonToolTip : null;
-        }
-    }
-
-    public string StartFocusLockItemLabel
-    {
-        get
-        {
-            return $"{FocusLockHoldDuration}분간 강제 잠금";
-        }
-    }
 
     public void StartFocusLockWithHold()
     {
         LockFocusWithHold();
 
-        Render();
+        OnRender();
     }
+    
     private void LockFocusWithHold()
     {
         _focusLockTimer.Duration = TimeSpan.FromMinutes(FocusLockHoldDuration);
@@ -134,7 +38,7 @@ public partial class MainViewModel
             LockFocus();
         }
 
-        Render();
+        OnRender();
     }
 
     private void LockFocus()
@@ -172,7 +76,7 @@ public partial class MainViewModel
             return;
         }
 
-        if (IsAnyAppActive)
+        if (TimerItem.IsAnyAppActive)
         {
             // 등록된 앱 중 활성화된 앱이 있으면 정상적인 상태입니다.
             return;
@@ -199,28 +103,15 @@ public partial class MainViewModel
             APIWrapper.SetForegroundWindow(prev);
         });
     }
-
-    #endregion
     
-    #region 타이머의 리셋
-
     public void ResetTimer()
     {
-        InitGlobalTimer();
         TimerItem.Reset();
 
-        AddResetHistory();
-        RestoreAppSlots();
-
-        TickAll();
-        RenderAll();
-    }
-
-    private void AddResetHistory()
-    {
         _appUsageService.AddResetHistory();
         _appUsageService.SaveRepository();
+        
+        _eventService.EmitReload();
+        _eventService.EmitRender();
     }
-    
-    #endregion
 }

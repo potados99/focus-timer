@@ -7,72 +7,55 @@ namespace FocusTimer.Features.Timer;
 
 public partial class MainViewModel
 {
-    #region 집중도
-
-    public string Concentration
+    private double CalculateConcentration()
     {
-        get
+        var elapsedTotal = TimerSlots
+            .Where(s => s.CurrentAppItem?.IsCountedOnConcentrationCalculation ?? false)
+            .Sum(s => s.CurrentAppItem?.ActiveElapsedTicks ?? 0);
+
+        if (elapsedTotal == 0)
         {
-            var elapsedTotal = TimerSlots
-                .Where(s => s.CurrentAppItem?.IsCountedOnConcentrationCalculation ?? false)
-                .Sum(s => s.CurrentAppItem?.ActiveElapsedTicks ?? 0);
-
-            if (elapsedTotal == 0)
-            {
-                return "0%";
-            }
-
-            double concentration = 100 * elapsedTotal / (TimerItem.ElapsedTicks + 1);
-
-            return concentration + "%";
+            return 0;
         }
-    }
 
-    public bool IsOnConcentration
-    {
-        get
-        {
-            return TimerSlots.Any(s => s.IsAppActive && s.IsAppCountedOnConcentrationCalculation);
-        }
-    }
-    
-    public BindableMenuItem[] ConcentrationContextMenu
-    {
-        get
-        {
-            _whichAppToIncludeMenuItem.Children = TimerSlots
-                .Where(s => s.CurrentAppItem != null)
-                .Select(s =>
-                {
-                    var app = s.CurrentAppItem!;
-                    var item = new BindableMenuItem()
-                    {
-                        IsCheckable = true,
-                        IsChecked = app.IsCountedOnConcentrationCalculation,
-                        Header = app.AppName
-                    };
+        double concentration = 100 * elapsedTotal / (TimerItem.ElapsedTicks + 1);
 
-                    item.OnCheck += (isChecked) =>
-                    {
-                        app.IsCountedOnConcentrationCalculation = isChecked;
-                        NotifyPropertyChanged(nameof(ConcentrationContextMenu));
-                    };
-
-                    return item;
-                })
-                .ToArray();
-
-            return new[] { _whichAppToIncludeMenuItem };
-        }
+        return concentration;
     }
 
     private readonly BindableMenuItem _whichAppToIncludeMenuItem = new()
     {
         IsCheckable = false,
         IsChecked = false,
-        Icon = new System.Windows.Controls.Image() { Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage },
+        Icon = new System.Windows.Controls.Image()
+            {Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage},
         Header = "집중도 계산에 포함할 프로그램  ",
     };
+    
+    private BindableMenuItem[] GenerateConcentrationSelectionMenu()
+    {
+        _whichAppToIncludeMenuItem.Children = TimerSlots
+            .Where(s => s.CurrentAppItem != null)
+            .Select(s =>
+            {
+                var app = s.CurrentAppItem!;
+                var item = new BindableMenuItem()
+                {
+                    IsCheckable = true,
+                    IsChecked = app.IsCountedOnConcentrationCalculation,
+                    Header = app.AppName
+                };
 
-    #endregion
+                item.OnCheck += (isChecked) =>
+                {
+                    app.IsCountedOnConcentrationCalculation = isChecked;
+                    NotifyPropertyChanged(nameof(ConcentrationContextMenu));
+                };
+
+                return item;
+            })
+            .ToArray();
+
+        return new[] {_whichAppToIncludeMenuItem};
+    }
 }
