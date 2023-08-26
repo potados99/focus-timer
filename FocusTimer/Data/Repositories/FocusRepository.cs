@@ -35,7 +35,8 @@ public class FocusRepository
         // 그보다 이후에 시작된 기록 중에서만 가져옵니다.
         return _context.AppUsages
             .Include(u => u.App)
-            .Include(u => u.ActiveUsages)
+            .Include(u => u.RunningUsages)
+            .ThenInclude(u => u.ActiveUsages)
             .Where(u => u.StartedAt > lastResetAt)
             .OrderBy(u => u.StartedAt)
             .LastOrDefault(u => u.App == app);
@@ -51,7 +52,8 @@ public class FocusRepository
 
         // 그보다 이후에 시작된 기록 중에서만 가져옵니다.
         return _context.TimerUsages
-            .Include(u => u.ActiveUsages)
+            .Include(u => u.RunningUsages)
+            .ThenInclude(u => u.ActiveUsages)
             .Where(u => u.StartedAt > lastResetAt)
             .OrderBy(u => u.StartedAt)
             .LastOrDefault();
@@ -70,8 +72,8 @@ public class FocusRepository
 
         return _context.AppUsages
             .Include(u => u.App)
-            .Include(u => u.ActiveUsages)
-            .Where(u => u.StartedAt >= then)
+            .Include(u => u.RunningUsages)
+            .ThenInclude(u => u.ActiveUsages)            .Where(u => u.StartedAt >= then)
             .OrderBy(u => u.StartedAt);
     }
 
@@ -80,7 +82,8 @@ public class FocusRepository
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LAST_HOW_MANY_DAYS - 1));
 
         return _context.TimerUsages
-            .Include(u => u.ActiveUsages)
+            .Include(u => u.RunningUsages)
+            .ThenInclude(u => u.ActiveUsages)
             .Where(u => u.StartedAt >= then)
             .OrderBy(u => u.StartedAt);
     }

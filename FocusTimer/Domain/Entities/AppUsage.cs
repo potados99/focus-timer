@@ -36,18 +36,15 @@ public class AppUsage
     /// </summary>
     public long ElapsedTicks { get; set; }
 
-    /// <summary>
-    /// 앱의 실제 사용 기록들입니다.
-    /// </summary>
-    public ICollection<AppActiveUsage> ActiveUsages { get; } = new List<AppActiveUsage>();
-
-    /// <summary>
-    /// 이 앱이 슬롯에서 "집중도 계산에 포함"하도록 설정되어 있는지 여부입니다.
-    /// </summary>
     public bool IsConcentrated { get; set; }
 
+    public ICollection<AppRunningUsage> RunningUsages { get; } = new List<AppRunningUsage>();
+    
+    [NotMapped] public AppRunningUsage RunningUsage => GetLastRunningUsage() ?? OpenNewRunningUsage();
+
     [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
-    [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
+    [NotMapped] public TimeSpan RunningElapsed => new(RunningUsages.Sum(u => u.Elapsed.Ticks));
+    [NotMapped] public TimeSpan ActiveElapsed => new(RunningUsages.Sum(u => u.ActiveElapsed.Ticks));
 
     public void TouchUsage(bool isConcentrated)
     {
@@ -57,40 +54,30 @@ public class AppUsage
         ElapsedTicks += TimeSpan.TicksPerSecond;
         IsConcentrated = isConcentrated;
     }
-    
-    public void TouchActiveUsage()
-    {
-        this.GetLogger().Debug("AppActiveUsage를 갱신합니다.");
 
-        var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
-
-        usage.TouchUsage();
-    }
-    
-    private AppActiveUsage? GetLastActiveUsage()
+    private AppRunningUsage? GetLastRunningUsage()
     {
-        var usage = ActiveUsages.LastOrDefault();
+        var usage = RunningUsages.LastOrDefault();
         if (usage != null)
         {
-            this.GetLogger().Debug($"기존의 AppActiveUsage를 가져왔습니다: {usage}");
+            this.GetLogger().Debug($"기존의 AppRunningUsage를 가져왔습니다: {usage}");
         }
 
         return usage;
     }
     
-    public AppActiveUsage OpenNewActiveUsage()
+    public AppRunningUsage OpenNewRunningUsage()
     {
-        this.GetLogger().Debug("새로운 AppActiveUsage를 생성합니다.");
+        this.GetLogger().Debug("새로운 AppRunningUsage를 생성합니다.");
         
-        var usage = new AppActiveUsage
+        var usage = new AppRunningUsage
         {
-            App = App,
             StartedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
             AppUsage = this
         };
         
-        ActiveUsages.Add(usage);
+        RunningUsages.Add(usage);
 
         return usage;
     }

@@ -15,11 +15,6 @@ public class AppActiveUsage
     public long Id { get; set; }
 
     /// <summary>
-    /// 사용 현황을 기록하는 앱입니다.
-    /// </summary>
-    public App App { get; set; }
-
-    /// <summary>
     /// 앱의 실제 사용이 시작된 시각입니다.
     /// </summary>
     public DateTime StartedAt { get; set; }
@@ -35,9 +30,9 @@ public class AppActiveUsage
     public long ElapsedTicks { get; set; }
     
     /// <summary>
-    /// 부모 <see cref="AppUsage"/>입니다.
+    /// 부모 <see cref="AppRunningUsage"/>입니다.
     /// </summary>
-    public AppUsage AppUsage { get; set; }
+    public AppRunningUsage AppRunningUsage { get; set; }
 
     [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
     

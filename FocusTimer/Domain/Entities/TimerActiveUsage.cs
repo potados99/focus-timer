@@ -30,14 +30,16 @@ public class TimerActiveUsage
     public long ElapsedTicks { get; set; }
 
     /// <summary>
-    /// 부모 <see cref="TimerUsage"/>입니다.
+    /// 부모 <see cref="TimerRunningUsage"/>입니다.
     /// </summary>
-    public TimerUsage TimerUsage { get; set; }
+    public TimerRunningUsage TimerRunningUsage { get; set; }
 
     [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
 
     public void TouchUsage()
     {
+        this.GetLogger().Debug("TimerActiveUsage를 갱신합니다.");
+
         if (UpdatedAt - StartedAt > Elapsed + TimeSpan.FromSeconds(5))
         {
             throw new InvalidOperationException(
@@ -47,7 +49,7 @@ public class TimerActiveUsage
         UpdatedAt = DateTime.Now;
         ElapsedTicks += TimeSpan.TicksPerSecond;
     }
-
+ 
     public override string ToString()
     {
         return $"TimerActiveUsage(Id={Id}, Elapsed={Elapsed.ToSixDigits()})";

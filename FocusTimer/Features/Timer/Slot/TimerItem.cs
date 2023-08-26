@@ -51,7 +51,7 @@ public partial class TimerItem : StopwatchRunner
         {
             this.GetLogger().Info("Activated 이벤트로 인해 새로운 TimerActiveUsage를 생성합니다.");
             
-            _usage?.OpenNewActiveUsage();
+            _usage?.RunningUsage.OpenNewActiveUsage();
         }
     }
 
@@ -65,7 +65,7 @@ public partial class TimerItem : StopwatchRunner
         {
             this.GetLogger().Info("Focused 이벤트로 인해 새로운 TimerActiveUsage를 생성합니다.");
 
-            _usage?.OpenNewActiveUsage();
+            _usage?.RunningUsage.OpenNewActiveUsage();
         }
     }
 
@@ -74,6 +74,7 @@ public partial class TimerItem : StopwatchRunner
         this.GetLogger().Debug("TimerUsage를 불러옵니다.");
 
         _usage = _timerUsageService.GetLastUsage() ?? _timerUsageService.CreateNewUsage();
+        _usage.OpenNewRunningUsage();
 
         Restart();
         AddOffset(_usage.ActiveElapsed, _usage.Elapsed);
@@ -87,10 +88,11 @@ public partial class TimerItem : StopwatchRunner
         }
         
         _usage.TouchUsage();
+        _usage.RunningUsage.TouchUsage();
 
         if (IsAnyAppActive)
         {
-            _usage.TouchActiveUsage();
+            _usage.RunningUsage.ActiveUsage.TouchUsage();
         }
 
         _timerUsageService.SaveRepository();
