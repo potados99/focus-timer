@@ -44,6 +44,23 @@ public class AppUsage
     [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
     [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
 
+    public void TouchUsage(bool isConcentrated)
+    {
+        this.GetLogger().Debug("AppUsage를 갱신합니다.");
+
+        UpdatedAt = DateTime.Now;
+        IsConcentrated = isConcentrated;
+    }
+    
+    public void TouchActiveUsage()
+    {
+        this.GetLogger().Debug("AppActiveUsage를 갱신합니다.");
+
+        var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
+
+        usage.UpdatedAt = DateTime.Now;
+    }
+    
     private AppActiveUsage? GetLastActiveUsage()
     {
         var usage = ActiveUsages.LastOrDefault();
@@ -70,12 +87,5 @@ public class AppUsage
         ActiveUsages.Add(usage);
 
         return usage;
-    }
-
-    public void TouchActiveUsage()
-    {
-        var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
-
-        usage.UpdatedAt = DateTime.Now;
     }
 }

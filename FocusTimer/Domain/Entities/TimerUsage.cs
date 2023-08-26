@@ -34,6 +34,22 @@ public class TimerUsage
     [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
 
     [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
+
+    public void TouchUsage()
+    {
+        this.GetLogger().Debug("TimerUsage를 갱신합니다.");
+
+        UpdatedAt = DateTime.Now;
+    }
+
+    public void TouchActiveUsage()
+    {
+        this.GetLogger().Debug("TimerActiveUsage를 갱신합니다.");
+
+        var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
+
+        usage.UpdatedAt = DateTime.Now;
+    }
     
     private TimerActiveUsage? GetLastActiveUsage()
     {
@@ -60,12 +76,5 @@ public class TimerUsage
         ActiveUsages.Add(usage);
 
         return usage;
-    }
-
-    public void TouchActiveUsage()
-    {
-        var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
-
-        usage.UpdatedAt = DateTime.Now;
     }
 }

@@ -72,6 +72,8 @@ public partial class AppItem : StopwatchRunner, IDisposable
     {
         if (IsActive)
         {
+            this.GetLogger().Info("Activated 이벤트로 인해 새로운 AppActiveUsage를 생성합니다.");
+
             _usage?.OpenNewActiveUsage();
         }
     }
@@ -80,6 +82,8 @@ public partial class AppItem : StopwatchRunner, IDisposable
     {
         if (IsActive)
         {
+            this.GetLogger().Info("Focused 이벤트로 인해 새로운 AppActiveUsage를 생성합니다.");
+
             _usage?.OpenNewActiveUsage();
         }
     }
@@ -102,12 +106,9 @@ public partial class AppItem : StopwatchRunner, IDisposable
         {
             return;
         }
-
-        this.GetLogger().Debug("AppUsage를 갱신합니다.");
-
-        _usage.UpdatedAt = DateTime.Now;
-        _usage.IsConcentrated = IsCountedOnConcentrationCalculation;
-
+        
+        _usage.TouchUsage(IsCountedOnConcentrationCalculation);
+        
         if (IsActive)
         {
             _usage.TouchActiveUsage();

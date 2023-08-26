@@ -47,6 +47,8 @@ public partial class TimerItem : StopwatchRunner
     {
         if (IsAnyAppActive)
         {
+            this.GetLogger().Info("Activated 이벤트로 인해 새로운 TimerActiveUsage를 생성합니다.");
+            
             _usage?.OpenNewActiveUsage();
         }
     }
@@ -59,6 +61,8 @@ public partial class TimerItem : StopwatchRunner
 
         if (wasInactive && IsAnyAppActive)
         {
+            this.GetLogger().Info("Focused 이벤트로 인해 새로운 TimerActiveUsage를 생성합니다.");
+
             _usage?.OpenNewActiveUsage();
         }
     }
@@ -79,10 +83,8 @@ public partial class TimerItem : StopwatchRunner
         {
             return;
         }
-
-        this.GetLogger().Debug("TimerUsage를 갱신합니다.");
-
-        _usage.UpdatedAt = DateTime.Now;
+        
+        _usage.TouchUsage();
 
         if (IsAnyAppActive)
         {
