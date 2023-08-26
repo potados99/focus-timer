@@ -7,7 +7,8 @@ using FocusTimer.Lib.Utility;
 namespace FocusTimer.Domain.Entities;
 
 /// <summary>
-/// 타이머의 사용 현황을 나타내는 엔티티입니다.
+/// 리셋과 리셋 사이의 타이머 사용 정보를 나타내는 엔티티입니다.
+/// 타이머가 리셋되면 새로운 엔티티가 생깁니다.
 /// </summary>
 public class TimerUsage
 {
@@ -17,7 +18,7 @@ public class TimerUsage
     public long Id { get; set; }
 
     /// <summary>
-    /// 타이머가 시작된 시각입니다.
+    /// 타이머가 리셋된 시각입니다.
     /// </summary>
     public DateTime StartedAt { get; set; }
 
@@ -27,7 +28,9 @@ public class TimerUsage
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// 타이머가 실제로 실행중인 상태에서 흐른 시간(tick)입니다.
+    /// 리셋 이후 흐른 시간입니다(tick).
+    /// 실제로 타이머가 켜져 있는 동안에만 증가하기 때문에,
+    /// <see cref="RunningUsage"/>의 <see cref="ElapsedTicks"/>와 사실상 같습니다.
     /// </summary>
     public long ElapsedTicks { get; set; }
 

@@ -5,7 +5,8 @@ using FocusTimer.Lib.Utility;
 namespace FocusTimer.Domain.Entities;
 
 /// <summary>
-/// 타이머의 실제 사용 현황을 나타내는 엔티티입니다.
+/// 등록된 앱이 focus를 가지고 있을 때의 사용 정보를 나타내는 엔티티입니다.
+/// 등록된 앱이 foreground로 (재)진입하면 새로운 엔티티가 생깁니다.
 /// </summary>
 public class TimerActiveUsage
 {
@@ -20,18 +21,15 @@ public class TimerActiveUsage
     public DateTime StartedAt { get; set; }
 
     /// <summary>
-    /// 타이머에 등록된 앱이 포커스를 얻은 상태로 유지된 마지막 시각입니다.
+    /// 마지막 업데이트 시각입니다.
     /// </summary>
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// 타이머가 실제로 실행중인 상태에서 흐른 시간(tick)입니다.
+    /// 타이머에 등록된 앱이 focus를 가지고 있는 동안 흐른 시간입니다(tick).
     /// </summary>
     public long ElapsedTicks { get; set; }
 
-    /// <summary>
-    /// 부모 <see cref="TimerRunningUsage"/>입니다.
-    /// </summary>
     public TimerRunningUsage TimerRunningUsage { get; set; }
 
     [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
