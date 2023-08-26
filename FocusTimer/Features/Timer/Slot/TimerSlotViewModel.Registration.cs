@@ -28,7 +28,7 @@ public partial class TimerSlotViewModel
 
         if (_slot != null)
         {
-            this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)의 변동을 기록합니다.");
+            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 변동을 기록합니다.");
 
             _slot.App = appItem.App;
             _slotService.SaveRepository();
@@ -64,7 +64,7 @@ public partial class TimerSlotViewModel
 
         if (_slot != null)
         {
-            this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)의 변동을 기록합니다.");
+            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 변동을 기록합니다.");
 
             _slot.App = null;
             _slotService.SaveRepository();

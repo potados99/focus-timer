@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FocusTimer.Data.DataContext;
 using FocusTimer.Domain.Entities;
+using FocusTimer.Lib.Utility;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocusTimer.Data.Repositories;
@@ -98,6 +99,8 @@ public class FocusRepository
 
     public void Save()
     {
+        this.GetLogger().Debug("데이터베이스에 변경 사항을 기록합니다.");
+        
         _context.Save();
     }
 }

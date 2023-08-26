@@ -1,6 +1,7 @@
 ﻿using System;
 using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Entities;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Domain.Services;
 
@@ -13,8 +14,21 @@ public class TimerUsageService
         _repository = repository;
     }
 
+    public TimerUsage? GetLastUsage()
+    {
+        var usage = _repository.FindLastTimerUsage();
+        if (usage != null)
+        {
+            this.GetLogger().Debug("기존의 TimerUsage를 가져왔습니다.");
+        }
+
+        return usage;
+    }
+    
     public TimerUsage CreateNewUsage()
     {
+        this.GetLogger().Debug("새로운 TimerUsage를 생성합니다.");
+
         var usage = new TimerUsage
         {
             StartedAt = DateTime.Now,
@@ -24,11 +38,6 @@ public class TimerUsageService
         _repository.StartTracking(usage);
         
         return usage;
-    }
-
-    public TimerUsage? GetLastUsage()
-    {
-        return _repository.FindLastTimerUsage();
     }
 
     public void SaveRepository()

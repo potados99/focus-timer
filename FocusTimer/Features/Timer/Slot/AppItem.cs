@@ -86,6 +86,8 @@ public partial class AppItem : StopwatchRunner, IDisposable
 
     private void LoadUsage()
     {
+        this.GetLogger().Debug("AppUsage를 불러옵니다.");
+        
         _usage = _appUsageService.GetLastUsage(App) ?? _appUsageService.CreateNewUsage(App);
 
         IsCountedOnConcentrationCalculation = _usage.IsConcentrated;
@@ -100,6 +102,8 @@ public partial class AppItem : StopwatchRunner, IDisposable
         {
             return;
         }
+
+        this.GetLogger().Debug("AppUsage를 갱신합니다.");
 
         _usage.UpdatedAt = DateTime.Now;
         _usage.IsConcentrated = IsCountedOnConcentrationCalculation;

@@ -40,7 +40,7 @@ public class TimerUsage
         var usage = ActiveUsages.LastOrDefault();
         if (usage != null)
         {
-            this.GetLogger().Info("기존의 TimerActiveUsage를 가져왔습니다.");
+            this.GetLogger().Debug("기존의 TimerActiveUsage를 가져왔습니다.");
         }
 
         return usage;
@@ -48,7 +48,7 @@ public class TimerUsage
     
     public TimerActiveUsage OpenNewActiveUsage()
     {
-        this.GetLogger().Info("새로운 TimerActiveUsage를 생성합니다.");
+        this.GetLogger().Debug("새로운 TimerActiveUsage를 생성합니다.");
 
         var usage = new TimerActiveUsage
         {
@@ -56,6 +56,7 @@ public class TimerUsage
             UpdatedAt = DateTime.Now,
             TimerUsage = this
         };
+        
         ActiveUsages.Add(usage);
 
         return usage;

@@ -65,6 +65,8 @@ public partial class TimerItem : StopwatchRunner
 
     private void LoadUsage()
     {
+        this.GetLogger().Debug("TimerUsage를 불러옵니다.");
+
         _usage = _timerUsageService.GetLastUsage() ?? _timerUsageService.CreateNewUsage();
 
         Restart();
@@ -77,6 +79,8 @@ public partial class TimerItem : StopwatchRunner
         {
             return;
         }
+
+        this.GetLogger().Debug("TimerUsage를 갱신합니다.");
 
         _usage.UpdatedAt = DateTime.Now;
 

@@ -49,7 +49,7 @@ public class AppUsage
         var usage = ActiveUsages.LastOrDefault();
         if (usage != null)
         {
-            this.GetLogger().Info("기존의 AppActiveUsage를 가져왔습니다.");
+            this.GetLogger().Debug("기존의 AppActiveUsage를 가져왔습니다.");
         }
 
         return usage;
@@ -57,7 +57,7 @@ public class AppUsage
     
     public AppActiveUsage OpenNewActiveUsage()
     {
-        this.GetLogger().Info("새로운 AppActiveUsage를 생성합니다.");
+        this.GetLogger().Debug("새로운 AppActiveUsage를 생성합니다.");
         
         var usage = new AppActiveUsage
         {
@@ -66,6 +66,7 @@ public class AppUsage
             UpdatedAt = DateTime.Now,
             AppUsage = this
         };
+        
         ActiveUsages.Add(usage);
 
         return usage;
