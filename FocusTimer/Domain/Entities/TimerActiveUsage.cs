@@ -25,12 +25,17 @@ public class TimerActiveUsage
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
+    /// 타이머가 실제로 실행중인 상태에서 흐른 시간(tick)입니다.
+    /// </summary>
+    public long ElapsedTicks { get; set; }
+    
+    /// <summary>
     /// 부모 <see cref="TimerUsage"/>입니다.
     /// </summary>
     public TimerUsage TimerUsage { get; set; }
-    
-    [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
-    
+
+    [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
+
     public override string ToString()
     {
         return $"TimerActiveUsage(Id={Id}, Elapsed={Elapsed.ToSixDigits()})";

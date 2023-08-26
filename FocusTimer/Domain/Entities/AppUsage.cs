@@ -27,9 +27,14 @@ public class AppUsage
     public DateTime StartedAt { get; set; }
 
     /// <summary>
-    /// 앱이 슬롯에 등록된 상태로 유지된 마지막 시각입니다.
+    /// 이 엔티티가 업데이트된 마지막 시각입니다.
     /// </summary>
     public DateTime UpdatedAt { get; set; }
+    
+    /// <summary>
+    /// 타이머가 실제로 실행중인 상태에서 흐른 시간(tick)입니다.
+    /// </summary>
+    public long ElapsedTicks { get; set; }
 
     /// <summary>
     /// 앱의 실제 사용 기록들입니다.
@@ -41,7 +46,7 @@ public class AppUsage
     /// </summary>
     public bool IsConcentrated { get; set; }
 
-    [NotMapped] public TimeSpan Elapsed => UpdatedAt - StartedAt;
+    [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
     [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
 
     public void TouchUsage(bool isConcentrated)
@@ -49,6 +54,7 @@ public class AppUsage
         this.GetLogger().Debug("AppUsage를 갱신합니다.");
 
         UpdatedAt = DateTime.Now;
+        ElapsedTicks += TimeSpan.TicksPerSecond;
         IsConcentrated = isConcentrated;
     }
     
@@ -59,6 +65,7 @@ public class AppUsage
         var usage = GetLastActiveUsage() ?? OpenNewActiveUsage();
 
         usage.UpdatedAt = DateTime.Now;
+        usage.ElapsedTicks += TimeSpan.TicksPerSecond;
     }
     
     private AppActiveUsage? GetLastActiveUsage()
