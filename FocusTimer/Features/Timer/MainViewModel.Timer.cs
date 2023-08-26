@@ -106,11 +106,14 @@ public partial class MainViewModel
     
     public void ResetTimer()
     {
-        TimerItem.Reset();
-
         _appUsageService.AddResetHistory();
         _appUsageService.SaveRepository();
         
+        // 여기에서 새 TimerUsage가 만들어집니다.
+        // 이는 반드시 ResetHistory가 만들어진 다음에
+        // 실행되어야 합니다.
+        TimerItem.Reset();
+
         _eventService.EmitReload();
         _eventService.EmitRender();
     }
