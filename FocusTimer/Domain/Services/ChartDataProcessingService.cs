@@ -31,7 +31,8 @@ public class ChartDataProcessingService
         return _repository
             .GetAppUsages()
             .SelectMany(UsageSplitter<AppUsage>
-                .GetRunningUsagesSplitByDate<AppUsage, AppRunningUsage, AppActiveUsage>);
+                .GetRunningUsagesSplitByDate<AppUsage, AppRunningUsage, AppActiveUsage>)
+            .ToList();
     }
 
     private IEnumerable<TimerRunningUsage> GetTimerRunningUsages()
@@ -39,7 +40,8 @@ public class ChartDataProcessingService
         return _repository
             .GetTimerUsages()
             .SelectMany(UsageSplitter<TimerUsage>
-                .GetRunningUsagesSplitByDate<TimerUsage, TimerRunningUsage, TimerActiveUsage>);
+                .GetRunningUsagesSplitByDate<TimerUsage, TimerRunningUsage, TimerActiveUsage>)
+            .ToList();
     }
 
     public ObservableCollection<ISeries> GetUpperChartSeries()
@@ -108,20 +110,20 @@ public class ChartDataProcessingService
         var series = new ObservableCollection<ISeries>();
 
         // 존재하는 모든 종류의 앱의 경로를 중복 없이 가져옵니다.
-        var appPaths = appRunningUsages.Select(u => u.ParentUsage.App.ExecutablePath).Distinct();
+        var apps = appRunningUsages.Select(u => u.ParentUsage.App).Distinct();
 
         // 앱별로 AppUsage를 분류합니다.
-        var runningUsagesPerApp = appPaths.Select(path =>
+        var runningUsagesPerApp = apps.Select(app =>
         {
             // 전 기간에 걸쳐 현재 앱의 사용량을 모두 가져옵니다.
             var thisAppRunningUsageOnAllPeriod = appRunningUsages
-                .Where(au => au.ParentUsage.App.ExecutablePath == path);
+                .Where(au => au.ParentUsage.App == app);
 
             // 앱별로 경로, 색상, 날짜별 사용량을 구합니다.
             return new
             {
-                AppPath = path,
-                FillColor = APIWrapper.ExtractAssociatedIcon(path).ToSKColor(),
+                AppPath = app.ExecutablePath,
+                FillColor = app.Icon.ToSKColor(), // APIWrapper.ExtractAssociatedIcon(app).ToSKColor(),
                 AppRunningUsagesPerDay = Dates.Select(d => new
                 {
                     Date = d,
@@ -186,7 +188,7 @@ public class ChartDataProcessingService
                 {
                     Name = "Avg. 타이머 가동",
                     Value = TickToMinutes((long) timerRunningUsages.GroupBy(u => u.StartedAt.Date)
-                        .Average(g => g.Sum(u => u.ActiveElapsed.Ticks)))
+                        .Average(g => g.Sum(u => u.Elapsed.Ticks)))
                 },
                 new()
                 {

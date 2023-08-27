@@ -77,7 +77,7 @@ public partial class TimerItem : StopwatchRunner
         _usage.OpenNewRunningUsage();
 
         Restart();
-        AddOffset(_usage.ActiveElapsed, _usage.Elapsed);
+        AddOffset(_usage.ActiveElapsed, _usage.RunningElapsed);
     }
 
     private void UpdateUsage()
