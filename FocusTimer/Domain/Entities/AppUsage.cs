@@ -10,7 +10,7 @@ namespace FocusTimer.Domain.Entities;
 /// 리셋과 리셋 사이의 앱 사용 정보를 나타내는 엔티티입니다.
 /// 타이머가 리셋되면 새로운 엔티티가 생깁니다.
 /// </summary>
-public class AppUsage
+public class AppUsage : IUsage<AppRunningUsage>
 {
     /// <summary>
     /// PK입니다.
@@ -80,7 +80,7 @@ public class AppUsage
         {
             StartedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
-            AppUsage = this
+            ParentUsage = this
         };
         
         RunningUsages.Add(usage);

@@ -8,7 +8,7 @@ namespace FocusTimer.Domain.Entities;
 /// 등록된 앱이 focus를 가지고 있을 때의 사용 정보를 나타내는 엔티티입니다.
 /// 등록된 앱이 foreground로 (재)진입하면 새로운 엔티티가 생깁니다.
 /// </summary>
-public class TimerActiveUsage
+public class TimerActiveUsage : IActiveUsage<TimerRunningUsage>
 {
     /// <summary>
     /// PK입니다.
@@ -30,7 +30,7 @@ public class TimerActiveUsage
     /// </summary>
     public long ElapsedTicks { get; set; }
 
-    public TimerRunningUsage TimerRunningUsage { get; set; }
+    public TimerRunningUsage ParentRunningUsage { get; set; }
 
     [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
 

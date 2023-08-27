@@ -14,12 +14,12 @@ namespace FocusTimer.Features.Charting;
 
 public partial class ChartViewModel : BaseViewModel
 {
-    private readonly ChartDataProcessor _processor;
+    private readonly ChartDataProcessingService _processingService;
     private readonly FocusRepository _repository;
 
-    public ChartViewModel(ChartDataProcessor processor, FocusRepository repository)
+    public ChartViewModel(ChartDataProcessingService processingService, FocusRepository repository)
     {
-        _processor = processor;
+        _processingService = processingService;
         _repository = repository;
     }
 
@@ -56,15 +56,8 @@ public partial class ChartViewModel : BaseViewModel
     
     private void LoadCollections()
     {
-        SeriesCollection1 = _processor.GetUpperChartSeries(
-            _repository.GetAppUsages(),
-            _repository.GetTimerUsages()
-        );
-        SeriesCollection2 = _processor.GetLowerChartSeries(
-            _repository.GetAppUsages(),
-            _repository.GetTimerUsages()
-        );
-
+        SeriesCollection1 = _processingService.GetUpperChartSeries();
+        SeriesCollection2 = _processingService.GetLowerChartSeries();
     }
     
     private void RegisterEvents() {

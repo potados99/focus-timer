@@ -27,7 +27,7 @@ public partial class ChartViewModel
 
     public string SelectedDateString => _selectedDate == DateTime.MinValue ? "지난 21일" : _selectedDate.ToString("yyyy. MM. dd");
 
-    public IEnumerable<PrimaryMetricItem> PrimaryMetrics => _processor.GetPrimaryMetrics(_selectedDate);
+    public IEnumerable<PrimaryMetricItem> PrimaryMetrics => _processingService.GetPrimaryMetrics(_selectedDate);
 
-    public IEnumerable<AppUsageItem> SelectedDateUsages => _processor.GetAppUsagesAtDate(_selectedDate);
+    public IEnumerable<AppUsageItem> SelectedDateUsages => _processingService.GetAppUsagesAtDate(_selectedDate);
 }

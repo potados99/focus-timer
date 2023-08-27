@@ -10,7 +10,7 @@ namespace FocusTimer.Domain.Entities;
 /// 타이머가 켜져 있는 동안의 타이머 사용 정보를 나타내는 엔티티입니다.
 /// 타이머가 켜지면 새로운 엔티티가 생깁니다.
 /// </summary>
-public class TimerRunningUsage
+public class TimerRunningUsage : IRunningUsage<TimerUsage, TimerActiveUsage>
 {
     /// <summary>
     /// PK입니다.
@@ -36,7 +36,7 @@ public class TimerRunningUsage
 
     [NotMapped] public TimerActiveUsage ActiveUsage => GetLastActiveUsage() ?? OpenNewActiveUsage();
 
-    public TimerUsage TimerUsage { get; set; }
+    public TimerUsage ParentUsage { get; set; }
 
     [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
     [NotMapped] public TimeSpan ActiveElapsed => new(ActiveUsages.Sum(u => u.Elapsed.Ticks));
@@ -68,7 +68,7 @@ public class TimerRunningUsage
         {
             StartedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
-            TimerRunningUsage = this
+            ParentRunningUsage = this
         };
 
         ActiveUsages.Add(usage);

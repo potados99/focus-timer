@@ -11,7 +11,7 @@ namespace FocusTimer.Data.Repositories;
 public class FocusRepository
 {
     private readonly FocusTimerDatabaseContext _context;
-    
+
     public FocusRepository(FocusTimerDatabaseContext context)
     {
         _context = context;
@@ -65,7 +65,7 @@ public class FocusRepository
             .Include(s => s.App)
             .FirstOrDefault(s => s.SlotNumber == slotNumber);
     }
-    
+
     public IEnumerable<AppUsage> GetAppUsages()
     {
         var then = DateTime.Now.Date.Subtract(TimeSpan.FromDays(LAST_HOW_MANY_DAYS - 1));
@@ -73,7 +73,8 @@ public class FocusRepository
         return _context.AppUsages
             .Include(u => u.App)
             .Include(u => u.RunningUsages)
-            .ThenInclude(u => u.ActiveUsages)            .Where(u => u.StartedAt >= then)
+            .ThenInclude(u => u.ActiveUsages)
+            .Where(u => u.StartedAt >= then)
             .OrderBy(u => u.StartedAt);
     }
 
@@ -103,7 +104,7 @@ public class FocusRepository
     public void Save()
     {
         this.GetLogger().Debug("데이터베이스에 변경 사항을 기록합니다.");
-        
+
         _context.Save();
     }
 }

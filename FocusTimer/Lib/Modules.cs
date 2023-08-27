@@ -44,7 +44,7 @@ public static class Modules
             .AddSingleton<ClockGenerator>()
             .AddSingleton<FocusTimerDatabaseContext>()
             .AddSingleton<UserActivityMonitor>()
-            .AddSingleton<ChartDataProcessor>()
+            .AddSingleton<ChartDataProcessingService>()
             .AddSingleton<WindowWatcher>();
 
         return services;
