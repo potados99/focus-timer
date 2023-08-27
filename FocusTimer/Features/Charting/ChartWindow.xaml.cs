@@ -38,5 +38,4 @@ public partial class ChartWindow : ChartViewModelWindow
 
 public abstract class ChartViewModelWindow : BaseWindow<ChartViewModel>
 {
-    
 }

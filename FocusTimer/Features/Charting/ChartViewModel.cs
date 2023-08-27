@@ -19,11 +19,11 @@ using FocusTimer.Lib;
 
 namespace FocusTimer.Features.Charting;
 
-public class ChartViewModel : BaseViewModel
+public partial class ChartViewModel : BaseViewModel
 {
     private readonly ChartDataProcessor _processor;
     private readonly FocusRepository _repository;
-    
+
     public ChartViewModel(ChartDataProcessor processor, FocusRepository repository)
     {
         _processor = processor;
@@ -31,8 +31,23 @@ public class ChartViewModel : BaseViewModel
     }
 
     public event Signal? OnChartNeedsUpdate;
+    
+    private DateTime _selectedDate;
 
-    public void Loaded()
+    public override void OnLoaded()
+    {
+        ConfigureChart();
+
+        LoadCollections();
+
+        RegisterEvents();
+        
+        SetAxis();
+
+        RenderChart();
+    }
+
+    private void ConfigureChart()
     {
         LiveChartsCore.LiveCharts.Configure(config =>
             config
@@ -44,7 +59,10 @@ public class ChartViewModel : BaseViewModel
                 // OPTIONAL
                 .AddDarkTheme()
         );
-
+    }
+    
+    private void LoadCollections()
+    {
         SeriesCollection1 = _processor.GetUpperChartSeries(
             _repository.GetAppUsages(),
             _repository.GetTimerUsages()
@@ -54,123 +72,116 @@ public class ChartViewModel : BaseViewModel
             _repository.GetTimerUsages()
         );
 
-        (SeriesCollection1.Last() as ColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
+    }
+    
+    private void RegisterEvents() {
+        ((ColumnSeries<DataPoint>) SeriesCollection1.Last()).ChartPointPointerDown += (a, b) =>
         {
             DateSelected(b.Model.DateTime);
         };
 
-        (SeriesCollection2.Last() as StackedColumnSeries<DataPoint>).ChartPointPointerDown += (a, b) =>
+        ((StackedColumnSeries<DataPoint>) SeriesCollection2.Last()).ChartPointPointerDown += (a, b) =>
         {
             DateSelected(b.Model.DateTime);
         };
-
-        SharedXAxis = new Axis[] {
-            new Axis() {
-                LabelsPaint = new SolidColorPaint(SKColors.LightGray)
-                {
-                    FontFamily = "맑은 고딕"
-                },
-                Labeler = (value) =>
-                {
-                    var date = new DateTime((long)value);
-
-                    return date.ToString(date.Day == 1 ? "M월 d" : "dd");
-                },
-                UnitWidth = TimeSpan.FromDays(1).Ticks,
-                MinStep = TimeSpan.FromDays(1).Ticks,
-                ForceStepToMin = true,
-                SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-                {
-                    StrokeThickness = 1,
-                    PathEffect = new DashEffect(new float[] { 3, 3 })
-                },
-            }
+    }
+    
+    private void SetAxis()
+    {
+        SharedXAxis = new[]
+        {
+            BuildXAxis()
         };
 
-        YAxis = new Axis[] {
-            new Axis() {
-                IsVisible = false,
-                SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-            }
+        YAxis = new[]
+        {
+            BuildYAxis()
         };
+    }
 
+    private Axis BuildXAxis()
+    {
+        return new Axis
+        {
+            LabelsPaint = new SolidColorPaint(SKColors.LightGray)
+            {
+                FontFamily = "맑은 고딕"
+            },
+            Labeler = (value) =>
+            {
+                var date = new DateTime((long) value);
+
+                return date.ToString(date.Day == 1 ? "M월 d" : "dd");
+            },
+            UnitWidth = TimeSpan.FromDays(1).Ticks,
+            MinStep = TimeSpan.FromDays(1).Ticks,
+            ForceStepToMin = true,
+            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
+            {
+                StrokeThickness = 1,
+                PathEffect = new DashEffect(new float[] {3, 3})
+            },
+        };
+    }
+
+    private Axis BuildYAxis()
+    {
+        return new Axis
+        {
+            IsVisible = false,
+            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
+        };
+    }
+    
+    private void RenderChart()
+    {
         NotifyPropertyChanged(nameof(SeriesCollection1));
         NotifyPropertyChanged(nameof(SeriesCollection2));
         NotifyPropertyChanged(nameof(SharedXAxis));
         NotifyPropertyChanged(nameof(YAxis));
     }
-
-    public ObservableCollection<ISeries> SeriesCollection1 { get; set; }
-    public ObservableCollection<ISeries> SeriesCollection2 { get; set; }
-    public Axis[] SharedXAxis { get; set; }
-
-    public Axis[] YAxis { get; set; }
-
-    public IPaint<SkiaSharpDrawingContext> TooltipPaint { get; set; } = new SolidColorPaint(new SKColor(28, 49, 58))
+    
+    private void DateSelected(DateTime date)
     {
-        FontFamily = "맑은 고딕"
-    };
-
-    public DateTime SelectedDate { get; set; }
-    public string SelectedDateString
-    {
-        get
+        if (_selectedDate == date)
         {
-            if (SelectedDate == DateTime.MinValue)
-            {
-                return "지난 21일";
-            }
-            return SelectedDate.ToString("yyyy. MM. dd");
-        }
-    }
-
-    public void DateSelected(DateTime date)
-    {
-        if (SelectedDate == date)
-        {
-            foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
+            foreach (var s in SeriesCollection1)
             {
                 s.ClearSelection();
             }
-            foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
+
+            foreach (var s in SeriesCollection2)
             {
                 s.ClearSelection();
             }
-            SelectedDate = DateTime.MinValue;
+
+            _selectedDate = DateTime.MinValue;
         }
         else
         {
-            foreach (ColumnSeries<DataPoint> s in SeriesCollection1)
+            foreach (var s in SeriesCollection1)
             {
                 s.SelectPoints(s.ActivePoints.Where(p => (p.Context.DataSource as DataPoint).DateTime == date));
             }
-            foreach (StackedColumnSeries<DataPoint> s in SeriesCollection2)
+
+            foreach (var s in SeriesCollection2)
             {
                 s.SelectPoints(s.ActivePoints.Where(p => (p.Context.DataSource as DataPoint).DateTime == date));
             }
-            SelectedDate = date;
+
+            _selectedDate = date;
         }
 
+        RenderDateSelection();
+    }
+
+    private void RenderDateSelection()
+    {
         OnChartNeedsUpdate?.Invoke();
 
         NotifyPropertyChanged(nameof(SelectedDateString));
         NotifyPropertyChanged(nameof(SelectedDateUsages));
         NotifyPropertyChanged(nameof(PrimaryMetrics));
     }
-
-    public IEnumerable<PrimaryMetricItem> PrimaryMetrics
-    {
-        get
-        {
-            return _processor.GetPrimaryMetrics(SelectedDate);
-        }
-    }
-
-    public IEnumerable<AppUsageItem> SelectedDateUsages
-    {
-        get
-        {
-            return _processor.GetAppUsagesAtDate(SelectedDate);
-        }
-    }
+    
 }
