@@ -1,20 +1,13 @@
 ﻿using FocusTimer.Lib.Component;
-using LiveChartsCore;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting.LiveCharts;
-using FocusTimer.Features.Charting.Metric;
-using FocusTimer.Features.Charting.Usages;
 using FocusTimer.Lib;
 
 namespace FocusTimer.Features.Charting;

@@ -1,5 +1,4 @@
-﻿using System;
-using FocusTimer.Lib.Component;
+﻿using FocusTimer.Lib.Component;
 
 namespace FocusTimer.Lib.Utility;
 

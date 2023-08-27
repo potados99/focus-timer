@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Threading;
-using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Lib;
 
