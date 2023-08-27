@@ -76,8 +76,11 @@ public class UsageSplitter<T> where T : IElapsable, new()
         foreach (var runningUsage in runningUsages)
         {
             runningUsage.ParentUsage = usage;
-            
-            foreach (var activeUsage in activeUsages.Where(u => u.StartedAt.Date == runningUsage.StartedAt.Date))
+
+            var activeUsagesInThisRunningUsage = activeUsages
+                .Where(u => runningUsage.StartedAt <= u.StartedAt && u.UpdatedAt <= runningUsage.UpdatedAt);
+
+            foreach (var activeUsage in activeUsagesInThisRunningUsage)
             {
                 activeUsage.ParentRunningUsage = runningUsage;
 

@@ -44,27 +44,30 @@ public class ChartDataProcessingService
 
     public ObservableCollection<ISeries> GetUpperChartSeries()
     {
-        var appUsages = GetAppRunningUsages();
-        var timerUsages = GetTimerRunningUsages();
-        
+        var appRunningUsages = GetAppRunningUsages();
+        var timerRunningUsages = GetTimerRunningUsages();
+
         // 차트에 표시할 영역의 날짜들을 가져옵니다.
         var dates = Enumerable.Range(0, 1 + EndDate.Subtract(StartDate).Days)
             .Select(offset => StartDate.AddDays(offset))
             .ToArray();
 
-        var usagesPerDay = dates.Select(d => new
+        // 날짜마다 RunningUsage들을 묶습니다.
+        var runningUsagesPerDay = dates.Select(d => new
         {
             Date = d,
-            AppUsages = appUsages.Where(u => u.StartedAt.Date == d),
-            TimerUsages = timerUsages.Where(u => u.StartedAt.Date == d)
+            AppRunningUsages = appRunningUsages.Where(u => u.StartedAt.Date == d),
+            TimerRunningUsages = timerRunningUsages.Where(u => u.StartedAt.Date == d)
         });
 
-        var values = usagesPerDay.Select(u => new DataPoint
+        // 날짜마다 집중도를 꺼내옵니다.
+        var values = runningUsagesPerDay.Select(usagesOfDay => new DataPoint
         {
-            DateTime = u.Date,
+            DateTime = usagesOfDay.Date,
             Value = Percentage(
-                u.AppUsages.Where(au => au.ParentUsage.IsConcentrated).Sum(au => au.Elapsed.Ticks),
-                u.TimerUsages.Sum(tu => tu.Elapsed.Ticks)
+                usagesOfDay.AppRunningUsages.Where(u => u.ParentUsage.IsConcentrated)
+                    .Sum(au => au.ActiveElapsed.Ticks), // 집중에 참여한 앱들이 포커스를 얻은 동안 흐른 시간
+                usagesOfDay.TimerRunningUsages.Sum(u => u.Elapsed.Ticks) // 타이머가 켜져 있는 동안 흐른 시간
             )
         });
 
@@ -99,46 +102,47 @@ public class ChartDataProcessingService
 
     internal ObservableCollection<ISeries> GetLowerChartSeries()
     {
-        var appUsages = GetAppRunningUsages();
-        var timerUsages = GetTimerRunningUsages();
+        var appRunningUsages = GetAppRunningUsages();
+        var timerRunningUsages = GetTimerRunningUsages();
 
         var series = new ObservableCollection<ISeries>();
 
         // 존재하는 모든 종류의 앱의 경로를 중복 없이 가져옵니다.
-        var appPaths = appUsages.Select(u => u.ParentUsage.App.ExecutablePath).Distinct();
+        var appPaths = appRunningUsages.Select(u => u.ParentUsage.App.ExecutablePath).Distinct();
 
         // 앱별로 AppUsage를 분류합니다.
-        var usagesPerApp = appPaths.Select(path =>
+        var runningUsagesPerApp = appPaths.Select(path =>
         {
             // 전 기간에 걸쳐 현재 앱의 사용량을 모두 가져옵니다.
-            var thisAppUsageOnAllPeriod = appUsages.Where(au => au.ParentUsage.App.ExecutablePath == path);
+            var thisAppRunningUsageOnAllPeriod = appRunningUsages
+                .Where(au => au.ParentUsage.App.ExecutablePath == path);
 
             // 앱별로 경로, 색상, 날짜별 사용량을 구합니다.
             return new
             {
                 AppPath = path,
                 FillColor = APIWrapper.ExtractAssociatedIcon(path).ToSKColor(),
-                AppUsagesPerDay = Dates.Select(d => new
+                AppRunningUsagesPerDay = Dates.Select(d => new
                 {
                     Date = d,
-                    Usages = thisAppUsageOnAllPeriod.Where(au => au.StartedAt.Date == d)
+                    RunningUsages = thisAppRunningUsageOnAllPeriod.Where(au => au.StartedAt.Date == d)
                 })
             };
         });
 
         // 앱마다 날짜별 사용량이 구해졌으니
-        foreach (var thisAppUsage in usagesPerApp)
+        foreach (var thisRunningAppUsage in runningUsagesPerApp)
         {
             // 그것을 기반으로 series를 만들어 더해줍니다.
             series.Add(new StackedColumnSeries<DataPoint>
             {
-                Name = thisAppUsage.AppPath,
-                Values = thisAppUsage.AppUsagesPerDay.Select(u => new DataPoint
+                Name = thisRunningAppUsage.AppPath,
+                Values = thisRunningAppUsage.AppRunningUsagesPerDay.Select(u => new DataPoint
                 {
                     DateTime = u.Date,
-                    Value = u.Usages.Sum(uu => uu.Elapsed.Ticks)
+                    Value = u.RunningUsages.Sum(uu => uu.ActiveElapsed.Ticks)
                 }).ToArray(),
-                Fill = new SolidColorPaint(thisAppUsage.FillColor),
+                Fill = new SolidColorPaint(thisRunningAppUsage.FillColor),
                 MaxBarWidth = 16,
                 Rx = 4,
                 Ry = 4,
@@ -148,8 +152,8 @@ public class ChartDataProcessingService
         var idle = Dates.Select(d => new
         {
             Date = d,
-            IdleTicks = timerUsages.Where(u => u.StartedAt.Date == d).Sum(tu => tu.Elapsed.Ticks) -
-                        appUsages.Where(au => au.StartedAt.Date == d).Sum(au => au.Elapsed.Ticks)
+            IdleTicks = timerRunningUsages.Where(u => u.StartedAt.Date == d).Sum(tu => tu.Elapsed.Ticks) -
+                        appRunningUsages.Where(au => au.StartedAt.Date == d).Sum(au => au.ActiveElapsed.Ticks)
         });
 
         series.Add(new StackedColumnSeries<DataPoint>
@@ -171,24 +175,25 @@ public class ChartDataProcessingService
 
     internal IEnumerable<PrimaryMetricItem> GetPrimaryMetrics(DateTime selectedDate)
     {
+        var appRunningUsages = GetAppRunningUsages();
+        var timerRunningUsages = GetTimerRunningUsages();
+
         if (selectedDate == DateTime.MinValue)
         {
-            var usages = _repository.GetAppUsages();
-
             return new PrimaryMetricItem[]
             {
-                new PrimaryMetricItem
+                new()
                 {
                     Name = "Avg. 타이머 가동",
-                    Value = TickToMinutes((long) _repository.GetTimerUsages().GroupBy(u => u.StartedAt.Date)
-                        .Average(g => g.Sum(u => u.Elapsed.Ticks)))
+                    Value = TickToMinutes((long) timerRunningUsages.GroupBy(u => u.StartedAt.Date)
+                        .Average(g => g.Sum(u => u.ActiveElapsed.Ticks)))
                 },
-                new PrimaryMetricItem
+                new()
                 {
                     Name = "Avg. 집중도",
                     Value = Percentage(
-                        _repository.GetAppUsages().Where(u => u.IsConcentrated).Sum(u => u.Elapsed.Ticks),
-                        _repository.GetTimerUsages().Sum(u => u.Elapsed.Ticks)
+                        appRunningUsages.Where(u => u.ParentUsage.IsConcentrated).Sum(u => u.ActiveElapsed.Ticks),
+                        timerRunningUsages.Sum(u => u.Elapsed.Ticks)
                     ) + "%"
                 }
             };
@@ -197,25 +202,25 @@ public class ChartDataProcessingService
         {
             return new PrimaryMetricItem[]
             {
-                new PrimaryMetricItem
+                new()
                 {
                     Name = "타이머 가동",
-                    Value = TickToMinutes(_repository.GetTimerUsages().Where(u => u.StartedAt.Date == selectedDate.Date)
+                    Value = TickToMinutes(timerRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
                         .Sum(u => u.Elapsed.Ticks))
                 },
-                new PrimaryMetricItem
+                new()
                 {
                     Name = "실제 사용",
-                    Value = TickToMinutes(_repository.GetAppUsages().Where(u => u.StartedAt.Date == selectedDate.Date)
-                        .Sum(u => u.Elapsed.Ticks))
+                    Value = TickToMinutes(appRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
+                        .Sum(u => u.ActiveElapsed.Ticks))
                 },
-                new PrimaryMetricItem
+                new()
                 {
                     Name = "집중도",
                     Value = Percentage(
-                        _repository.GetAppUsages().Where(u => u.StartedAt.Date == selectedDate.Date)
-                            .Where(u => u.IsConcentrated).Sum(u => u.Elapsed.Ticks),
-                        _repository.GetTimerUsages().Where(u => u.StartedAt.Date == selectedDate.Date)
+                        appRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
+                            .Where(u => u.ParentUsage.IsConcentrated).Sum(u => u.ActiveElapsed.Ticks),
+                        timerRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
                             .Sum(u => u.Elapsed.Ticks)
                     ) + "%"
                 }
@@ -227,42 +232,42 @@ public class ChartDataProcessingService
     {
         if (selectedDate == DateTime.MinValue)
         {
-            var usages = _repository.GetAppUsages();
-
-            return usages.GroupBy(u => u.App.ExecutablePath).Select(thisAppGroup => new AppUsageItem
+            var appRunningUsages = GetAppRunningUsages();
+            
+            return appRunningUsages.GroupBy(u => u.ParentUsage.App.ExecutablePath).Select(thisAppGroup => new AppUsageItem
             {
                 AppPath = thisAppGroup.Key,
-                UsageString = TickToMinutes(thisAppGroup.Sum(g => g.Elapsed.Ticks)),
+                UsageString = TickToMinutes(thisAppGroup.Sum(g => g.ActiveElapsed.Ticks)),
                 UsagesByTime = new UsageByTimeItem[]
                 {
-                    new UsageByTimeItem
+                    new()
                     {
                         TimeString = "Avg. 사용 시간",
                         UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
-                            .Average(g => g.Sum(u => u.Elapsed.Ticks)))
+                            .Average(g => g.Sum(u => u.ActiveElapsed.Ticks)))
                     },
-                    new UsageByTimeItem
+                    new()
                     {
                         TimeString = "Avg. 비활성 시간",
                         UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
-                            .Average(g => g.Sum(u => (u.UpdatedAt - u.StartedAt).Ticks - u.Elapsed.Ticks)))
+                            .Average(g => g.Sum(u => u.Elapsed.Ticks - u.ActiveElapsed.Ticks)))
                     },
                 }
             });
         }
         else
         {
-            var usages = _repository.GetAppUsages().Where(u => u.StartedAt.Date == selectedDate.Date);
-
-            return usages.GroupBy(u => u.App.ExecutablePath).Select(thisAppGroup => new AppUsageItem
+            var appRunningUsages = GetAppRunningUsages().Where(u => u.StartedAt.Date == selectedDate.Date);
+            
+            return appRunningUsages.GroupBy(u => u.ParentUsage.App.ExecutablePath).Select(thisAppGroup => new AppUsageItem
             {
                 Date = thisAppGroup.First().StartedAt.Date,
                 AppPath = thisAppGroup.Key,
-                UsageString = TickToMinutes(thisAppGroup.Sum(au => au.Elapsed.Ticks)),
+                UsageString = TickToMinutes(thisAppGroup.Sum(au => au.ActiveElapsed.Ticks)),
                 UsagesByTime = thisAppGroup.Select(au => new UsageByTimeItem
                 {
                     TimeString = $"{au.StartedAt:HH:mm} ~ {au.UpdatedAt:HH:mm}",
-                    UsageString = TickToMinutes(au.Elapsed.Ticks)
+                    UsageString = TickToMinutes(au.ActiveElapsed.Ticks)
                 }),
             });
         }
