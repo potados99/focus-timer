@@ -8,7 +8,7 @@ using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer.Slot;
 
-public partial class TimerItem : StopwatchRunner
+public partial class TimerItem : StopwatchRunner<TimerUsage, TimerRunningUsage, TimerActiveUsage>
 {
     private readonly TimerUsageService _timerUsageService = Modules.Get<TimerUsageService>();
     private readonly EventService _eventService = Modules.Get<EventService>();
@@ -30,8 +30,6 @@ public partial class TimerItem : StopwatchRunner
         new TimerSlotViewModel {SlotNumber = 4},
     };
     
-    private TimerUsage? _usage;
-
     private void RegisterEvents()
     {
         _eventService.OnTick += OnTick;
@@ -50,7 +48,7 @@ public partial class TimerItem : StopwatchRunner
     {
         Restart();
 
-        _usage = _timerUsageService.CreateNewUsage();
+        Usage = _timerUsageService.CreateNewUsage();
     }
     
     private void OnActivated()
@@ -59,7 +57,7 @@ public partial class TimerItem : StopwatchRunner
         {
             this.GetLogger().Info("Activated 이벤트로 인해 새로운 TimerActiveUsage를 생성합니다.");
             
-            _usage?.RunningUsage.OpenNewActiveUsage();
+            Usage?.RunningUsage.OpenNewActiveUsage();
         }
     }
 
@@ -73,7 +71,7 @@ public partial class TimerItem : StopwatchRunner
         {
             this.GetLogger().Info("Focused 이벤트로 인해 새로운 TimerActiveUsage를 생성합니다.");
 
-            _usage?.RunningUsage.OpenNewActiveUsage();
+            Usage?.RunningUsage.OpenNewActiveUsage();
         }
     }
 
@@ -81,26 +79,26 @@ public partial class TimerItem : StopwatchRunner
     {
         this.GetLogger().Debug("TimerUsage를 불러옵니다.");
 
-        _usage = _timerUsageService.GetLastUsage() ?? _timerUsageService.CreateNewUsage();
-        _usage.OpenNewRunningUsage();
+        Usage = _timerUsageService.GetLastUsage() ?? _timerUsageService.CreateNewUsage();
+        Usage.OpenNewRunningUsage();
 
         Restart();
-        AddOffset(_usage.ActiveElapsed, _usage.RunningElapsed);
+        AddOffset(Usage.ActiveElapsed, Usage.RunningElapsed);
     }
 
     private void UpdateUsage()
     {
-        if (_usage == null)
+        if (Usage == null)
         {
             return;
         }
         
-        _usage.TouchUsage();
-        _usage.RunningUsage.TouchUsage();
+        Usage.TouchUsage();
+        Usage.RunningUsage.TouchUsage();
 
         if (IsAnyAppActive)
         {
-            _usage.RunningUsage.ActiveUsage.TouchUsage();
+            Usage.RunningUsage.ActiveUsage.TouchUsage();
         }
 
         _timerUsageService.SaveRepository();

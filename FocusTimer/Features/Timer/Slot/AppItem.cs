@@ -10,7 +10,7 @@ namespace FocusTimer.Features.Timer.Slot;
 /// 타이머 슬롯에 등록되는 앱을 나타냅니다.
 /// 타이머 슬롯에는 앱이 등록되어 있을 수도, 그렇지 않을 수도 있습니다.
 /// </summary>
-public partial class AppItem : StopwatchRunner, IDisposable
+public partial class AppItem : StopwatchRunner<AppUsage, AppRunningUsage, AppActiveUsage>, IDisposable
 {
     private readonly AppService _appService = Modules.Get<AppService>();
     private readonly AppUsageService _appUsageService = Modules.Get<AppUsageService>();
@@ -47,9 +47,7 @@ public partial class AppItem : StopwatchRunner, IDisposable
     }
 
     public Domain.Entities.App App { get; }
-
-    private AppUsage? _usage;
-
+    
     private void RegisterEvents()
     {
         _eventService.OnTick += OnTick;
@@ -76,7 +74,7 @@ public partial class AppItem : StopwatchRunner, IDisposable
         {
             this.GetLogger().Info("Activated 이벤트로 인해 새로운 AppActiveUsage를 생성합니다.");
 
-            _usage?.RunningUsage.OpenNewActiveUsage();
+            Usage?.RunningUsage.OpenNewActiveUsage();
         }
     }
     
@@ -86,7 +84,7 @@ public partial class AppItem : StopwatchRunner, IDisposable
         {
             this.GetLogger().Info("Focused 이벤트로 인해 새로운 AppActiveUsage를 생성합니다.");
 
-            _usage?.RunningUsage.OpenNewActiveUsage();
+            Usage?.RunningUsage.OpenNewActiveUsage();
         }
     }
 
@@ -94,28 +92,28 @@ public partial class AppItem : StopwatchRunner, IDisposable
     {
         this.GetLogger().Debug("AppUsage를 불러옵니다.");
         
-        _usage = _appUsageService.GetLastUsage(App) ?? _appUsageService.CreateNewUsage(App);
-        _usage.OpenNewRunningUsage();
+        Usage = _appUsageService.GetLastUsage(App) ?? _appUsageService.CreateNewUsage(App);
+        Usage.OpenNewRunningUsage();
         
-        IsCountedOnConcentrationCalculation = _usage.IsConcentrated;
+        IsCountedOnConcentrationCalculation = Usage.IsConcentrated;
 
         Restart();
-        AddOffset(_usage.ActiveElapsed, TimeSpan.Zero);
+        AddOffset(Usage.ActiveElapsed, TimeSpan.Zero);
     }
 
     private void UpdateUsage()
     {
-        if (_usage == null)
+        if (Usage == null)
         {
             return;
         }
         
-        _usage.TouchUsage(IsCountedOnConcentrationCalculation);
-        _usage.RunningUsage.TouchUsage();
+        Usage.TouchUsage(IsCountedOnConcentrationCalculation);
+        Usage.RunningUsage.TouchUsage();
         
         if (IsActive)
         {
-            _usage.RunningUsage.ActiveUsage.TouchUsage();
+            Usage.RunningUsage.ActiveUsage.TouchUsage();
         }
 
         _appUsageService.SaveRepository();
