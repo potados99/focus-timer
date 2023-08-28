@@ -35,6 +35,7 @@ public partial class TimerItem : StopwatchRunner
     private void RegisterEvents()
     {
         _eventService.OnTick += OnTick;
+        _eventService.OnReload += OnReload;
         _eventService.OnActivated += OnActivated;
         _eventService.OnFocusChanged += OnFocusChanged;
     }
@@ -43,6 +44,13 @@ public partial class TimerItem : StopwatchRunner
     {
         StartOrStopActiveTimer(IsAnyAppActive);
         UpdateUsage();
+    }
+
+    private void OnReload()
+    {
+        Restart();
+
+        _usage = _timerUsageService.CreateNewUsage();
     }
     
     private void OnActivated()
@@ -96,12 +104,5 @@ public partial class TimerItem : StopwatchRunner
         }
 
         _timerUsageService.SaveRepository();
-    }
-
-    public void Reset()
-    {
-        Restart();
-
-        _usage = _timerUsageService.CreateNewUsage();
     }
 }

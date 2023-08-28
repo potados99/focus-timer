@@ -36,9 +36,13 @@ public class StopwatchRunner
     public void Restart()
     {
         _activeStopwatch.ClearOffset();
-        _activeStopwatch.Restart();
+        _activeStopwatch.Reset();
 
         _alwaysOnStopwatch.ClearOffset();
-        _alwaysOnStopwatch.Restart();
+        _alwaysOnStopwatch.Reset();
+        
+        // 이 친구는 상태와 무관하게 계속 흘러갑니다.
+        // 따라서 이곳에서 시작되며 다시 멈추지 않습니다.
+        _alwaysOnStopwatch.Start();
     }
 }

@@ -66,7 +66,7 @@ public class EventService
 
     public void EmitReload()
     {
-        this.GetLogger().Debug("슬롯 다시 불러오기를 유발합니다.");
+        this.GetLogger().Debug("타임 리셋 및 슬롯 다시 불러오기를 유발합니다.");
 
         OnReload?.Invoke();
     }

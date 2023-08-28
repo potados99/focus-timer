@@ -1,4 +1,5 @@
-﻿using FocusTimer.Lib.Utility;
+﻿using System;
+using FocusTimer.Lib.Utility;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -20,6 +21,8 @@ public partial class MainViewModel
 
         double concentration = 100 * elapsedTotal / (TimerItem.ElapsedTicks + 1);
 
+        this.GetLogger().Info($"집중도 계산에 포함하는 앱들의 활성 사용 시간 합: {new TimeSpan(elapsedTotal).ToSixDigits()}, 타이머가 구동중인 시간의 합: {TimerItem.ElapsedString}");
+            
         return concentration;
     }
 
