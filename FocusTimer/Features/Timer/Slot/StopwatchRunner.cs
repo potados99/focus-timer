@@ -23,6 +23,7 @@ public class StopwatchRunner<TUsage, TRunningUsage, TActiveUSage>
 
     protected void AddOffset(TimeSpan activeOffset, TimeSpan alwaysOnOffset)
     {
+        // TODO 오프셋이 다 무슨 소용이란 말인가? 어차피 1초마다 Tick에 의해 움직인다면, 스탑워치는 이제 다 필요 없을듯.
         _activeStopwatch.AddOffset(activeOffset);
         _alwaysOnStopwatch.AddOffset(alwaysOnOffset);
     }
