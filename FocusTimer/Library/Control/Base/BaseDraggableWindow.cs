@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace FocusTimer.Lib.Control.Base;
+namespace FocusTimer.Library.Control.Base;
 
 /// <summary>
 /// 드래그와 클릭을 둘 다 지원하는 윈도우 컨트롤입니다.

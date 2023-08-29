@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.AppCenter.Crashes;
 
-namespace FocusTimer.Lib.Extensions;
+namespace FocusTimer.Library.Extensions;
 
 public static class ProcessExtensions
 {

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Media;
 using FocusTimer.Features.Charting.Usages.Detail;
-using FocusTimer.Lib;
-using FocusTimer.Lib.Extensions;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Library;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Features.Charting.Usages;
 

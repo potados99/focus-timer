@@ -1,5 +1,4 @@
 ﻿using FocusTimer.Features.Charting;
-using FocusTimer.Lib.Utility;
 using System;
 using System.Reflection;
 using System.Windows;
@@ -12,8 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FocusTimer.Features.License;
 using FocusTimer.Features.Timer.Border;
-using FocusTimer.Lib.Control.Base;
-using FocusTimer.Lib.Extensions;
+using FocusTimer.Library.Control.Base;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Features.Timer;
 

@@ -10,7 +10,7 @@ using SkiaSharp;
 using DColor = System.Drawing.Color;
 using MColor = System.Windows.Media.Color;
 
-namespace FocusTimer.Lib.Extensions;
+namespace FocusTimer.Library.Extensions;
 
 public static class IconExtensions
 {

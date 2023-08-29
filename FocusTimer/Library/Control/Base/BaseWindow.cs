@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using FocusTimer.Lib.Extensions;
+using FocusTimer.Library.Extensions;
 
-namespace FocusTimer.Lib.Control.Base;
+namespace FocusTimer.Library.Control.Base;
 
 /// <summary>
 /// 뷰 모델과 라이프사이클 이벤트를 가지는 윈도우입니다.

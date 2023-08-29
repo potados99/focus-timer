@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Threading;
 
-namespace FocusTimer.Lib.Utility;
+namespace FocusTimer.Library.Utility;
 
 /// <summary>
 /// 포커스를 가지고 있는 창이 바뀌는 이벤트를 감지하는 모니터입니다.

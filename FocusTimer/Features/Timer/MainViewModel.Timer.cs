@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using FocusTimer.Lib;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Library;
+using FocusTimer.Library.Utility;
 
 namespace FocusTimer.Features.Timer;
 

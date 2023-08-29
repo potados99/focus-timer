@@ -1,9 +1,8 @@
-﻿using FocusTimer.Lib.Utility;
-using Microsoft.AppCenter.Crashes;
+﻿using Microsoft.AppCenter.Crashes;
 using System;
 using System.Linq;
 using FocusTimer.Features.Timer.Slot;
-using FocusTimer.Lib.Extensions;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Features.Timer;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Threading;
 
-namespace FocusTimer.Lib.Utility;
+namespace FocusTimer.Library.Utility;
 
 /// <summary>
 /// 사용자의 입력을 감지하는 모니터입니다.

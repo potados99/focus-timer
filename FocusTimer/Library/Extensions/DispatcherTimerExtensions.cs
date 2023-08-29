@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Windows.Threading;
 
-namespace FocusTimer.Lib.Extensions;
+namespace FocusTimer.Library.Extensions;
 
 public static class DispatcherTimerExtensions
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Threading;
 
-namespace FocusTimer.Lib.Utility;
+namespace FocusTimer.Library.Utility;
 
 /// <summary>
 /// 정해진 기간 동안 일정 간격으로 Tick을 발생시킵니다.

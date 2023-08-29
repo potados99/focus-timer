@@ -1,4 +1,4 @@
-﻿namespace FocusTimer.Lib;
+﻿namespace FocusTimer.Library;
 
 /// <summary>
 /// 애플리케이션의 설정에 접근할 수 있는 인터페이스를 제공합니다.

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using FocusTimer.Lib.Control.Base;
+using FocusTimer.Library.Control.Base;
 
 namespace FocusTimer.Features.Timer.Slot;
 

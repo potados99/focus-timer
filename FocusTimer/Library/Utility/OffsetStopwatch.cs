@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace FocusTimer.Lib.Utility;
+namespace FocusTimer.Library.Utility;
 
 /// <summary>
 /// 시작 오프셋을 추가한 <see cref="Stopwatch"/>입니다.

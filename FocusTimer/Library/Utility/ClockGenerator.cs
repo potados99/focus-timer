@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Threading;
-using FocusTimer.Lib.Extensions;
+using FocusTimer.Library.Extensions;
 
-namespace FocusTimer.Lib.Utility;
+namespace FocusTimer.Library.Utility;
 
 /// <summary>
 /// 정해진 시간 간격마다 이벤트를 발생시킵니다.

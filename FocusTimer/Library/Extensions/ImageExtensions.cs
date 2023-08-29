@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace FocusTimer.Lib.Extensions;
+namespace FocusTimer.Library.Extensions;
 
 public static class ImageExtensions
 {

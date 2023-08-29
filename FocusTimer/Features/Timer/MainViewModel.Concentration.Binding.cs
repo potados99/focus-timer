@@ -1,6 +1,5 @@
-﻿using FocusTimer.Lib.Utility;
-using System.Linq;
-using FocusTimer.Lib.Control;
+﻿using System.Linq;
+using FocusTimer.Library.Control;
 
 namespace FocusTimer.Features.Timer;
 

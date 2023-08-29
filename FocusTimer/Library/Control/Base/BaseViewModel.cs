@@ -1,4 +1,4 @@
-﻿namespace FocusTimer.Lib.Control.Base;
+﻿namespace FocusTimer.Library.Control.Base;
 
 /// <summary>
 /// 라이프사이클 이벤트를 가지는 모델입니다.

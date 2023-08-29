@@ -1,13 +1,13 @@
-﻿using Microsoft.AppCenter.Crashes;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using FocusTimer.Lib.Extensions;
+using FocusTimer.Library.Extensions;
+using Microsoft.AppCenter.Crashes;
 
-namespace FocusTimer.Lib;
+namespace FocusTimer.Library;
 
 /// <summary>
 /// 저수준의 API 호출을 감싸는 wrapper입니다.

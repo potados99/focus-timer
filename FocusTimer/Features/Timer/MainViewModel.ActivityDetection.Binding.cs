@@ -1,4 +1,4 @@
-﻿using FocusTimer.Lib;
+﻿using FocusTimer.Library;
 
 namespace FocusTimer.Features.Timer;
 

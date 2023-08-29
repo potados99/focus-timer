@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using FocusTimer.Domain.Entities;
 using FocusTimer.Domain.Services;
-using FocusTimer.Lib;
-using FocusTimer.Lib.Extensions;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Library;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Features.Timer.Slot;
 

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace FocusTimer.Lib.Control;
+namespace FocusTimer.Library.Control;
 
 /// <summary>
 /// XAML 바인딩에 사용할 수 있는 MenuItem입니다.

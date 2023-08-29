@@ -4,10 +4,10 @@ using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting;
 using FocusTimer.Features.License;
 using FocusTimer.Features.Timer;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Library.Utility;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FocusTimer.Lib;
+namespace FocusTimer.Library;
 
 /// <summary>
 /// 의존성으로 주입할 모듈들을 정의합니다.

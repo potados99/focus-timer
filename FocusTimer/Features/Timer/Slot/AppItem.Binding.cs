@@ -1,7 +1,6 @@
 ﻿using System.Windows.Media;
-using FocusTimer.Lib;
-using FocusTimer.Lib.Extensions;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Library;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Features.Timer.Slot;
 

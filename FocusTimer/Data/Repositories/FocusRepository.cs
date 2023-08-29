@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FocusTimer.Data.DataContext;
 using FocusTimer.Domain.Entities;
-using FocusTimer.Lib.Extensions;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Library.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocusTimer.Data.Repositories;

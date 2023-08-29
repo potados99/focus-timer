@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using FocusTimer.Lib;
-using FocusTimer.Lib.Extensions;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Library;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Domain.Entities;
 

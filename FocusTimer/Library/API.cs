@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace FocusTimer.Lib;
+namespace FocusTimer.Library;
 
 public class API
 {
