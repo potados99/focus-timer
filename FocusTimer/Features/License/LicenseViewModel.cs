@@ -27,7 +27,7 @@ public class LicenseViewModel : BaseViewModel
     {
         if (_licenseService.ValidateLicenseKey(LicenseKeyInput) == false)
         {
-            MessageBox.Show("Please check your input.", "Invalid License Key");
+            MessageBox.Show("라이센스 키가 올바르지 않습니다. 입력하신 라이센스 키를 확인해 주세요.", "올바르지 않은 라이센스 키");
             return;
         }
         
