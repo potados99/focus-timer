@@ -18,7 +18,7 @@ public class EventService
         _clockGenerator = clockGenerator;
         _clockGenerator.OnTick += () =>
         {
-            this.GetLogger().Debug("Tick 이벤트가 발생하였습니다.");
+            this.GetLogger().Info("[이벤트 발생] Tick 이벤트가 발생하였습니다.");
             OnTick?.Invoke();
             OnRender?.Invoke();
         };
@@ -26,14 +26,14 @@ public class EventService
         _activityMonitor = activityMonitor;
         _activityMonitor.OnActivated += () =>
         {
-            this.GetLogger().Debug("Activated 이벤트가 발생하였습니다.");
+            this.GetLogger().Info("[이벤트 발생] Activated 이벤트가 발생하였습니다.");
             
             OnRender?.Invoke();
             OnActivated?.Invoke();
         };
         _activityMonitor.OnDeactivated += () =>
         {
-            this.GetLogger().Debug("Deactivated 이벤트가 발생하였습니다.");
+            this.GetLogger().Info("[이벤트 발생] Deactivated 이벤트가 발생하였습니다.");
 
             OnRender?.Invoke();
             OnDeactivated?.Invoke();
@@ -42,7 +42,7 @@ public class EventService
         _windowWatcher = windowWatcher;
         _windowWatcher.OnFocused += (p, n) =>
         {
-            this.GetLogger().Debug("Focused 이벤트가 발생하였습니다.");
+            this.GetLogger().Info("[이벤트 발생] Focused 이벤트가 발생하였습니다.");
 
             OnFocusChanged?.Invoke(p, n);
             OnRender?.Invoke();

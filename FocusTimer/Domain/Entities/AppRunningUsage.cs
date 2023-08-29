@@ -31,7 +31,7 @@ public class AppRunningUsage : IRunningUsage<AppUsage, AppActiveUsage>
     /// 타이머가 켜져 있고 앱이 슬롯에 등록되어 있는 동안 흐른 시간입니다(tick).
     /// </summary>
     public long ElapsedTicks { get; set; }
-    
+
     public ICollection<AppActiveUsage> ActiveUsages { get; } = new List<AppActiveUsage>();
 
     [NotMapped] public AppActiveUsage ActiveUsage => GetLastActiveUsage() ?? OpenNewActiveUsage();
@@ -45,10 +45,16 @@ public class AppRunningUsage : IRunningUsage<AppUsage, AppActiveUsage>
     {
         this.GetLogger().Debug("AppRunningUsage를 갱신합니다.");
 
+        if (UpdatedAt - StartedAt > Elapsed + TimeSpan.FromSeconds(5))
+        {
+            this.GetLogger()
+                .Error($"이 {ToString()}에는 중간에 5초 이상 downtime이 있었던 것으로 보입니다. 시작 이후 흐른 시간이 실제 유효 시간보다 5초 넘게 큽니다.");
+        }
+
         UpdatedAt = DateTime.Now;
         ElapsedTicks += TimeSpan.TicksPerSecond;
     }
-    
+
     private AppActiveUsage? GetLastActiveUsage()
     {
         var usage = ActiveUsages.LastOrDefault();
@@ -75,7 +81,7 @@ public class AppRunningUsage : IRunningUsage<AppUsage, AppActiveUsage>
 
         return usage;
     }
-    
+
     public override string ToString()
     {
         return $"AppRunningUsage(Id={Id}, Elapsed={Elapsed.ToSixDigits()})";

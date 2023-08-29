@@ -70,13 +70,15 @@ public class UsageSplitter<T> where T : IElapsable, new()
 
         var activeUsages = usage.RunningUsages
             .SelectMany(u => u.ActiveUsages)
+            .Where(u => (u.UpdatedAt - u.StartedAt).Ticks > 0 || u.ElapsedTicks > 0) // 실제로 사용된 것만 취급합니다.
             .SelectMany(u => new UsageSplitter<TActiveUsage>(u).Split())
-            .ToList(); // 여기도 마찬가지!
+            .ToList(); // 이렇게 이 시점에 컬렉션을 확보해야 아래에서 수정할 수 있습니다.
 
         foreach (var runningUsage in runningUsages)
         {
             runningUsage.ParentUsage = usage;
 
+            // ActiveUsage 중 현재 RunningUsage의 시간 범위에 속한 것만 선택합니다.
             var activeUsagesInThisRunningUsage = activeUsages
                 .Where(u => runningUsage.StartedAt <= u.StartedAt && u.UpdatedAt <= runningUsage.UpdatedAt);
 

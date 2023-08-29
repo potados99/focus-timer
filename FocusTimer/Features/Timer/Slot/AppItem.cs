@@ -10,7 +10,7 @@ namespace FocusTimer.Features.Timer.Slot;
 /// 타이머 슬롯에 등록되는 앱을 나타냅니다.
 /// 타이머 슬롯에는 앱이 등록되어 있을 수도, 그렇지 않을 수도 있습니다.
 /// </summary>
-public partial class AppItem : StopwatchRunner<AppUsage, AppRunningUsage, AppActiveUsage>, IDisposable
+public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActiveUsage>, IDisposable
 {
     private readonly AppService _appService = Modules.Get<AppService>();
     private readonly AppUsageService _appUsageService = Modules.Get<AppUsageService>();
@@ -64,7 +64,6 @@ public partial class AppItem : StopwatchRunner<AppUsage, AppRunningUsage, AppAct
 
     private void OnTick()
     {
-        StartOrStopActiveTimer(IsActive);
         UpdateUsage();
     }
 
@@ -94,11 +93,9 @@ public partial class AppItem : StopwatchRunner<AppUsage, AppRunningUsage, AppAct
         
         Usage = _appUsageService.GetLastUsage(App) ?? _appUsageService.CreateNewUsage(App);
         Usage.OpenNewRunningUsage();
+        Usage.RunningUsage.OpenNewActiveUsage(); // 기존의 것을 또 건드리는 일을 막기 위해 일단 무지성으로 새로 만들어줍니다.
         
         IsCountedOnConcentrationCalculation = Usage.IsConcentrated;
-
-        Restart();
-        AddOffset(Usage.ActiveElapsed, TimeSpan.Zero);
     }
 
     private void UpdateUsage()

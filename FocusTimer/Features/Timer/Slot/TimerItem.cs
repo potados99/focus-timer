@@ -8,7 +8,7 @@ using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer.Slot;
 
-public partial class TimerItem : StopwatchRunner<TimerUsage, TimerRunningUsage, TimerActiveUsage>
+public partial class TimerItem : UsageContainer<TimerUsage, TimerRunningUsage, TimerActiveUsage>
 {
     private readonly TimerUsageService _timerUsageService = Modules.Get<TimerUsageService>();
     private readonly EventService _eventService = Modules.Get<EventService>();
@@ -40,14 +40,11 @@ public partial class TimerItem : StopwatchRunner<TimerUsage, TimerRunningUsage, 
 
     private void OnTick()
     {
-        StartOrStopActiveTimer(IsAnyAppActive);
         UpdateUsage();
     }
 
     private void OnReload()
     {
-        Restart();
-
         Usage = _timerUsageService.CreateNewUsage();
     }
     
@@ -81,9 +78,6 @@ public partial class TimerItem : StopwatchRunner<TimerUsage, TimerRunningUsage, 
 
         Usage = _timerUsageService.GetLastUsage() ?? _timerUsageService.CreateNewUsage();
         Usage.OpenNewRunningUsage();
-
-        Restart();
-        AddOffset(Usage.ActiveElapsed, Usage.RunningElapsed);
     }
 
     private void UpdateUsage()

@@ -45,6 +45,12 @@ public class TimerRunningUsage : IRunningUsage<TimerUsage, TimerActiveUsage>
     {
         this.GetLogger().Debug("TimerRunningUsage를 갱신합니다.");
 
+        if (UpdatedAt - StartedAt > Elapsed + TimeSpan.FromSeconds(5))
+        {
+            this.GetLogger()
+                .Error($"이 {ToString()}에는 중간에 5초 이상 downtime이 있었던 것으로 보입니다. 시작 이후 흐른 시간이 실제 유효 시간보다 5초 넘게 큽니다.");
+        }
+        
         UpdatedAt = DateTime.Now;
         ElapsedTicks += TimeSpan.TicksPerSecond;
     }
