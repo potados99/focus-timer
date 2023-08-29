@@ -16,8 +16,14 @@ public static class IconExtensions
 {
     public static byte[] ToBytes(this Icon icon)
     {
+        // Icon을 직접 Save하면 품질 저하가 생깁니다.
+        // 따라서 비트맵으로 다룹니다.
+        // 자세한 정보: https://stackoverflow.com/a/52689799
+        var bitmap = icon.ToBitmap();
+
         using var ms = new MemoryStream();
-        icon.Save(ms);
+        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+        
         return ms.ToArray();
     }
     
