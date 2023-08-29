@@ -1,14 +1,18 @@
-﻿using FocusTimer.Lib.Utility;
-using Microsoft.AppCenter.Crashes;
+﻿using Microsoft.AppCenter.Crashes;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using FocusTimer.Lib.Extensions;
 
 namespace FocusTimer.Lib;
 
+/// <summary>
+/// 저수준의 API 호출을 감싸는 wrapper입니다.
+/// </summary>
+// ReSharper disable once InconsistentNaming
 public static class APIWrapper
 {
     #region 창

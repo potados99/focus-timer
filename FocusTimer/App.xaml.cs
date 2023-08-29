@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Windows;
 
 namespace FocusTimer;
 
-public partial class App : Application
+public partial class App
 {
     [STAThread]
     public static void Main()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using FocusTimer.Lib.Extensions;
 using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Domain.Entities;

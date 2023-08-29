@@ -3,6 +3,7 @@ using Microsoft.AppCenter.Crashes;
 using System;
 using System.Linq;
 using FocusTimer.Features.Timer.Slot;
+using FocusTimer.Lib.Extensions;
 
 namespace FocusTimer.Features.Timer;
 

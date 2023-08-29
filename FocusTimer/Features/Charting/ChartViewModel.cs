@@ -1,5 +1,4 @@
-﻿using FocusTimer.Lib.Component;
-using LiveChartsCore.SkiaSharpView;
+﻿using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
@@ -9,6 +8,7 @@ using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting.LiveCharts;
 using FocusTimer.Lib;
+using FocusTimer.Lib.Control.Base;
 
 namespace FocusTimer.Features.Charting;
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using FocusTimer.Lib;
+using FocusTimer.Lib.Extensions;
 using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Domain.Entities;

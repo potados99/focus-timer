@@ -4,10 +4,14 @@ using FocusTimer.Domain.Services;
 using FocusTimer.Features.Charting;
 using FocusTimer.Features.License;
 using FocusTimer.Features.Timer;
+using FocusTimer.Lib.Utility;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FocusTimer.Lib;
 
+/// <summary>
+/// 의존성으로 주입할 모듈들을 정의합니다.
+/// </summary>
 public static class Modules
 {
     private static readonly ServiceProvider s_provider =

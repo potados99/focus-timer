@@ -3,6 +3,8 @@ using FocusTimer.Lib.Utility;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using FocusTimer.Lib.Control;
+using FocusTimer.Lib.Extensions;
 
 namespace FocusTimer.Features.Timer;
 

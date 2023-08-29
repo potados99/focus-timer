@@ -2,8 +2,12 @@
 using System.Linq;
 using System.Windows.Threading;
 
-namespace FocusTimer.Lib;
+namespace FocusTimer.Lib.Utility;
 
+/// <summary>
+/// 포커스를 가지고 있는 창이 바뀌는 이벤트를 감지하는 모니터입니다.
+/// 시스템 UI는 포커스를 얻어도 무시합니다. 아래 <see cref="SkipList"/> 참조.
+/// </summary>
 public class WindowWatcher
 {
     public WindowWatcher()

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FocusTimer.Lib.Utility;
+namespace FocusTimer.Lib.Extensions;
 
 public static class TimeSpanExtensions
 {

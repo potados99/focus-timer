@@ -1,4 +1,5 @@
-﻿using FocusTimer.Lib.Utility;
+﻿using FocusTimer.Lib.Extensions;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer.Slot;
 

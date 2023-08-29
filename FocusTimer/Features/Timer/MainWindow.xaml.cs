@@ -12,7 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FocusTimer.Features.License;
 using FocusTimer.Features.Timer.Border;
-using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Control.Base;
+using FocusTimer.Lib.Extensions;
 
 namespace FocusTimer.Features.Timer;
 

@@ -1,16 +1,16 @@
-﻿using Microsoft.AppCenter.Crashes;
-using SkiaSharp;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.AppCenter.Crashes;
+using SkiaSharp;
 using DColor = System.Drawing.Color;
 using MColor = System.Windows.Media.Color;
 
-namespace FocusTimer.Lib.Utility;
+namespace FocusTimer.Lib.Extensions;
 
 public static class IconExtensions
 {

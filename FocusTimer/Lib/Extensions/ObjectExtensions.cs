@@ -1,4 +1,4 @@
-﻿namespace FocusTimer.Lib.Utility;
+﻿namespace FocusTimer.Lib.Extensions;
 
 public static class ObjectExtensions
 {

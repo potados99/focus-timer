@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using FocusTimer.Domain.Entities;
+using FocusTimer.Lib.Extensions;
 using FocusTimer.Lib.Utility;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Data.Sqlite;

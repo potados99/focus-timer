@@ -1,8 +1,12 @@
 ﻿using System.Windows;
-using FocusTimer.Lib.Utility;
+using FocusTimer.Lib.Extensions;
 
-namespace FocusTimer.Lib.Component;
+namespace FocusTimer.Lib.Control.Base;
 
+/// <summary>
+/// 뷰 모델과 라이프사이클 이벤트를 가지는 윈도우입니다.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public abstract class BaseWindow<T> : Window where T : BaseViewModel
 {
     protected readonly T ViewModel = Modules.Get<T>();

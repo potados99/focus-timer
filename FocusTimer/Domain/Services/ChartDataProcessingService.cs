@@ -8,7 +8,7 @@ using FocusTimer.Features.Charting.LiveCharts;
 using FocusTimer.Features.Charting.Metric;
 using FocusTimer.Features.Charting.Usages;
 using FocusTimer.Features.Charting.Usages.Detail;
-using FocusTimer.Lib;
+using FocusTimer.Lib.Extensions;
 using FocusTimer.Lib.Utility;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;

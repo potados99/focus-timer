@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using FocusTimer.Features.Charting.LiveCharts;
-using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Control.Base;
 
 namespace FocusTimer.Features.Charting;
 

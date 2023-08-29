@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using FocusTimer.Lib.Extensions;
 using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Domain.Entities;

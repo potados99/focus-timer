@@ -1,8 +1,9 @@
 ﻿using System;
 using FocusTimer.Lib;
-using FocusTimer.Lib.Component;
 using FocusTimer.Domain.Services;
 using FocusTimer.Features.Timer.Slot;
+using FocusTimer.Lib.Control.Base;
+using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Timer;
 

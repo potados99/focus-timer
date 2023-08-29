@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows.Media;
 using FocusTimer.Features.Charting.Usages.Detail;
 using FocusTimer.Lib;
+using FocusTimer.Lib.Extensions;
 using FocusTimer.Lib.Utility;
 
 namespace FocusTimer.Features.Charting.Usages;

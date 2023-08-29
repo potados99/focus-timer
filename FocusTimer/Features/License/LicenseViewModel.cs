@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using FocusTimer.Domain.Services;
 using FocusTimer.Lib;
-using FocusTimer.Lib.Component;
+using FocusTimer.Lib.Control.Base;
 
 namespace FocusTimer.Features.License;
 

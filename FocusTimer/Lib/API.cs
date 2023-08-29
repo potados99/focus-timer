@@ -4,30 +4,17 @@ using System.Text;
 
 namespace FocusTimer.Lib;
 
-class API
+public class API
 {
-    public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
-
-    public const uint WINEVENT_OUTOFCONTEXT = 0;
-    public const uint EVENT_SYSTEM_FOREGROUND = 3;
-
     public const int SW_MAXIMIZE = 3;
     public const int SW_MINIMIZE = 6;
 
     public const int ALT = 0xA4;
     public const int EXTENDEDKEY = 0x1;
     public const int KEYUP = 0x2;
-    public const uint Restore = 9;
 
     [DllImport("user32.dll")]
     public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
-
-    [DllImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool IsIconic(IntPtr hWnd);
-
-    [DllImport("user32.dll")]
-    public static extern int ShowWindow(IntPtr hWnd, uint Msg);
 
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
@@ -43,19 +30,6 @@ class API
 
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern IntPtr GetModuleHandle(string lpModuleName);
-
-    [DllImport("user32.dll")]
-    public static extern IntPtr SetWindowsHookEx(int idHook, HookProc callback, IntPtr hInstance, uint threadId);
-
-    public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
-    public static int WH_KEYBOARD_LL = 13;
-    public static int WH_MOUSE_LL = 14;
-
-    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern IntPtr CallNextHookEx(IntPtr hhk, int code, IntPtr wParam, IntPtr lParam);
 
     [DllImport("user32.dll")]
     public static extern bool GetLastInputInfo(out LASTINPUTINFO plii);

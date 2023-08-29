@@ -3,22 +3,18 @@ using System.Windows.Threading;
 
 namespace FocusTimer.Lib.Utility;
 
+/// <summary>
+/// 정해진 기간 동안 일정 간격으로 Tick을 발생시킵니다.
+/// </summary>
 public class CountdownTimer
 {
-    public delegate void TickHandler();
-    public event TickHandler? OnFinish;
+    public event Signal? OnFinish;
 
     public TimeSpan Duration { get; set; }
 
-    public bool IsEnabled
-    {
-        get
-        {
-            return this.Timer.IsEnabled;
-        }
-    }
+    public bool IsEnabled => _timer.IsEnabled;
 
-    private readonly DispatcherTimer Timer = new();
+    private readonly DispatcherTimer _timer = new();
 
     public TimeSpan TimeLeft { get; private set; }
 
@@ -29,28 +25,27 @@ public class CountdownTimer
 
     private void Prepare()
     {
-        Timer.Tick += (_, _) =>
+        _timer.Tick += (_, _) =>
         {
-            this.TimeLeft = this.TimeLeft.Subtract(TimeSpan.FromSeconds(1));
+            TimeLeft = TimeLeft.Subtract(TimeSpan.FromSeconds(1));
 
-            if (this.TimeLeft == TimeSpan.Zero || this.TimeLeft.TotalSeconds <= 0)
+            if (TimeLeft == TimeSpan.Zero || TimeLeft.TotalSeconds <= 0)
             {
-                this.Timer.Stop();
-                this.OnFinish?.Invoke();
-                return;
+                _timer.Stop();
+                OnFinish?.Invoke();
             }
         };
-        Timer.Interval = TimeSpan.FromSeconds(1);
+        _timer.Interval = TimeSpan.FromSeconds(1);
     }
 
     public void Start()
     {
-        this.TimeLeft = new TimeSpan(Duration.Ticks);
-        this.Timer.Start();
+        TimeLeft = new TimeSpan(Duration.Ticks);
+        _timer.Start();
     }
 
     public void Stop()
     {
-        this.Timer.Stop();
+        _timer.Stop();
     }
 }
