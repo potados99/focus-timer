@@ -34,6 +34,7 @@ public static class Modules
         services
             .AddSingleton<EventService>()
             .AddSingleton<LicenseService>()
+            .AddSingleton<MigrationService>()
             .AddSingleton<AppService>()
             .AddSingleton<AppUsageService>()
             .AddSingleton<TimerUsageService>()
