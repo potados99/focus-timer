@@ -56,11 +56,11 @@ try
     {
         $msBuildVerbosityArg = ""
     }
-    & $msBuildPath /target:publish /p:PublishProfile = ClickOnceProfile `
-        /p:ApplicationVersion = $version `
-        /p:Configuration = Release `
-        /p:PublishDir = $publishDir `
-        /p:PublishUrl = $publishDir `
+    & $msBuildPath /target:publish /p:PublishProfile=ClickOnceProfile `
+        /p:ApplicationVersion=$version `
+        /p:Configuration=Release `
+        /p:PublishDir=$publishDir `
+        /p:PublishUrl=$publishDir `
         $msBuildVerbosityArg
 
     # Measure publish size.
