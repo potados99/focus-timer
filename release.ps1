@@ -1,8 +1,8 @@
 # From https://janjones.me/posts/clickonce-installer-build-publish-github/.
 
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
 param (
-    [switch]$OnlyBuild=$false
+    [switch]$OnlyBuild = $false
 )
 
 $appName = "FocusTimer" # 👈 Replace with your application project name.
@@ -18,17 +18,18 @@ Write-Output "Working directory: $pwd"
 $msBuildPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
     -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe `
     -prerelease | select-object -first 1
-Write-Output "MSBuild: $((Get-Command $msBuildPath).Path)"
+Write-Output "MSBuild: $( (Get-Command $msBuildPath).Path )"
 
 # Load current Git tag.
-$tag = $(git describe --tags) # v2.0.0-beta1
+$tag = $( git describe --tags ) # v2.0.0-beta1
 Write-Output "Tag: $tag"
 
 # Parse tag into a three-number-and-prerelease version.
 $splitted = $tag.Split('-')
 $version = $splitted[0].TrimStart('v')
-$preReleaseNum = $splitted[$splitted.Length - 1] -replace "[^0-9]" , ''
-if ([string]::IsNullOrEmpty($preReleaseNum))
+$splitted = @("") + ($splitted | Select-Object -Skip 1) # replace first one with empty string.
+$preReleaseNum = $splitted[$splitted.Length - 1] -replace "[^0-9]", ''
+if ( [string]::IsNullOrEmpty($preReleaseNum))
 {
     $preReleaseNum = "0"
 }
@@ -38,25 +39,28 @@ Write-Output "Version: $version"
 # Clean output directory.
 $publishDir = "bin/publish"
 $outDir = "$projDir/$publishDir"
-if (Test-Path $outDir) {
+if (Test-Path $outDir)
+{
     Remove-Item -Path $outDir -Recurse
 }
 
 # Publish the application.
 Push-Location $projDir
-try {
+try
+{
     Write-Output "Restoring:"
     dotnet restore -r win-x64
     Write-Output "Publishing:"
     $msBuildVerbosityArg = "/v:m"
-    if ($env:CI) {
+    if ($env:CI)
+    {
         $msBuildVerbosityArg = ""
     }
-    & $msBuildPath /target:publish /p:PublishProfile=ClickOnceProfile `
-        /p:ApplicationVersion=$version `
-        /p:Configuration=Release `
-        /p:PublishDir=$publishDir `
-        /p:PublishUrl=$publishDir `
+    & $msBuildPath /target:publish /p:PublishProfile = ClickOnceProfile `
+        /p:ApplicationVersion = $version `
+        /p:Configuration = Release `
+        /p:PublishDir = $publishDir `
+        /p:PublishUrl = $publishDir `
         $msBuildVerbosityArg
 
     # Measure publish size.
@@ -64,11 +68,13 @@ try {
             Measure-Object -Property Length -Sum).Sum / 1Mb
     Write-Output ("Published size: {0:N2} MB" -f $publishSize)
 }
-finally {
+finally
+{
     Pop-Location
 }
 
-if ($OnlyBuild) {
+if ($OnlyBuild)
+{
     Write-Output "Build finished."
     exit
 }
@@ -84,19 +90,22 @@ Push-Location "distribution/$appName"
 git config core.eol native
 git config core.autocrlf false
 
-try {
+try
+{
     # Remove previous application files.
     Write-Output "Removing previous files..."
-    if (Test-Path "Application Files") {
+    if (Test-Path "Application Files")
+    {
         Remove-Item -Path "Application Files" -Recurse
     }
-    if (Test-Path "$appName.application") {
+    if (Test-Path "$appName.application")
+    {
         Remove-Item -Path "$appName.application"
     }
 
     # Copy new application files.
     Write-Output "Copying new files..."
-    Copy-Item -Path "../../$outDir/Application Files","../../$outDir/$appName.application" `
+    Copy-Item -Path "../../$outDir/Application Files", "../../$outDir/$appName.application" `
         -Destination . -Recurse
 
     # Stage and commit.
@@ -107,6 +116,8 @@ try {
 
     # Push.
     git push
-} finally {
+}
+finally
+{
     Pop-Location
 }
