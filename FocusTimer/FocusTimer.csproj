@@ -107,5 +107,14 @@
       <Output PropertyName="FileVersion" TaskParameter="OutputVersion" />
     </FormatVersion>
   </Target>
+
+  <Target Name="AutoSetMinimumRequiredVersion" BeforeTargets="GenerateDeploymentManifest">
+    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+      <Output PropertyName="MinimumRequiredVersion" TaskParameter="OutputVersion" />
+    </FormatVersion>
+    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+      <Output PropertyName="_DeploymentBuiltMinimumRequiredVersion" TaskParameter="OutputVersion" />
+    </FormatVersion>
+  </Target>
   
 </Project>
