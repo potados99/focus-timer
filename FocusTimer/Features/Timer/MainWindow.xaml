@@ -241,11 +241,14 @@
                         </Grid.ContextMenu>
 
                         <Label Grid.Row="0"
+                               Opacity="{Binding ShowConcentrationOpacity}"
+                               Visibility="{Binding ShowConcentrationOpacity}"
                                Content="집중도"
                                Style="{StaticResource WhiteTextLabel}"
                                VerticalAlignment="Bottom"
                                HorizontalAlignment="Center" />
                         <Label Grid.Row="1"
+                               Opacity="{Binding ShowConcentrationOpacity}"
                                Content="{Binding Concentration, FallbackValue=92%}"
                                Style="{StaticResource ConcentrationLabel}"
                                IsEnabled="{Binding IsOnConcentration}"

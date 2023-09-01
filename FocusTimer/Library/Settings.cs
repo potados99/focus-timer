@@ -34,4 +34,16 @@ public static class Settings
 
         Properties.Settings.Default.Save();
     }
+
+    public static bool GetShowConcentration()
+    {
+        return Properties.Settings.Default.ShowConcentration;
+    }
+
+    public static void SetShowConcentration(bool show)
+    {
+        Properties.Settings.Default.ShowConcentration = show;
+
+        Properties.Settings.Default.Save();
+    }
 }
