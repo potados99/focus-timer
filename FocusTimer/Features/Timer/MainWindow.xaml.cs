@@ -32,7 +32,7 @@ public partial class MainWindow
             DataContext = ViewModel
         }.Show();
     }
-    
+
     private ChartWindow? _openedChartWindow;
 
     #region 이벤트 핸들러
@@ -80,11 +80,13 @@ public partial class MainWindow
 
     private void InfoItem_Click(object sender, RoutedEventArgs e)
     {
-        string? ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+        var ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
         MessageBox.Show(
-            "Focus Timer\n" +
-            "버전 " + ver.ToString() + "\n\n"
+            $"Focus Timer\n버전 {ver}",
+            "프로그램 정보",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information
         );
     }
 
