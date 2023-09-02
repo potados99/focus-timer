@@ -7,10 +7,10 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
-	<GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
+	<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Deterministic>false</Deterministic>
-  </PropertyGroup>
+   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\DSEG7Classic-Bold.ttf" />
@@ -100,8 +100,9 @@
   </ItemGroup>
 
   <Target Name="SetAssemblyVersion" BeforeTargets="BeforeCompile">
+ 
     <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-      <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion" />
+      <Output PropertyName="AssemblyInformationalVersion" TaskParameter="OutputVersion" />
     </FormatVersion>
     <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
       <Output PropertyName="FileVersion" TaskParameter="OutputVersion" />
