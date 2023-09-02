@@ -4,31 +4,19 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using System.Threading;
-using System.Threading.Tasks;
 using FocusTimer.Features.License;
 using FocusTimer.Features.Timer.Border;
 using FocusTimer.Library.Control.Base;
-using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Features.Timer;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : MainViewModelWindow
+public partial class MainWindow
 {
-    private log4net.ILog Logger => this.GetLogger();
-    
     protected override void OnInitialize()
     {
-#if !DEBUG
-            HandleUnhandledExceptions();
-#endif
-
         if (ViewModel.ShouldAskForLicense())
         {
             new LicenseWindow().Show();
@@ -45,57 +33,7 @@ public partial class MainWindow : MainViewModelWindow
         }.Show();
     }
     
-    private void HandleUnhandledExceptions()
-    {
-        AppDomain currentDomain = AppDomain.CurrentDomain;
-        currentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledExceptionHandler);
-
-        Crashes.ShouldProcessErrorReport = (ErrorReport report) => true;
-
-        AppCenter.Start("66ce761f-2892-41cd-b8f7-95ba75670719", typeof(Analytics), typeof(Crashes));
-    }
-
-    private void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
-    {
-        Exception e = (Exception) args.ExceptionObject;
-        Logger.Fatal("처리되지 않은 예외가 발생하여 런타임을 종료합니다.", e);
-
-        // 이 곳에서 modal dialog로 시간을 오래 끌게 되면 아래 코드가 실행되지 않습니다.
-        // 따라서 새 스레드로 빠르게 넘깁니다.
-        new Thread(() =>
-            MessageBox.Show("미처 예상하지 못한 문제가 발생하여 프로그램을 종료하게 되었습니다. 프로그램을 다시 실행하면 이 문제에 대한 자세한 정보가 전송됩니다.",
-                "죄송합니다.")).Start();
-
-        bool didAppCrash = Crashes.HasCrashedInLastSessionAsync().GetAwaiter().GetResult();
-        if (didAppCrash)
-        {
-            Logger.Info("이전에 발생한 크래시가 있어, 프로그램 종료 전까지 기다립니다.");
-            var tcs = new TaskCompletionSource<bool>();
-
-            Crashes.SentErrorReport += (sender, e) =>
-            {
-                Logger.Info("크래시를 보고하였습니다. 이제 프로그램을 종료합니다.");
-                tcs.SetResult(true);
-            };
-
-            Crashes.FailedToSendErrorReport += (sender, e) =>
-            {
-                Logger.Info("크래시를 보내는 데에 실패하였습니다. 이제 프로그램을 종료합니다.");
-                tcs.SetResult(false);
-            };
-
-            Task.Delay(30 * 1000).ContinueWith(t =>
-            {
-                Logger.Info("크래시를 보내는 작업이 30초를 초과하였습니다. 이제 프로그램을 종료합니다.");
-                tcs.SetResult(false);
-            });
-
-            tcs.Task.GetAwaiter().GetResult();
-            Application.Current.Shutdown();
-        }
-    }
-
-    private ChartWindow? OpenedChartWindow = null;
+    private ChartWindow? _openedChartWindow;
 
     #region 이벤트 핸들러
 
@@ -130,14 +68,14 @@ public partial class MainWindow : MainViewModelWindow
 
     private void ChartItem_Click(object sender, RoutedEventArgs e)
     {
-        if (OpenedChartWindow == null)
+        if (_openedChartWindow == null)
         {
-            OpenedChartWindow = new ChartWindow();
-            OpenedChartWindow.Closed += (_, _) => { OpenedChartWindow = null; };
+            _openedChartWindow = new ChartWindow();
+            _openedChartWindow.Closed += (_, _) => { _openedChartWindow = null; };
         }
 
-        OpenedChartWindow.Show();
-        OpenedChartWindow.Activate();
+        _openedChartWindow.Show();
+        _openedChartWindow.Activate();
     }
 
     private void InfoItem_Click(object sender, RoutedEventArgs e)
