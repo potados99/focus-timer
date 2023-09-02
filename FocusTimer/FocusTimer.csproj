@@ -100,9 +100,11 @@
   </ItemGroup>
 
   <Target Name="SetAssemblyVersion" BeforeTargets="BeforeCompile">
- 
     <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-      <Output PropertyName="AssemblyInformationalVersion" TaskParameter="OutputVersion" />
+      <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion" />
+    </FormatVersion>
+    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+      <Output PropertyName="InformationalVersion" TaskParameter="OutputVersion" />
     </FormatVersion>
     <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
       <Output PropertyName="FileVersion" TaskParameter="OutputVersion" />

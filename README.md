@@ -28,7 +28,7 @@ $ git push --tags
 아래는 [배포 스크립트](./release.ps1)의 일부를 가져와 변형한 것으로, 로컬에서 ClickOnce 관련 설정을 조정할 때에 테스트 목적으로 종종 사용합니다.
 
 ```powershell
-$version = "1.0.0.0" # 적절한 버전
+$version = "2.0.0.0" # 적절한 버전
 $publishDir = "bin/publish"
 
 & "C:\Program Files\JetBrains\JetBrains Rider 2023.1.4\tools\MSBuild\Current\Bin\MSBuild.exe" `
@@ -45,3 +45,4 @@ $publishDir = "bin/publish"
 > OS: Windows Server 2022 Datacenter 21H2    
 > IDE: JetBrains Rider 2023.1.4    
 > Runtime: Microsoft .NET SDK 7.0.302 (x64) from Visual Studio
+
