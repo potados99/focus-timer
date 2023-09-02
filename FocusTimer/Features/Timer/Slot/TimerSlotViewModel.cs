@@ -51,7 +51,7 @@ public partial class TimerSlotViewModel
         {
             this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)에 등록된 앱({_slot.App.Title})을 복구합니다.");
 
-            StopWaitingAndRegisterApp(new AppItem(_slot.App));
+            StopWaitingAndRegisterApp(new AppItem(_slot.App.ExecutablePath));
         }
         else
         {

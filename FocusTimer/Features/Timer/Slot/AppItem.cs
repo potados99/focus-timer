@@ -17,22 +17,14 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
     private readonly AppUsageService _appUsageService = Modules.Get<AppUsageService>();
     private readonly UserActivityMonitor _activityMonitor = Modules.Get<UserActivityMonitor>();
     private readonly EventService _eventService = Modules.Get<EventService>();
-
-    public AppItem(IntPtr windowHandle) : this(APIWrapper.GetProcessByWindowHandle(windowHandle)?.ExecutablePath())
-    {
-    }
     
-    public AppItem(Domain.Entities.App app) : this(app.ExecutablePath)
-    {
-    }
-
-    private AppItem(string? executablePath)
+    public AppItem(string executablePath)
     {
         this.GetLogger().Info("AppItem을 초기화합니다.");
 
         if (string.IsNullOrEmpty(executablePath))
         {
-            throw new Exception("TimerApp의 생성자에 executablePath가 null로 들어왔습니다. 이래서는 안 됩니다!");
+            throw new Exception("AppItem의 생성자에 executablePath가 null로 들어왔습니다. 이래서는 안 됩니다!");
         }
 
         App = _appService.GetOrCreateApp(executablePath);
