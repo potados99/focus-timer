@@ -1,24 +1,18 @@
-﻿// The MIT License(MIT)
-//
-// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+﻿// CustomTooltip.cs
+// 이 파일은 FocusTimer의 일부입니다.
+// 
+// © 2023 Potados <song@potados.com>
+// 
+// FocusTimer은(는) 자유 소프트웨어입니다.
+// GNU General Public License v3.0을 준수하는 범위 내에서
+// 자유롭게 변경, 수정하거나 배포할 수 있습니다.
+// 
+// 이 프로그램을 공유함으로서 다른 누군가에게 도움이 되기를 바랍니다.
+// 다만 프로그램 배포와 함께 아무 것도 보증하지 않습니다. 자세한 내용은
+// GNU General Public License를 참고하세요.
+// 
+// 라이센스 전문은 이 프로그램과 함께 제공되었을 것입니다. 만약 아니라면,
+// 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
 using System;
 using System.Collections.Generic;
