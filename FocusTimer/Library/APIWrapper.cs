@@ -113,7 +113,6 @@ public static class APIWrapper
         }
         catch (Exception e)
         {
-            Crashes.TrackError(e);
             s_logger.Error($"주어진 프로세스 ID({processId})에 해당하는 프로세스를 찾을 수 없습니다: {e}");
             return null;
         }
