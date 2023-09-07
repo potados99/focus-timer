@@ -35,7 +35,6 @@ $publishDir = "bin/publish"
     /target:publish `
     /p:PublishProfile=ClickOnceProfile `
     /p:ApplicationVersion=$version `
-    /p:Configuration=Release `
     /p:PublishDir=$publishDir `
     /p:PublishUrl=$publishDir
 ```

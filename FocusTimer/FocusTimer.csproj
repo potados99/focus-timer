@@ -1,123 +1,126 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <PlatformTarget>x64</PlatformTarget>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
-	<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <Deterministic>false</Deterministic>
-   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\DSEG7Classic-Bold.ttf" />
-    <None Remove="Resources\DSEG7Classic-Regular.ttf" />
-    <None Remove="Resources\log4net.config" />
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <UseWPF>true</UseWPF>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <PlatformTarget>x64</PlatformTarget>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <PublishSingleFile>false</PublishSingleFile>
+        <SelfContained>false</SelfContained>
+        <Nullable>enable</Nullable>
+        <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <Deterministic>false</Deterministic>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="Resources\log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resources\DSEG7Classic-Bold.ttf"/>
+        <None Remove="Resources\DSEG7Classic-Regular.ttf"/>
+        <None Remove="Resources\log4net.config"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CalcBinding" Version="2.5.2" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
-    <PackageReference Include="log4net" Version="2.0.15" />
-    <PackageReference Include="Meziantou.Framework.Win32.CredentialManager" Version="1.4.2" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="Resources\log4net.config">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CalcBinding" Version="2.5.2"/>
+        <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0"/>
+        <PackageReference Include="log4net" Version="2.0.15"/>
+        <PackageReference Include="Meziantou.Framework.Win32.CredentialManager" Version="1.4.2"/>
+        <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0"/>
+        <PackageReference Include="System.Drawing.Common" Version="7.0.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\DSEG7Classic-Bold.ttf" />
-    <Resource Include="Resources\DSEG7Classic-Regular.ttf" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Update="Features\Timer\Slot\TimerSlotControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Features\Timer\Border\BorderWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Features\Charting\Metric\PrimaryMetricView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\DSEG7Classic-Bold.ttf"/>
+        <Resource Include="Resources\DSEG7Classic-Regular.ttf"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+        <Compile Update="Features\Timer\Slot\TimerSlotControl.xaml.cs">
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Features\Timer\Border\BorderWindow.xaml.cs">
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Features\Charting\Metric\PrimaryMetricView.xaml.cs">
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ApplicationDefinition Remove="App.xaml" />
-    <Page Include="App.xaml" />
-    <Page Update="Features\Timer\Slot\TimerSlotControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <XamlRuntime>Wpf</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Features\Timer\Border\BorderWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <XamlRuntime>Wpf</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Features\Charting\Usages\AppUsageView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <XamlRuntime>Wpf</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Features\Charting\Metric\PrimaryMetricView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <XamlRuntime>Wpf</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Features\Charting\Usages\Detail\UsageByTimeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <XamlRuntime>Wpf</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
 
-  <Target Name="SetAssemblyVersion" BeforeTargets="BeforeCompile">
-    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-      <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion" />
-    </FormatVersion>
-    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-      <Output PropertyName="InformationalVersion" TaskParameter="OutputVersion" />
-    </FormatVersion>
-    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-      <Output PropertyName="FileVersion" TaskParameter="OutputVersion" />
-    </FormatVersion>
-  </Target>
+    <ItemGroup>
+        <ApplicationDefinition Remove="App.xaml"/>
+        <Page Include="App.xaml"/>
+        <Page Update="Features\Timer\Slot\TimerSlotControl.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Features\Timer\Border\BorderWindow.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Features\Charting\Usages\AppUsageView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Features\Charting\Metric\PrimaryMetricView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Features\Charting\Usages\Detail\UsageByTimeView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
 
-  <Target Name="AutoSetMinimumRequiredVersion" BeforeTargets="GenerateDeploymentManifest">
-    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-      <Output PropertyName="MinimumRequiredVersion" TaskParameter="OutputVersion" />
-    </FormatVersion>
-    <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-      <Output PropertyName="_DeploymentBuiltMinimumRequiredVersion" TaskParameter="OutputVersion" />
-    </FormatVersion>
-  </Target>
-  
+    <Target Name="SetAssemblyVersion" BeforeTargets="BeforeCompile">
+        <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+            <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion"/>
+        </FormatVersion>
+        <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+            <Output PropertyName="InformationalVersion" TaskParameter="OutputVersion"/>
+        </FormatVersion>
+        <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+            <Output PropertyName="FileVersion" TaskParameter="OutputVersion"/>
+        </FormatVersion>
+    </Target>
+
+    <Target Name="AutoSetMinimumRequiredVersion" BeforeTargets="GenerateDeploymentManifest">
+        <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+            <Output PropertyName="MinimumRequiredVersion" TaskParameter="OutputVersion"/>
+        </FormatVersion>
+        <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
+            <Output PropertyName="_DeploymentBuiltMinimumRequiredVersion" TaskParameter="OutputVersion"/>
+        </FormatVersion>
+    </Target>
+
 </Project>
