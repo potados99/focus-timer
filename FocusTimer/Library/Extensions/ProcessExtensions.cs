@@ -23,40 +23,80 @@ namespace FocusTimer.Library.Extensions;
 
 public static class ProcessExtensions
 {
-    private static readonly Dictionary<int, string> s_cache = new();
+    private static readonly Dictionary<int, string?> s_cache = new();
 
     public static string? ExecutablePath(this Process process)
     {
+        var logger = process.GetLogger();
+
         if (process.Id == 0)
         {
-            process.GetLogger().Warn("프로세스의 실행 파일 경로를 가져오려 하는데, 주어진 프로세스의 ID가 0입니다. 따라서 실행 파일의 경로를 가져올 수 없기에 null을 반환합니다.");
+            logger.Warn("프로세스의 실행 파일 경로를 가져오려 하는데, 주어진 프로세스의 ID가 0입니다. 따라서 실행 파일의 경로를 가져올 수 없기에 null을 반환합니다.");
+            return null;
+        }
+
+        if (process.HasExited)
+        {
+            logger.Warn("프로세스의 실행 파일 경로를 가져오려 하는데, 주어진 프로세스는 이미 종료되었기에 null을 반환합니다.");
             return null;
         }
         
         if (!s_cache.ContainsKey(process.Id))
         {
-            TryGetProcessFilename(process);
+            s_cache[process.Id] = SafeGetProcessFilename(process);
         }
 
         return s_cache[process.Id];
     }
 
-    private static void TryGetProcessFilename(Process process)
+    /// <summary>
+    /// 프로세스의 실행파일 이름을 안전하게 가져옵니다.
+    /// 못 가져오면 null입니다.
+    /// </summary>
+    /// <param name="process"></param>
+    /// <returns></returns>
+    private static string? SafeGetProcessFilename(Process process)
     {
         var logger = process.GetLogger();
 
         try
         {
-            s_cache[process.Id] = APIWrapper.GetProcessFilename(process);
-            logger.Info($"조사해보니, 이 프로세스({process.Id}, {process.ProcessName})의 실행 파일 경로는 [{s_cache[process.Id]}] 입니다.");
+            var filename = APIWrapper.GetProcessFilename(process);
+            logger.Info($"조사해보니, 이 프로세스({process.Id}, {process.SafeGetProcessName() ?? "???"})의 실행 파일 경로는 [{filename}] 입니다.");
+            
+            return filename;
         }
         catch (Exception e)
         {
             Crashes.TrackError(e);
-            logger.Error($"프로세스({process.Id}, {process.ProcessName})의 실행 파일 정보를 가져오지 못 하였습니다.");
+            logger.Error($"프로세스({process.Id}, {process.SafeGetProcessName() ?? "???"})의 실행 파일 정보를 가져오지 못 하였습니다.");
             logger.Error(e);
 
-            s_cache[process.Id] = "";
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 프로세스 이름을 안전하게 가져옵니다.
+    /// 못 가져오면 null입니다.
+    /// </summary>
+    /// <param name="process"></param>
+    /// <returns></returns>
+    public static string? SafeGetProcessName(this Process process)
+    {
+        var logger = process.GetLogger();
+
+        try
+        {
+            return process.ProcessName;
+        }
+        catch (Exception e)
+        {
+            Crashes.TrackError(e);
+            logger.Error($"프로세스({process.Id})의 이름을 가져오지 못 하였습니다.");
+            logger.Error(e);
+            
+            return null;
         }
     }
 }

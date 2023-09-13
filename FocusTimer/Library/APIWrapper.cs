@@ -140,8 +140,12 @@ public static class APIWrapper
         // 따라서 PROCESS_QUERY_LIMITED_INFORMATION access를 사용합니다.
         var processPtr = API.OpenProcess(API.ProcessAccessFlags.QueryLimitedInformation, false, p.Id);
         var gotName = API.QueryFullProcessImageName(processPtr, 0, builder, ref capacity);
-        
-        return gotName ? builder.ToString() : string.Empty;
+        if (!gotName)
+        {
+            throw new Exception($"프로세스({p.Id}, {p.SafeGetProcessName()})의 이미지 이름을 가져오지 못 하였습니다.");
+        }
+
+        return builder.ToString();
     }
 
     #endregion
