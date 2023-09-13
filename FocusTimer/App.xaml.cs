@@ -18,6 +18,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using FocusTimer.Data.DataContext;
+using FocusTimer.Library;
 using FocusTimer.Library.Extensions;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -40,12 +42,19 @@ public partial class App
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        Logger.Info("앱을 시작합니다.");
+        
+        Modules.Initialize();
+        Logger.Info("의존성 주입기를 초기화하였습니다.");
 
+        Modules.Get<FocusTimerDatabaseContext>().Initialize();
+        Logger.Info("DB Context를 초기화하였습니다.");
+        
 #if !DEBUG
         HandleUnhandledExceptions();
 #endif
     }
-
+    
     private void HandleUnhandledExceptions()
     {
         AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
@@ -57,7 +66,7 @@ public partial class App
 
     private void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
     {
-        Exception e = (Exception) args.ExceptionObject;
+        var e = (Exception) args.ExceptionObject;
         Logger.Fatal("처리되지 않은 예외가 발생하여 런타임을 종료합니다.", e);
 
         // 이 곳에서 modal dialog로 시간을 오래 끌게 되면 아래 코드가 실행되지 않습니다.
@@ -66,7 +75,7 @@ public partial class App
             MessageBox.Show("미처 예상하지 못한 문제가 발생하여 프로그램을 종료하게 되었습니다. 프로그램을 다시 실행하면 이 문제에 대한 자세한 정보가 전송됩니다.",
                 "죄송합니다.")).Start();
 
-        bool didAppCrash = Crashes.HasCrashedInLastSessionAsync().GetAwaiter().GetResult();
+        var didAppCrash = Crashes.HasCrashedInLastSessionAsync().GetAwaiter().GetResult();
         if (didAppCrash)
         {
             Logger.Info("이전에 발생한 크래시가 있어, 프로그램 종료 전까지 기다립니다.");
@@ -91,7 +100,7 @@ public partial class App
             });
 
             tcs.Task.GetAwaiter().GetResult();
-            Application.Current.Shutdown();
+            Current.Shutdown();
         }
     }
 }

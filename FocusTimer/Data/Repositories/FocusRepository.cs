@@ -121,6 +121,6 @@ public class FocusRepository
     {
         this.GetLogger().Debug("데이터베이스에 변경 사항을 기록합니다.");
 
-        _context.Save();
+        _context.SaveChanges();
     }
 }

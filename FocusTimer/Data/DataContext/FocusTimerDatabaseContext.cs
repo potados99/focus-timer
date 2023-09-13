@@ -27,13 +27,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FocusTimer.Data.DataContext;
 
-public class FocusTimerDatabaseContext : DbContext
+public sealed class FocusTimerDatabaseContext : DbContext
 {
     public DbSet<Domain.Entities.App> Apps { get; set; }
     public DbSet<AppUsage> AppUsages { get; set; }
     public DbSet<TimerUsage> TimerUsages { get; set; }
     public DbSet<Slot> SlotStatuses { get; set; }
-
     public DbSet<ResetHistory> ResetHistories { get; set; }
     
     private string DbPath
@@ -52,36 +51,18 @@ public class FocusTimerDatabaseContext : DbContext
         }
     }
 
-    public FocusTimerDatabaseContext()
+    /// <summary>
+    /// 이 DB Context를 사용하려면 이 메소드를 시작 시점에 호출해주어야 합니다.
+    /// </summary>
+    public void Initialize()
     {
-        Initialize();
+        // 여기서 Migrate()을 호출해야 했습니다...
+        // EnsureCreated()는 마이그레이션 히스토리 테이블을 만들지 않습니다. 즉, 개발 및 테스트용입니다.
+        // DB가 이미 생성된 상태에서 Migrate()을 호출하면 지금 존재하는 스케마를 또 생성하려 하기 때문에 뻗습니다!
+        // 따라서 배포가 끝난 지금, 아래 호출을 Migrate()으로 변경할 수 없습니다... 마이그레이션 할 일이 없기를 비는 수밖에,,
+        Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder
         .UseSqlite($"Data Source={DbPath}");
-
-    private void Initialize()
-    {
-        if (File.Exists(DbPath))
-        {
-            try
-            {
-                TimerUsages.AsEnumerable().LastOrDefault();
-            }
-            catch (SqliteException e)
-            {
-                Crashes.TrackError(e);
-                e.GetLogger().Warn("DB에 질의할 때에 SqliteException이 발생하여 DB를 새로 생성합니다.");
-                e.GetLogger().Warn(e);
-                Database.EnsureDeleted();
-            }
-        }
-
-        Database.EnsureCreated();
-    }
-
-    public void Save()
-    {
-        SaveChanges();
-    }
 }

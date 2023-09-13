@@ -14,6 +14,7 @@
 // 라이센스 전문은 이 프로그램과 함께 제공되었을 것입니다. 만약 아니라면,
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
+using System;
 using FocusTimer.Data.DataContext;
 using FocusTimer.Data.Repositories;
 using FocusTimer.Domain.Services;
@@ -30,15 +31,17 @@ namespace FocusTimer.Library;
 /// </summary>
 public static class Modules
 {
-    private static readonly ServiceProvider s_provider =
-        ConfigureServices(new ServiceCollection()).BuildServiceProvider();
-
-    public static T Get<T>()
+    private static ServiceProvider? _provider;
+    
+    /// <summary>
+    /// 이 객체를 사용하려면 이 메소드를 시작 시점에 호출해주어야 합니다.
+    /// </summary>
+    public static void Initialize()
     {
-        return s_provider.GetService<T>()!;
+        _provider = ConfigureServices(new ServiceCollection()).BuildServiceProvider();
     }
 
-    public static IServiceCollection ConfigureServices(IServiceCollection services)
+    private static IServiceCollection ConfigureServices(IServiceCollection services)
     {
         // ViewModels
         services
@@ -63,11 +66,30 @@ public static class Modules
         // Others
         services
             .AddSingleton<ClockGenerator>()
-            .AddSingleton<FocusTimerDatabaseContext>()
+            .AddSingleton<FocusTimerDatabaseContext>() // DB Context를 singleton으로 두는 것은 일반적으로 좋지 않지만, 여기서는 스레드가 하나뿐이니 넘어갑니다~
             .AddSingleton<UserActivityMonitor>()
             .AddSingleton<ChartDataProcessingService>()
             .AddSingleton<WindowWatcher>();
 
         return services;
+    }
+    
+    /// <summary>
+    /// 주어진 타입의 인스턴스를 가져옵니다.
+    /// </summary>
+    /// <remarks>
+    /// <code>ServiceProvider.GetServices</code> 호출의 wrapper입니다.
+    /// </remarks>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static T Get<T>()
+    {
+        if (_provider == null)
+        {
+            throw new Exception("의존성 주입기가 초기화되지 않았습니다. 아직 앱이 시작되지 않은 것 같습니다.");
+        }
+        
+        return _provider.GetService<T>()!;
     }
 }
