@@ -27,20 +27,6 @@ public static class ProcessExtensions
 
     public static string? ExecutablePath(this Process process)
     {
-        var logger = process.GetLogger();
-
-        if (process.Id == 0)
-        {
-            logger.Warn("프로세스의 실행 파일 경로를 가져오려 하는데, 주어진 프로세스의 ID가 0입니다. 따라서 실행 파일의 경로를 가져올 수 없기에 null을 반환합니다.");
-            return null;
-        }
-
-        if (process.HasExited)
-        {
-            logger.Warn("프로세스의 실행 파일 경로를 가져오려 하는데, 주어진 프로세스는 이미 종료되었기에 null을 반환합니다.");
-            return null;
-        }
-        
         if (!s_cache.ContainsKey(process.Id))
         {
             s_cache[process.Id] = SafeGetProcessFilename(process);
@@ -58,6 +44,12 @@ public static class ProcessExtensions
     private static string? SafeGetProcessFilename(Process process)
     {
         var logger = process.GetLogger();
+
+        if (process.Id == 0)
+        {
+            logger.Warn("프로세스의 실행 파일 경로를 가져오려 하는데, 주어진 프로세스의 ID가 0입니다. 따라서 실행 파일의 경로를 가져올 수 없기에 null을 반환합니다.");
+            return null;
+        }
 
         try
         {
