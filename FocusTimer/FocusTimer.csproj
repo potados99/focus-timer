@@ -16,9 +16,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="Resources\DSEG7Classic-Bold.ttf"/>
-        <None Remove="Resources\DSEG7Classic-Regular.ttf"/>
-        <None Remove="Resources\log4net.config"/>
+        <None Remove="Resources\DSEG7Classic-Bold.ttf" />
+        <None Remove="Resources\DSEG7Classic-Regular.ttf" />
+        <None Remove="Resources\log4net.config" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,24 +28,25 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CalcBinding" Version="2.5.2"/>
-        <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0"/>
-        <PackageReference Include="log4net" Version="2.0.15"/>
-        <PackageReference Include="Meziantou.Framework.Win32.CredentialManager" Version="1.4.2"/>
-        <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2"/>
-        <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0"/>
-        <PackageReference Include="System.Drawing.Common" Version="7.0.0"/>
+        <PackageReference Include="CalcBinding" Version="2.5.2" />
+        <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+        <PackageReference Include="log4net" Version="2.0.15" />
+        <PackageReference Include="MaterialDesignThemes" Version="5.0.0-ci368" />
+        <PackageReference Include="Meziantou.Framework.Win32.CredentialManager" Version="1.4.2" />
+        <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2" />
+        <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj"/>
+        <ProjectReference Include="..\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Resources\DSEG7Classic-Bold.ttf"/>
-        <Resource Include="Resources\DSEG7Classic-Regular.ttf"/>
+        <Resource Include="Resources\DSEG7Classic-Bold.ttf" />
+        <Resource Include="Resources\DSEG7Classic-Regular.ttf" />
     </ItemGroup>
 
     <ItemGroup>
@@ -73,8 +74,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ApplicationDefinition Remove="App.xaml"/>
-        <Page Include="App.xaml"/>
+        <ApplicationDefinition Remove="App.xaml" />
+        <Page Include="App.xaml" />
         <Page Update="Features\Timer\Slot\TimerSlotControl.xaml">
             <Generator>MSBuild:Compile</Generator>
             <XamlRuntime>Wpf</XamlRuntime>
@@ -100,26 +101,36 @@
             <XamlRuntime>Wpf</XamlRuntime>
             <SubType>Designer</SubType>
         </Page>
+        <Page Update="Library\Control\CircularProgressBar\MaterialDesignTheme.ProgressBar.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Features\Splash\SplashWindow.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
     </ItemGroup>
 
     <Target Name="SetAssemblyVersion" BeforeTargets="BeforeCompile">
         <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-            <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion"/>
+            <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion" />
         </FormatVersion>
         <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-            <Output PropertyName="InformationalVersion" TaskParameter="OutputVersion"/>
+            <Output PropertyName="InformationalVersion" TaskParameter="OutputVersion" />
         </FormatVersion>
         <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-            <Output PropertyName="FileVersion" TaskParameter="OutputVersion"/>
+            <Output PropertyName="FileVersion" TaskParameter="OutputVersion" />
         </FormatVersion>
     </Target>
 
     <Target Name="AutoSetMinimumRequiredVersion" BeforeTargets="GenerateDeploymentManifest">
         <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-            <Output PropertyName="MinimumRequiredVersion" TaskParameter="OutputVersion"/>
+            <Output PropertyName="MinimumRequiredVersion" TaskParameter="OutputVersion" />
         </FormatVersion>
         <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
-            <Output PropertyName="_DeploymentBuiltMinimumRequiredVersion" TaskParameter="OutputVersion"/>
+            <Output PropertyName="_DeploymentBuiltMinimumRequiredVersion" TaskParameter="OutputVersion" />
         </FormatVersion>
     </Target>
 
