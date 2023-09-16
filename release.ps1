@@ -79,7 +79,7 @@ try
         /p:ApplicationVersion=$version `
         /p:PublishDir=$publishDir `
         /p:PublishUrl=$publishDir `
-        /p:DefineConstants="$Constants"
+        /p:DefineConstants="$Constants" `
         $msBuildVerbosityArg
 
     # 빌드 결과물의 크기를 측정합니다.
