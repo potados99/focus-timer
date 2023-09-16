@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FocusTimer.Library;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -157,7 +158,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
         if (_seriesVisualsMap.TryGetValue(point.Context.Series, out var visual))
         {
             if (_chart is null) return visual;
-            visual.TitleLabelVisual.Text = $"총 사용 시간";
+            visual.TitleLabelVisual.Text = Strings.Get("time_total_usage");
             visual.TitleLabelVisual.Invalidate(_chart);
             visual.ValueLabelVisual.Text = PointToValueString(point);
             visual.ValueLabelVisual.Invalidate(_chart);
@@ -169,7 +170,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
 
         var titleLabel = new LabelVisual
         {
-            Text = $"총 사용 시간",
+            Text = Strings.Get("time_total_usage"),
             Paint = FontPaint,
             TextSize = 12,
             Padding = new Padding(8, 0, 0, 0),
@@ -214,11 +215,11 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
 
         if (minutes >= 60)
         {
-            return dt.ToString("H시간 m분");
+            return dt.ToString($"H\\{Strings.Get("hour_short")} m\\{Strings.Get("minute_short")}");
         }
         else
         {
-            return dt.ToString("m분");
+            return dt.ToString($"m\\{Strings.Get("minute_short")}");
         }
     }
 

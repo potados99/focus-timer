@@ -123,6 +123,18 @@
   <data name="add_program" xml:space="preserve">
     <value>Add Program</value>
   </data>
+  <data name="avg_concentration" xml:space="preserve">
+    <value>Avg. Concentration</value>
+  </data>
+  <data name="avg_time_active" xml:space="preserve">
+    <value>Avg. Active Time</value>
+  </data>
+  <data name="avg_time_inactive" xml:space="preserve">
+    <value>Avg. Inactive Time</value>
+  </data>
+  <data name="avg_time_timer_running" xml:space="preserve">
+    <value>Avg. Timer Running</value>
+  </data>
   <data name="click_window" xml:space="preserve">
     <value>Waiting for window...</value>
   </data>
@@ -141,11 +153,23 @@
   <data name="hold_focus_lock_for" xml:space="preserve">
     <value>Hold focus lock for:</value>
   </data>
+  <data name="hour_short" xml:space="preserve">
+    <value>h</value>
+  </data>
+  <data name="last_n_days" xml:space="preserve">
+    <value>Last {0} days</value>
+  </data>
   <data name="minutes" xml:space="preserve">
     <value>minute(s)</value>
   </data>
   <data name="minutes_left" xml:space="preserve">
     <value>{0} minute(s) left.</value>
+  </data>
+  <data name="minute_short" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="non_registered_program" xml:space="preserve">
+    <value>None</value>
   </data>
   <data name="pause_timer_after" xml:space="preserve">
     <value>Pause timer after:</value>
@@ -162,11 +186,26 @@
   <data name="seconds" xml:space="preserve">
     <value>second(s)</value>
   </data>
+  <data name="second_short" xml:space="preserve">
+    <value>s</value>
+  </data>
   <data name="show_concentration" xml:space="preserve">
     <value>Show concentration status</value>
   </data>
+  <data name="starting" xml:space="preserve">
+    <value>Starting...</value>
+  </data>
   <data name="start_focus_lock_for" xml:space="preserve">
     <value>Start focus lock for {0} min(s)</value>
+  </data>
+  <data name="time_concentrated" xml:space="preserve">
+    <value>Concentrated</value>
+  </data>
+  <data name="time_timer_running" xml:space="preserve">
+    <value>Timer Running</value>
+  </data>
+  <data name="time_total_usage" xml:space="preserve">
+    <value>Total Amount of Usage</value>
   </data>
   <data name="version" xml:space="preserve">
     <value>Version</value>

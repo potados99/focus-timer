@@ -24,6 +24,7 @@ using FocusTimer.Features.Charting.LiveCharts;
 using FocusTimer.Features.Charting.Metric;
 using FocusTimer.Features.Charting.Usages;
 using FocusTimer.Features.Charting.Usages.Detail;
+using FocusTimer.Library;
 using FocusTimer.Library.Extensions;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -92,9 +93,9 @@ public class ChartDataProcessingService
         {
             new ColumnSeries<DataPoint>
             {
-                Name = "집중도",
+                Name = Strings.Get("concentration"),
                 Values = values.ToArray(),
-                TooltipLabelFormatter = (d) => $"집중도 {d.PrimaryValue}%",
+                TooltipLabelFormatter = (d) => $"{Strings.Get("concentration")} {d.PrimaryValue}%",
                 Fill = new SolidColorPaint(SKColors.Orange),
                 MaxBarWidth = 16,
                 Rx = 5,
@@ -175,7 +176,7 @@ public class ChartDataProcessingService
 
         series.Add(new StackedColumnSeries<DataPoint>
         {
-            Name = "미등록 프로그램",
+            Name = Strings.Get("non_registered_program"),
             Values = idle.Select(u => new DataPoint
             {
                 DateTime = u.Date,
@@ -201,13 +202,13 @@ public class ChartDataProcessingService
             {
                 new()
                 {
-                    Name = "일 평균 타이머 실행 시간",
+                    Name = Strings.Get("avg_time_timer_running"), // "일 평균 타이머 실행 시간",
                     Value = TickToMinutes((long) timerRunningUsages.GroupBy(u => u.StartedAt.Date)
                         .Average(g => g.Sum(u => u.Elapsed.Ticks)))
                 },
                 new()
                 {
-                    Name = "일 평균 집중도",
+                    Name = Strings.Get("avg_concentration"), // "일 평균 집중도",
                     Value = Percentage(
                         appRunningUsages.Where(u => u.ParentUsage.IsConcentrated).Sum(u => u.ActiveElapsed.Ticks),
                         timerRunningUsages.Sum(u => u.Elapsed.Ticks)
@@ -221,19 +222,19 @@ public class ChartDataProcessingService
             {
                 new()
                 {
-                    Name = "타이머 실행 시간",
+                    Name = Strings.Get("time_timer_running"), // "타이머 실행 시간",
                     Value = TickToMinutes(timerRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
                         .Sum(u => u.Elapsed.Ticks))
                 },
                 new()
                 {
-                    Name = "집중한 시간",
+                    Name = Strings.Get("time_concentrated"), // "집중한 시간",
                     Value = TickToMinutes(appRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
                         .Sum(u => u.ActiveElapsed.Ticks))
                 },
                 new()
                 {
-                    Name = "집중도",
+                    Name = Strings.Get("concentration"), // "집중도",
                     Value = Percentage(
                         appRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
                             .Where(u => u.ParentUsage.IsConcentrated).Sum(u => u.ActiveElapsed.Ticks),
@@ -250,43 +251,45 @@ public class ChartDataProcessingService
         if (selectedDate == DateTime.MinValue)
         {
             var appRunningUsages = GetAppRunningUsages();
-            
-            return appRunningUsages.GroupBy(u => u.ParentUsage.App.ExecutablePath).Select(thisAppGroup => new AppUsageItem
-            {
-                AppPath = thisAppGroup.Key,
-                UsageString = TickToMinutes(thisAppGroup.Sum(g => g.ActiveElapsed.Ticks)),
-                UsagesByTime = new UsageByTimeItem[]
+
+            return appRunningUsages.GroupBy(u => u.ParentUsage.App.ExecutablePath).Select(thisAppGroup =>
+                new AppUsageItem
                 {
-                    new()
+                    AppPath = thisAppGroup.Key,
+                    UsageString = TickToMinutes(thisAppGroup.Sum(g => g.ActiveElapsed.Ticks)),
+                    UsagesByTime = new UsageByTimeItem[]
                     {
-                        TimeString = "일 평균 사용 시간",
-                        UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
-                            .Average(g => g.Sum(u => u.ActiveElapsed.Ticks)))
-                    },
-                    new()
-                    {
-                        TimeString = "일 평균 대기 시간",
-                        UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
-                            .Average(g => g.Sum(u => u.Elapsed.Ticks - u.ActiveElapsed.Ticks)))
-                    },
-                }
-            });
+                        new()
+                        {
+                            TimeString = Strings.Get("avg_time_active"), // "일 평균 사용 시간",
+                            UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
+                                .Average(g => g.Sum(u => u.ActiveElapsed.Ticks)))
+                        },
+                        new()
+                        {
+                            TimeString = Strings.Get("avg_time_inactive"), // "일 평균 대기 시간",
+                            UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
+                                .Average(g => g.Sum(u => u.Elapsed.Ticks - u.ActiveElapsed.Ticks)))
+                        },
+                    }
+                });
         }
         else
         {
             var appRunningUsages = GetAppRunningUsages().Where(u => u.StartedAt.Date == selectedDate.Date);
-            
-            return appRunningUsages.GroupBy(u => u.ParentUsage.App.ExecutablePath).Select(thisAppGroup => new AppUsageItem
-            {
-                Date = thisAppGroup.First().StartedAt.Date,
-                AppPath = thisAppGroup.Key,
-                UsageString = TickToMinutes(thisAppGroup.Sum(au => au.ActiveElapsed.Ticks)),
-                UsagesByTime = thisAppGroup.Select(au => new UsageByTimeItem
+
+            return appRunningUsages.GroupBy(u => u.ParentUsage.App.ExecutablePath).Select(thisAppGroup =>
+                new AppUsageItem
                 {
-                    TimeString = $"{au.StartedAt:HH:mm} ~ {au.UpdatedAt:HH:mm}",
-                    UsageString = TickToMinutes(au.ActiveElapsed.Ticks)
-                }),
-            });
+                    Date = thisAppGroup.First().StartedAt.Date,
+                    AppPath = thisAppGroup.Key,
+                    UsageString = TickToMinutes(thisAppGroup.Sum(au => au.ActiveElapsed.Ticks)),
+                    UsagesByTime = thisAppGroup.Select(au => new UsageByTimeItem
+                    {
+                        TimeString = $"{au.StartedAt:HH:mm} ~ {au.UpdatedAt:HH:mm}",
+                        UsageString = TickToMinutes(au.ActiveElapsed.Ticks)
+                    }),
+                });
         }
     }
 
@@ -306,13 +309,8 @@ public class ChartDataProcessingService
     {
         var minutes = (int) Math.Ceiling(new TimeSpan(ticks).TotalMinutes);
 
-        if (minutes >= 60)
-        {
-            return $"{minutes / 60}시간 {minutes % 60}분";
-        }
-        else
-        {
-            return $"{minutes % 60}분";
-        }
+        return minutes >= 60
+            ? $"{minutes / 60}${Strings.Get("hour_short")} {minutes % 60}{Strings.Get("minute_short")}"
+            : $"{minutes % 60}{Strings.Get("minute_short")}";
     }
 }

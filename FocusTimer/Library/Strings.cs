@@ -34,7 +34,7 @@ public static class Strings
         //Thread.CurrentThread.CurrentUICulture = culture;
     }
 
-    public static string Get(string key)
+    public static string Get(string key) 
     {
         if (_rm == null)
         {

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FocusTimer.Features.Charting.Metric;
 using FocusTimer.Features.Charting.Usages;
+using FocusTimer.Library;
 
 namespace FocusTimer.Features.Charting;
 
@@ -41,7 +42,7 @@ public partial class ChartViewModel
         FontFamily = "맑은 고딕"
     };
 
-    public string SelectedDateString => _selectedDate == DateTime.MinValue ? "지난 21일" : _selectedDate.ToString("yyyy. MM. dd");
+    public string SelectedDateString => _selectedDate == DateTime.MinValue ? string.Format(Strings.Get("last_n_days"), 21) : _selectedDate.ToString("yyyy. MM. dd");
 
     public IEnumerable<PrimaryMetricItem> PrimaryMetrics => _processingService.GetPrimaryMetrics(_selectedDate);
 

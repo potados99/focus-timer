@@ -79,6 +79,42 @@ namespace FocusTimer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Avg. Concentration.
+        /// </summary>
+        public static string avg_concentration {
+            get {
+                return ResourceManager.GetString("avg_concentration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avg. Active Time.
+        /// </summary>
+        public static string avg_time_active {
+            get {
+                return ResourceManager.GetString("avg_time_active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avg. Inactive Time.
+        /// </summary>
+        public static string avg_time_inactive {
+            get {
+                return ResourceManager.GetString("avg_time_inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avg. Timer Running.
+        /// </summary>
+        public static string avg_time_timer_running {
+            get {
+                return ResourceManager.GetString("avg_time_timer_running", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Waiting for window....
         /// </summary>
         public static string click_window {
@@ -133,6 +169,33 @@ namespace FocusTimer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to h.
+        /// </summary>
+        public static string hour_short {
+            get {
+                return ResourceManager.GetString("hour_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last {0} days.
+        /// </summary>
+        public static string last_n_days {
+            get {
+                return ResourceManager.GetString("last_n_days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to m.
+        /// </summary>
+        public static string minute_short {
+            get {
+                return ResourceManager.GetString("minute_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to minute(s).
         /// </summary>
         public static string minutes {
@@ -147,6 +210,15 @@ namespace FocusTimer.Resources {
         public static string minutes_left {
             get {
                 return ResourceManager.GetString("minutes_left", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string non_registered_program {
+            get {
+                return ResourceManager.GetString("non_registered_program", resourceCulture);
             }
         }
         
@@ -187,6 +259,15 @@ namespace FocusTimer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to s.
+        /// </summary>
+        public static string second_short {
+            get {
+                return ResourceManager.GetString("second_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to second(s).
         /// </summary>
         public static string seconds {
@@ -210,6 +291,42 @@ namespace FocusTimer.Resources {
         public static string start_focus_lock_for {
             get {
                 return ResourceManager.GetString("start_focus_lock_for", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting....
+        /// </summary>
+        public static string starting {
+            get {
+                return ResourceManager.GetString("starting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Concentrated.
+        /// </summary>
+        public static string time_concentrated {
+            get {
+                return ResourceManager.GetString("time_concentrated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timer Running.
+        /// </summary>
+        public static string time_timer_running {
+            get {
+                return ResourceManager.GetString("time_timer_running", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Amount of Usage.
+        /// </summary>
+        public static string time_total_usage {
+            get {
+                return ResourceManager.GetString("time_total_usage", resourceCulture);
             }
         }
         

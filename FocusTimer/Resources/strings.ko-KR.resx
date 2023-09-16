@@ -123,6 +123,18 @@
   <data name="add_program" xml:space="preserve">
     <value>프로그램 등록</value>
   </data>
+  <data name="avg_concentration" xml:space="preserve">
+    <value>일 평균 집중도</value>
+  </data>
+  <data name="avg_time_active" xml:space="preserve">
+    <value>일 평균 사용 시간</value>
+  </data>
+  <data name="avg_time_inactive" xml:space="preserve">
+    <value>일 평균 대기 시간</value>
+  </data>
+  <data name="avg_time_timer_running" xml:space="preserve">
+    <value>일 평균 타이머 실행 시간</value>
+  </data>
   <data name="click_window" xml:space="preserve">
     <value>창을 클릭해주세요</value>
   </data>
@@ -141,11 +153,23 @@
   <data name="hold_focus_lock_for" xml:space="preserve">
     <value>화면 강제 잠금</value>
   </data>
+  <data name="hour_short" xml:space="preserve">
+    <value>시간</value>
+  </data>
+  <data name="last_n_days" xml:space="preserve">
+    <value>지난 {0}일</value>
+  </data>
   <data name="minutes" xml:space="preserve">
     <value>분</value>
   </data>
   <data name="minutes_left" xml:space="preserve">
     <value>{0}분 남았습니다.</value>
+  </data>
+  <data name="minute_short" xml:space="preserve">
+    <value>분</value>
+  </data>
+  <data name="non_registered_program" xml:space="preserve">
+    <value>미등록 프로그램</value>
   </data>
   <data name="pause_timer_after" xml:space="preserve">
     <value>동작이 없으면 타이머 정지</value>
@@ -162,11 +186,26 @@
   <data name="seconds" xml:space="preserve">
     <value>초</value>
   </data>
+  <data name="second_short" xml:space="preserve">
+    <value>초</value>
+  </data>
   <data name="show_concentration" xml:space="preserve">
     <value>집중도를 표시합니다.</value>
   </data>
+  <data name="starting" xml:space="preserve">
+    <value>Focus 실행 중...</value>
+  </data>
   <data name="start_focus_lock_for" xml:space="preserve">
     <value>{0}분간 강제 잠금</value>
+  </data>
+  <data name="time_concentrated" xml:space="preserve">
+    <value>집중한 시간</value>
+  </data>
+  <data name="time_timer_running" xml:space="preserve">
+    <value>타이머 실행 시간</value>
+  </data>
+  <data name="time_total_usage" xml:space="preserve">
+    <value>총 사용 시간</value>
   </data>
   <data name="version" xml:space="preserve">
     <value>버전</value>
