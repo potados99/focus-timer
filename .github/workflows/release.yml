@@ -5,7 +5,8 @@ on:
     tags: [v*]
 
 jobs:
-  release:
+  # ClickOnce로 직접 배포하기 위한 빌드입니다.
+  release-clickonce:
     runs-on: windows-latest
 
     steps:
@@ -20,4 +21,16 @@ jobs:
 
       - name: Run release script
         shell: pwsh
-        run: ./release.ps1
+        run: ./release.ps1 -ClickOnce
+        
+  # Steam에 올리기 위한 빌드입니다.
+  release-artifact:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run release script
+        shell: pwsh
+        run: ./release.ps1 -Artifact -Constants "STEAM"
