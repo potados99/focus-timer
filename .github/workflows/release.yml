@@ -21,7 +21,7 @@ jobs:
 
       - name: Run release script
         shell: pwsh
-        run: ./release.ps1 -ClickOnce
+        run: ./release.ps1 # -ClickOnce
         
   # Steam에 올리기 위한 빌드입니다.
   release-artifact:
