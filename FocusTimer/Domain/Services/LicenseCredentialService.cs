@@ -1,4 +1,4 @@
-﻿// LicenseService.cs
+﻿// LicenseCredentialService.cs
 // 이 파일은 FocusTimer의 일부입니다.
 // 
 // © 2023 Potados <song@potados.com>
@@ -21,7 +21,7 @@ using Meziantou.Framework.Win32;
 
 namespace FocusTimer.Domain.Services;
 
-public class LicenseService
+public class LicenseCredentialService : ILicenseService
 {
     public bool ValidateLicenseKey(string key)
     {

@@ -32,7 +32,7 @@ namespace FocusTimer.Library;
 public static class Modules
 {
     private static ServiceProvider? _provider;
-    
+
     /// <summary>
     /// 이 객체를 사용하려면 이 메소드를 시작 시점에 호출해주어야 합니다.
     /// </summary>
@@ -52,12 +52,16 @@ public static class Modules
         // Services
         services
             .AddSingleton<EventService>()
-            .AddSingleton<LicenseService>()
             .AddSingleton<MigrationService>()
             .AddSingleton<AppService>()
             .AddSingleton<AppUsageService>()
             .AddSingleton<TimerUsageService>()
-            .AddSingleton<SlotService>();
+            .AddSingleton<SlotService>()
+#if STEAM
+            .AddSingleton<ILicenseService, LicenseDummyService>(); // 스팀 배포용이다? 라이센스 체크 생략합니다.
+#else
+            .AddSingleton<ILicenseService, LicenseCredentialService>(); // 아니라면 CredentialManager 구현을 사용합니다.
+#endif
 
         // Repositories
         services
@@ -73,7 +77,7 @@ public static class Modules
 
         return services;
     }
-    
+
     /// <summary>
     /// 주어진 타입의 인스턴스를 가져옵니다.
     /// </summary>
@@ -89,7 +93,7 @@ public static class Modules
         {
             throw new Exception("의존성 주입기가 초기화되지 않았습니다. 아직 앱이 시작되지 않은 것 같습니다.");
         }
-        
+
         return _provider.GetService<T>()!;
     }
 }

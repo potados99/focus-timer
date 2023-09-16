@@ -2,14 +2,14 @@ using FocusTimer.Domain.Services;
 
 namespace FocusTimerTest.Services;
 
-public class LicenseServiceTest
+public class LicenseCredentialServiceTest
 {
-    private LicenseService _service = null!;
+    private LicenseCredentialService _service = null!;
     
     [SetUp]
     public void Setup()
     {
-        _service = new LicenseService();
+        _service = new LicenseCredentialService();
     }
 
     [Test]

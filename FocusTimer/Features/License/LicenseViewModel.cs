@@ -24,10 +24,10 @@ namespace FocusTimer.Features.License;
 
 public class LicenseViewModel : BaseViewModel
 {
-    private readonly LicenseService _licenseService;
+    private readonly ILicenseService _licenseService;
     private readonly MigrationService _migrationService;
 
-    public LicenseViewModel(LicenseService licenseService, MigrationService migrationService)
+    public LicenseViewModel(ILicenseService licenseService, MigrationService migrationService)
     {
         _licenseService = licenseService;
         _migrationService = migrationService;
