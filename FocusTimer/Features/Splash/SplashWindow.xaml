@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        Background="#FF222425"
+        Background="{x:Null}"
         AllowsTransparency="True"
         Topmost="True"
         ShowInTaskbar="False"
