@@ -4,6 +4,7 @@
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                 xmlns:slot="clr-namespace:FocusTimer.Features.Timer.Slot"
+                                xmlns:resources="clr-namespace:FocusTimer.Resources"
                                 d:DataContext="{d:DesignInstance Type=slot:TimerSlotViewModel}"
                                 mc:Ignorable="d"
                                 d:DesignHeight="40"
@@ -79,7 +80,7 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left" />
                 <Label Grid.Column="1"
-                       Content="프로그램 등록"
+                       Content="{x:Static resources:strings.add_program}"
                        Foreground="White"
                        FontSize="14"
                        Padding="0"

@@ -54,6 +54,9 @@ public partial class App
 
         Modules.Get<FocusTimerDatabaseContext>().Initialize();
         Logger.Info("DB Context를 초기화하였습니다.");
+        
+        Strings.Initialize();
+        Logger.Info("스트링 리소스를 초기화하였습니다.");
 
         new AppCenterCrashes().SetupExceptionHandler();
     }

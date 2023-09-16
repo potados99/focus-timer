@@ -15,6 +15,7 @@
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
 using System.Windows;
+using FocusTimer.Library;
 using FocusTimer.Library.Control.Base;
 
 namespace FocusTimer.Features.Timer.Slot;
@@ -33,5 +34,5 @@ public partial class TimerSlotViewModel : BaseViewModel
 
     public bool IsAppCountedOnConcentrationCalculation => CurrentAppItem is {IsCountedOnConcentrationCalculation: true};
 
-    public string WindowSelectPrompt { get; set; } = "창을 클릭해주세요";
+    public string WindowSelectPrompt { get; set; } = Strings.Get("click_window");
 }

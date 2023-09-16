@@ -54,7 +54,7 @@ public partial class MainViewModel
         IsChecked = false,
         Icon = new System.Windows.Controls.Image
             {Source = Application.Current.FindResource("ic_magnify") as DrawingImage},
-        Header = "집중도 표시 옵션  ",
+        Header = $"{Strings.Get("concentration_display_options")}  ",
     };
 
     private readonly BindableMenuItem _whichAppToIncludeMenuItem = new()
@@ -63,7 +63,7 @@ public partial class MainViewModel
         IsChecked = false,
         Icon = new System.Windows.Controls.Image
             {Source = Application.Current.FindResource("ic_calculator_variant_outline") as DrawingImage},
-        Header = "집중도 계산에 포함할 프로그램  ",
+        Header = $"{Strings.Get("programs_to_include_in_calculation")}  ",
     };
 
     private BindableMenuItem[] GenerateConcentrationSelectionMenu()
@@ -87,7 +87,7 @@ public partial class MainViewModel
         {
             IsCheckable = true,
             IsChecked = Settings.GetShowConcentration(),
-            Header = "집중도를 표시합니다"
+            Header = Strings.Get("show_concentration")
         };
 
         item.OnCheck += (isChecked) =>

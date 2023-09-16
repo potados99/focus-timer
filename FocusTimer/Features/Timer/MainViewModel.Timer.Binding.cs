@@ -60,11 +60,11 @@ public partial class MainViewModel
     {
         get
         {
-            _lockButtonToolTip.Content = $"{(int) Math.Ceiling(_focusLockTimer.TimeLeft.TotalMinutes)}분 남았습니다.";
+            _lockButtonToolTip.Content = string.Format(Strings.Get("minutes_left"), (int) Math.Ceiling(_focusLockTimer.TimeLeft.TotalMinutes));
 
             return IsFocusLockHold ? _lockButtonToolTip : null;
         }
     }
 
-    public string StartFocusLockItemLabel => $"{FocusLockHoldDuration}분간 강제 잠금";
+    public string StartFocusLockItemLabel => string.Format(Strings.Get("start_focus_lock_for"), FocusLockHoldDuration);
 }

@@ -64,11 +64,6 @@
         <Compile Update="Features\Charting\Metric\PrimaryMetricView.xaml.cs">
             <SubType>Code</SubType>
         </Compile>
-        <Compile Update="Resources\strings.Designer.cs">
-          <DesignTime>True</DesignTime>
-          <AutoGen>True</AutoGen>
-          <DependentUpon>strings.resx</DependentUpon>
-        </Compile>
         <Compile Update="Resources\strings.ko-KR.Designer.cs">
           <DesignTime>True</DesignTime>
           <AutoGen>True</AutoGen>
@@ -130,7 +125,7 @@
 
     <ItemGroup>
       <EmbeddedResource Update="Resources\strings.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
+        <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>strings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Update="Resources\strings.ko-KR.resx">
@@ -138,7 +133,7 @@
         <LastGenOutput>strings.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Update="Resources\strings.ko-KR.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
+        <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>strings.ko-KR.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>

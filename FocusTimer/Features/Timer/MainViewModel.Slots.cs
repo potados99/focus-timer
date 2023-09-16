@@ -17,6 +17,7 @@
 using Microsoft.AppCenter.Crashes;
 using System;
 using System.Linq;
+using System.Windows;
 using FocusTimer.Features.Timer.Slot;
 using FocusTimer.Library;
 using FocusTimer.Library.Extensions;
@@ -64,7 +65,7 @@ public partial class MainViewModel
         if (TimerSlots.Select(s => s.CurrentAppItem?.ProcessExecutablePath).Contains(executablePath))
         {
             this.GetLogger().Warn("앱 등록을 마치려는데, 이미 등록된 프로그램입니다. 따라서 아무 일도 하지 않고 중단합니다.");
-            UnableToRegisterApp("이미 등록된 프로그램이에요.");
+            UnableToRegisterApp(Strings.Get("program_already_added"));
             return;
         }
 
