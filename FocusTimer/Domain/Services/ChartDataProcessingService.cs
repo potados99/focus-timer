@@ -201,13 +201,13 @@ public class ChartDataProcessingService
             {
                 new()
                 {
-                    Name = "Avg. 타이머 가동",
+                    Name = "일 평균 타이머 실행 시간",
                     Value = TickToMinutes((long) timerRunningUsages.GroupBy(u => u.StartedAt.Date)
                         .Average(g => g.Sum(u => u.Elapsed.Ticks)))
                 },
                 new()
                 {
-                    Name = "Avg. 집중도",
+                    Name = "일 평균 집중도",
                     Value = Percentage(
                         appRunningUsages.Where(u => u.ParentUsage.IsConcentrated).Sum(u => u.ActiveElapsed.Ticks),
                         timerRunningUsages.Sum(u => u.Elapsed.Ticks)
@@ -221,13 +221,13 @@ public class ChartDataProcessingService
             {
                 new()
                 {
-                    Name = "타이머 가동",
+                    Name = "타이머 실행 시간",
                     Value = TickToMinutes(timerRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
                         .Sum(u => u.Elapsed.Ticks))
                 },
                 new()
                 {
-                    Name = "실제 사용",
+                    Name = "집중한 시간",
                     Value = TickToMinutes(appRunningUsages.Where(u => u.StartedAt.Date == selectedDate.Date)
                         .Sum(u => u.ActiveElapsed.Ticks))
                 },
@@ -259,13 +259,13 @@ public class ChartDataProcessingService
                 {
                     new()
                     {
-                        TimeString = "Avg. 사용 시간",
+                        TimeString = "일 평균 사용 시간",
                         UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
                             .Average(g => g.Sum(u => u.ActiveElapsed.Ticks)))
                     },
                     new()
                     {
-                        TimeString = "Avg. 비활성 시간",
+                        TimeString = "일 평균 대기 시간",
                         UsageString = TickToMinutes((long) thisAppGroup.GroupBy(u => u.StartedAt.Date)
                             .Average(g => g.Sum(u => u.Elapsed.Ticks - u.ActiveElapsed.Ticks)))
                     },
