@@ -156,6 +156,9 @@
   <data name="hour_short" xml:space="preserve">
     <value>h</value>
   </data>
+  <data name="language" xml:space="preserve">
+    <value>Language:</value>
+  </data>
   <data name="last_n_days" xml:space="preserve">
     <value>Last {0} days</value>
   </data>
@@ -180,8 +183,17 @@
   <data name="program_already_added" xml:space="preserve">
     <value>Program already added.</value>
   </data>
+  <data name="program_info" xml:space="preserve">
+    <value>Program information</value>
+  </data>
+  <data name="prompt_language_change_restart" xml:space="preserve">
+    <value>Changes will take effect on the next run. Restart now?</value>
+  </data>
   <data name="reset" xml:space="preserve">
     <value>Reset Timer</value>
+  </data>
+  <data name="restart" xml:space="preserve">
+    <value>Restart</value>
   </data>
   <data name="seconds" xml:space="preserve">
     <value>second(s)</value>

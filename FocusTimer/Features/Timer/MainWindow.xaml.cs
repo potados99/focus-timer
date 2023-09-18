@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using FocusTimer.Features.License;
 using FocusTimer.Features.Timer.Border;
+using FocusTimer.Library;
 using FocusTimer.Library.Control.Base;
 
 namespace FocusTimer.Features.Timer;
@@ -99,8 +100,8 @@ public partial class MainWindow
         var ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
         MessageBox.Show(
-            $"Focus Timer\n버전 {ver}",
-            "프로그램 정보",
+            $"Focus Timer\n{Strings.Get("version")} {ver}",
+            Strings.Get("program_info"),
             MessageBoxButton.OK,
             MessageBoxImage.Information
         );

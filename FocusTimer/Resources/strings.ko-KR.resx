@@ -151,10 +151,13 @@
     <value>종료</value>
   </data>
   <data name="hold_focus_lock_for" xml:space="preserve">
-    <value>화면 강제 잠금</value>
+    <value>화면 강제 잠금:</value>
   </data>
   <data name="hour_short" xml:space="preserve">
     <value>시간</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>언어:</value>
   </data>
   <data name="last_n_days" xml:space="preserve">
     <value>지난 {0}일</value>
@@ -172,7 +175,7 @@
     <value>미등록 프로그램</value>
   </data>
   <data name="pause_timer_after" xml:space="preserve">
-    <value>동작이 없으면 타이머 정지</value>
+    <value>동작이 없으면 타이머 정지:</value>
   </data>
   <data name="programs_to_include_in_calculation" xml:space="preserve">
     <value>집중도 계산에 포함할 프로그램</value>
@@ -180,8 +183,17 @@
   <data name="program_already_added" xml:space="preserve">
     <value>이미 등록된 프로그램이에요.</value>
   </data>
+  <data name="program_info" xml:space="preserve">
+    <value>프로그램 정보</value>
+  </data>
+  <data name="prompt_language_change_restart" xml:space="preserve">
+    <value>언어 변경은 프로그램을 다시 실행해야 적용됩니다. 지금 다시 시작하시겠습니까?</value>
+  </data>
   <data name="reset" xml:space="preserve">
     <value>타이머 리셋</value>
+  </data>
+  <data name="restart" xml:space="preserve">
+    <value>재시작</value>
   </data>
   <data name="seconds" xml:space="preserve">
     <value>초</value>

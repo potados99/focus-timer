@@ -143,6 +143,12 @@
       </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="System.Windows.Forms">
+        <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Windows.Forms\v4.0_4.0.0.0__b77a5c561934e089\System.Windows.Forms.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
     <Target Name="SetAssemblyVersion" BeforeTargets="BeforeCompile">
         <FormatVersion Version="$(ApplicationVersion)" Revision="$(ApplicationRevision)">
             <Output PropertyName="AssemblyVersion" TaskParameter="OutputVersion" />

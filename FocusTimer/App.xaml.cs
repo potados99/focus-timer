@@ -58,7 +58,7 @@ public partial class App
         Modules.Get<FocusTimerDatabaseContext>().Initialize();
         Logger.Info("DB Context를 초기화하였습니다.");
         
-        Culture.OverrideForStringResources();
+        Culture.Initialize();
         Logger.Info("언어를 설정하였습니다.");
 
         Strings.Initialize();

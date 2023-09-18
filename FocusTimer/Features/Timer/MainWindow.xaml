@@ -96,7 +96,29 @@
             </MenuItem>
 
             <Separator Style="{StaticResource ModernMenuSeparator}" />
-
+            
+            <MenuItem Style="{StaticResource ModernMenuItem}"
+                      x:Name="LanguageItem">
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource ic_web}" />
+                </MenuItem.Icon>
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="{x:Static resources:strings.language}"></TextBlock>
+                        <ComboBox x:Name="Language"
+                                  ItemsSource="{Binding SupportedCultures}"
+                                  SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
+                                  Margin="5,0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NativeName}"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </MenuItem.Header>
+                
+            </MenuItem>
             <MenuItem Style="{StaticResource ModernMenuItem}">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource ic_timer_lock_outline}" />
@@ -118,7 +140,6 @@
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
-
             <MenuItem Style="{StaticResource ModernMenuItem}">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource ic_mouse_move_vertical}" />
@@ -140,7 +161,7 @@
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
-
+            
             <Separator Style="{StaticResource ModernMenuSeparator}" />
 
             <MenuItem Style="{StaticResource ModernMenuItem}"

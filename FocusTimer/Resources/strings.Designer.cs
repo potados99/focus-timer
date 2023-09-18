@@ -178,6 +178,15 @@ namespace FocusTimer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language:.
+        /// </summary>
+        public static string language {
+            get {
+                return ResourceManager.GetString("language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last {0} days.
         /// </summary>
         public static string last_n_days {
@@ -241,6 +250,15 @@ namespace FocusTimer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Program information.
+        /// </summary>
+        public static string program_info {
+            get {
+                return ResourceManager.GetString("program_info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Take into account on calculation.
         /// </summary>
         public static string programs_to_include_in_calculation {
@@ -250,11 +268,29 @@ namespace FocusTimer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changes will take effect on the next run. Restart now?.
+        /// </summary>
+        public static string prompt_language_change_restart {
+            get {
+                return ResourceManager.GetString("prompt_language_change_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset Timer.
         /// </summary>
         public static string reset {
             get {
                 return ResourceManager.GetString("reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart.
+        /// </summary>
+        public static string restart {
+            get {
+                return ResourceManager.GetString("restart", resourceCulture);
             }
         }
         
