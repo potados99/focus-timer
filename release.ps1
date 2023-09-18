@@ -1,17 +1,29 @@
 # 주어진 프로젝트를 빌드하여 배포하는 스크립트입니다.
+# 
 # 두 가지 배포를 지원합니다: ClickOnce와 Artifact
 # 전자는 ClickOnce 배포용 GitHub 저장소에 빌드 결과를 업로드합니다.
 # 후자는 tag와 함께 등록된 release에 빌드 결과를 업로드합니다.
 #
-# 이 스크립트는 아래 링크의 것을 참고하여 만들어졌습니다.
-# From https://janjones.me/posts/clickonce-installer-build-publish-github/.
+# 태그 v2.0.0에 맞추어 빌드만 하고 싶다?
+# > ./release.ps1 -Tag "v2.0.0"
+#
+# 태그 v2.0.0에 맞추어 빌드하고 ClickOnce 배포하고 싶다?
+# > ./release.ps1 -Tag "v2.0.0" -ClickOnce
+# 단, 이 때 ClickOnce 배포용 GitHub 저장소에 쓰기 권한을 가지도록 git이 설정되어 있어야 합니다.
+#
+# 태그 v2.0.0에 맞추고 전처리기 상수에 "HELLO"를 넣어 빌드한 다음 release에 아티팩트로 빌드 결과물을 달고 싶다?
+# > ./release.ps1 -Tag "v2.0.0" -Artifact -Constants "HELLO"
+# 단, 이 때 GH_TOKEN 환경변수로 해당 저장소에 권한이 있는 GITHUB_TOKEN을 제공해 주어야 합니다.
+#
+# 참고: 이 스크립트는 아래 링크의 것을 참고하여 만들어졌습니다.
+# https://janjones.me/posts/clickonce-installer-build-publish-github/.
 
     [CmdletBinding(PositionalBinding = $false)]
 param (
-    [string]$Tag,
-    [string]$Constants,
-    [switch]$ClickOnce,
-    [switch]$Artifact
+    [string]$Tag, # 버전 정보를 뽑아올 때, 릴리즈를 찾을 때에 쓰입니다. 없으면 git describe --tags 명령으로 꺼내옵니다.
+    [string]$Constants, # 빌드 명령에 넘길 전처리기 상수입니다.
+    [switch]$ClickOnce, # ClickOnce 배포 여부입니다.
+    [switch]$Artifact # Release에 빌드 결과물을 올릴지 여부입니다.
 )
 
 $appName = "FocusTimer" # 앱 이름입니다. 아래에서 ClickOnce 배포 디렉토리의 이름으로 사용됩니다.
@@ -124,13 +136,12 @@ if ($ClickOnce)
         Copy-Item -Path "../../$outDir/Application Files", "../../$outDir/$appName.application" `
         -Destination . -Recurse
 
-        # 스테이지 & 커밋합니다.
+        # 스테이지 & 커밋 & 푸시합니다.
         Write-Output "Staging..."
         git add -A
         Write-Output "Committing..."
         git commit -m "chore(release): $appName v$version"
-
-        # 올립니다.
+        Write-Output "Pushing..."
         git push
     }
     finally
@@ -144,8 +155,10 @@ if ($Artifact)
     $artifactName = "build_$tag.zip"
     
     # 빌드 결과물을 압축합니다.
+    Write-Output "Compressing build artifacts..."
     Compress-Archive "$projDir/bin/Release/net6.0-windows/win-x64/*" $artifactName
     
     # 현재 태그에 딸린 릴리즈에 artifact를 올립니다.
+    Write-Output "Uploading build artifacts..."
     gh release upload $tag $artifactName
 }
