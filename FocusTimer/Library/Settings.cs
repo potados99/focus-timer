@@ -21,6 +21,16 @@ namespace FocusTimer.Library;
 /// </summary>
 public static class Settings
 {
+    public static void UpgradeIfNeeded()
+    {
+        if (Properties.Settings.Default.UpgradeRequired)
+        {
+            Properties.Settings.Default.Upgrade();
+            Properties.Settings.Default.UpgradeRequired = false;
+            Properties.Settings.Default.Save();
+        }
+    }
+
     public static int GetFocusLockHoldDuration()
     {
         var got = Properties.Settings.Default.FocusLockHoldDuration;
@@ -59,6 +69,18 @@ public static class Settings
     public static void SetShowConcentration(bool show)
     {
         Properties.Settings.Default.ShowConcentration = show;
+
+        Properties.Settings.Default.Save();
+    }
+
+    public static string GetCultureOverride()
+    {
+        return Properties.Settings.Default.CultureOverride;
+    }
+
+    public static void SetCultureOverride(string culture)
+    {
+        Properties.Settings.Default.CultureOverride = culture;
 
         Properties.Settings.Default.Save();
     }

@@ -48,13 +48,19 @@ public partial class App
     {
         base.OnStartup(e);
         Logger.Info("앱을 시작합니다.");
-
+        
+        Settings.UpgradeIfNeeded();
+        Logger.Info("설정을 이전하였습니다.");
+        
         Modules.Initialize();
         Logger.Info("의존성 주입기를 초기화하였습니다.");
 
         Modules.Get<FocusTimerDatabaseContext>().Initialize();
         Logger.Info("DB Context를 초기화하였습니다.");
         
+        Culture.OverrideForStringResources();
+        Logger.Info("언어를 설정하였습니다.");
+
         Strings.Initialize();
         Logger.Info("스트링 리소스를 초기화하였습니다.");
 

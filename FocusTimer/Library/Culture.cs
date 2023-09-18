@@ -1,4 +1,4 @@
-﻿// Strings.cs
+﻿// Culture.cs
 // 이 파일은 FocusTimer의 일부입니다.
 // 
 // © 2023 Potados <song@potados.com>
@@ -15,34 +15,34 @@
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
 using System;
-using System.Globalization;
-using System.Resources;
-using System.Threading;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Library;
 
-public static class Strings
+public static class Culture
 {
-    private static ResourceManager? _rm;
-
-    public static void Initialize()
+    public static void OverrideForStringResources()
     {
-        _rm = new ResourceManager("FocusTimer.Resources.strings", typeof(Resources.strings).Assembly);
+        var storedCultureOverride = Settings.GetCultureOverride();
+        var nothingOverriden = string.IsNullOrEmpty(storedCultureOverride);
+        if (nothingOverriden)
+        {
+            return;
+        }
+        
+        OverrideForStringResources(storedCultureOverride);
     }
-
-    public static string Get(string key) 
+    
+    private static void OverrideForStringResources(string name)
     {
-        if (_rm == null)
+        try
         {
-            throw new Exception("리소스 매니저가 없습니다. Initialize()를 호출했는지 확인해주세요.");
+            Resources.strings.Culture = System.Globalization.CultureInfo.CreateSpecificCulture(name);
         }
-
-        var got = _rm.GetString(key);
-        if (got == null)
+        catch (Exception e)
         {
-            throw new Exception($"주어진 key({key})에 해당하는 리소스가 없습니다.");
+            e.GetLogger().Error($"주어진 이름의 Culture로 override하지 못하였습니다. 아마 [{name}]이라는 이름의 Culture가 없나봅니다.", e);
+            // ignored
         }
-
-        return got;
     }
 }
