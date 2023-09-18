@@ -14,10 +14,8 @@
 // 라이센스 전문은 이 프로그램과 함께 제공되었을 것입니다. 만약 아니라면,
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
-using Microsoft.AppCenter.Crashes;
 using System;
 using System.Linq;
-using System.Windows;
 using FocusTimer.Features.Timer.Slot;
 using FocusTimer.Library;
 using FocusTimer.Library.Extensions;

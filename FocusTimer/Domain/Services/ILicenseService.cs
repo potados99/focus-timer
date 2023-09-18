@@ -14,11 +14,6 @@
 // 라이센스 전문은 이 프로그램과 함께 제공되었을 것입니다. 만약 아니라면,
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
-using System;
-using System.Globalization;
-using System.Linq;
-using Meziantou.Framework.Win32;
-
 namespace FocusTimer.Domain.Services;
 
 public interface ILicenseService

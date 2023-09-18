@@ -21,7 +21,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using FocusTimer.Library.Extensions;
-using Microsoft.AppCenter.Crashes;
 
 namespace FocusTimer.Library;
 

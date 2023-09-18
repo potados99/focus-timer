@@ -16,11 +16,7 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using FocusTimer.Domain.Entities;
-using FocusTimer.Library.Extensions;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

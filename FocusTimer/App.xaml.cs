@@ -15,18 +15,12 @@
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using FocusTimer.Data.DataContext;
 using FocusTimer.Features.Splash;
 using FocusTimer.Library;
 using FocusTimer.Library.Extensions;
 using FocusTimer.Library.Utility;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 
 namespace FocusTimer;
 
