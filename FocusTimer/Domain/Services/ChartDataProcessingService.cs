@@ -310,7 +310,7 @@ public class ChartDataProcessingService
         var minutes = (int) Math.Ceiling(new TimeSpan(ticks).TotalMinutes);
 
         return minutes >= 60
-            ? $"{minutes / 60}${Strings.Get("hour_short")} {minutes % 60}{Strings.Get("minute_short")}"
+            ? $"{minutes / 60}{Strings.Get("hour_short")} {minutes % 60}{Strings.Get("minute_short")}"
             : $"{minutes % 60}{Strings.Get("minute_short")}";
     }
 }
