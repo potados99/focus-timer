@@ -56,6 +56,20 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
     }
 
     public Domain.Entities.App App { get; }
+
+    public void ForceStartNewUsage()
+    {
+        this.GetLogger().Debug("강제로 새로운 AppUsage를 만들어줍니다.");
+
+        Usage = _appUsageService.CreateNewUsage(App);
+        Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
+        Usage.OpenNewRunningUsage();
+        Usage.RunningUsage.OpenNewActiveUsage(); // 기존의 것을 또 건드리는 일을 막기 위해 일단 무지성으로 새로 만들어줍니다.
+        
+        IsCountedOnConcentrationCalculation = Usage.IsConcentrated;
+        
+        UpdateUsage();
+    }
     
     private void RegisterEvents()
     {

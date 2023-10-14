@@ -76,6 +76,7 @@ public partial class TimerSlotViewModel
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 등록된 앱을 제거합니다.");
 
+        CurrentAppItem?.ForceStartNewUsage(); // 새 AppUsage를 시작합니다. 이렇게 하면 앱을 다시 불러왔을 때에 기록이 0인 상태로 시작하니, 리셋의 효과가 있습니다.
         CurrentAppItem?.Dispose();
         CurrentAppItem = null;
 
