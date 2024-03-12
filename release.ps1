@@ -36,18 +36,11 @@ $ErrorActionPreference = "Stop"
 Write-Output "Working directory: $pwd"
 Write-Output "Constants: $Constants"
 Write-Output "ClickOnce: $ClickOnce"
-Write-Output "Artifact: $Artifact"
-
-# MSBuild의 경로를 찾습니다.
-$msBuildPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
-    -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe `
-    -prerelease | select-object -first 1
-Write-Output "MSBuild: $( (Get-Command $msBuildPath).Path )"
 
 # Tag 정보를 가져옵니다.
 # 파라미터로 주어진 것을 먼저 사용하고, 없으면 git에서 가져옵니다.
 $tag = $Tag
-if ([string]::IsNullOrEmpty($tag))
+if ( [string]::IsNullOrEmpty($tag))
 {
     $tag = $( git describe --tags ) # v2.0.0-beta1
 }
@@ -58,107 +51,122 @@ $splitted = $tag.Split('-')
 $version = $splitted[0].TrimStart('v')
 $splitted = @("") + ($splitted | Select-Object -Skip 1) # replace first one with empty string.
 $preReleaseNum = $splitted[$splitted.Length - 1] -replace "[^0-9]", ''
-if ([string]::IsNullOrEmpty($preReleaseNum))
+if ( [string]::IsNullOrEmpty($preReleaseNum))
 {
     $preReleaseNum = "0"
 }
 $version = "$version.$preReleaseNum" # 2.0.0.1
 Write-Output "Version: $version"
 
-# 빌드하기 전에 output 디렉토리를 비웁니다.
+# 프로젝트 내에서 빌드 결과물을 저장할 디렉토리를 정합니다.
 $publishDir = "bin/publish"
+
+# 솔루션 내에서 빌드 결과물이 저장될 디렉토리를 정합니다.
+# $publishDir는 프로젝트 폴더 내부에 있으므로, 프로젝트 폴더 경로를 더해줍니다.
 $outDir = "$projDir/$publishDir"
+
+# 빌드하기 전에 output 디렉토리를 비웁니다.
 if (Test-Path $outDir)
 {
     Remove-Item -Path $outDir -Recurse
 }
 
-# 빌드합니다.
-Push-Location $projDir
-try
-{
-    Write-Output "Restoring:"
-    dotnet restore -r win-x64
-    Write-Output "Publishing:"
-    $msBuildVerbosityArg = "/v:m"
-    if ($env:CI)
-    {
-        $msBuildVerbosityArg = ""
-    }
-    & $msBuildPath /target:publish `
-        /p:PublishProfile=ClickOnceProfile `
-        /p:Configuration=Release `
-        /p:ApplicationVersion=$version `
-        /p:PublishDir=$publishDir `
-        /p:PublishUrl=$publishDir `
-        /p:DefineConstants="$Constants" `
-        $msBuildVerbosityArg
-
-    # 빌드 결과물의 크기를 측정합니다.
-    $publishSize = (Get-ChildItem -Path "$publishDir/Application Files" -Recurse |
-            Measure-Object -Property Length -Sum).Sum / 1Mb
-    Write-Output ("Published size: {0:N2} MB" -f $publishSize)
-}
-finally
-{
-    Pop-Location
-}
-
+# ClickOnce 배포를 한다?
+# 1. ClickOnce 배포용 프로필을 사용하여 publish합니다.
+# 2. 그렇게 publish된 결과를 배포용 저장소에 업로드합니다.
 if ($ClickOnce)
 {
+    # ClickOnce 배포용 프로필을 사용하여 publish합니다.
+    Write-Output "Publishing ClickOnce..."
+    dotnet publish `
+        --configuration Release `
+        --property:PublishProfile=ClickOnceProfile `
+        --property:ApplicationVersion=$version `
+        --property:PublishDir=$publishDir `
+        --property:PublishUrl=$publishDir `
+        --property:DefineConstants="$Constants"
+    
+    Write-Output "Setting up distribution repository for ClickOnce..."
     # ClickOnce 배포용 저장소를 클론합니다.
     # 이전 커밋 기록 없이 현재 것만 가져옵니다.
     git clone $distRepo --depth 1 "distribution"
 
-    # 현재 프로젝트 디렉토리에 들어갑니다.
-    Push-Location "distribution/$appName"
+    # 배포용 저장소 폴더에 들어갑니다.
+    Push-Location "distribution"
+    
+    # 배포용 저장소의 이 앱 폴더에 들어갑니다.
+    Push-Location $appName
 
     # CRLF만 사용하도록 바꿉니다.
     # Git의 line ending 자동 변환으로 인한 해시값 변경을 방지합니다.
     git config core.eol native
     git config core.autocrlf false
 
-    try
+    # 이전 버전을 지웁니다. 싹
+    Write-Output "Removing previous deployed versions..."
+    if (Test-Path "Application Files")
     {
-        # 이전 버전을 지웁니다. 싹
-        Write-Output "Removing previous files..."
-        if (Test-Path "Application Files")
-        {
-            Remove-Item -Path "Application Files" -Recurse
-        }
-        if (Test-Path "$appName.application")
-        {
-            Remove-Item -Path "$appName.application"
-        }
+        Remove-Item -Path "Application Files" -Recurse
+    }
+    if (Test-Path "$appName.application")
+    {
+        Remove-Item -Path "$appName.application"
+    }
 
-        # 새 빌드를 복사합니다.
-        Write-Output "Copying new files..."
-        Copy-Item -Path "../../$outDir/Application Files", "../../$outDir/$appName.application" `
+    # 새 빌드를 복사합니다.
+    Write-Output "Copying new files..."
+    Copy-Item -Path "../../$outDir/Application Files", "../../$outDir/$appName.application" `
         -Destination . -Recurse
 
-        # 스테이지 & 커밋 & 푸시합니다.
-        Write-Output "Staging..."
-        git add -A
-        Write-Output "Committing..."
-        git commit -m "chore(release): $appName v$version"
-        Write-Output "Pushing..."
-        git push
-    }
-    finally
-    {
-        Pop-Location
-    }
+    # 스테이지 & 커밋 & 푸시합니다.
+    Write-Output "Staging..."
+    git add -A
+    Write-Output "Committing..."
+    git commit -m "chore(release): $appName v$version"
+    Write-Output "Pushing..."
+    git push
+
+    # 배포용 저장소의 이 앱 폴더에서 나갑니다.
+    Pop-Location
+    
+    # 배포용 저장소 폴더에서 나갑니다.
+    Pop-Location
 }
 
+# Release에 빌드 결과물을 올린다?
+# 1. 로컬에 publish합니다.
+# 2. 그렇게 publish된 결과물을 릴리즈에 업로드합니다.
 if ($Artifact)
 {
-    $artifactName = "build_$tag.zip"
+    # publish 합니다.
+    Write-Output "Publishing to local..."
+    dotnet publish `
+        --configuration Release `
+        --property:ApplicationVersion=$version `
+        --property:PublishDir=$publishDir `
+        --property:PublishUrl=$publishDir `
+        --property:DefineConstants="$Constants"
+
+    # 우리가 빼올 exe 파일의 이름입니다.
+    $productExeName = "$appName.exe"
+
+    # artifact의 이름을 정합니다.
+    if ($Constants -ne "")
+    {
+        # 전처리기 상수가 있으면, 그것을 포함한 이름으로 설정합니다.
+        $artifactName = "$appName`_$tag`_$Constants.exe"
+    }
+    else
+    {
+        # 없으면 그냥 태그 이름으로 설정합니다.
+        $artifactName = "$appName`_$tag.exe"
+    }
     
-    # 빌드 결과물을 압축합니다.
-    Write-Output "Compressing build artifacts..."
-    Compress-Archive "$projDir/bin/Release/net6.0-windows/win-x64/*" $artifactName
-    
+    # 빌드 결과물인 exe 파일을 복사합니다.
+    Write-Output "Extracting single executable: $productExeName"
+    Copy-Item -Path "$outDir/$productExeName" -Destination $artifactName
+
     # 현재 태그에 딸린 릴리즈에 artifact를 올립니다.
-    Write-Output "Uploading build artifacts..."
+    Write-Output "Uploading build artifacts: $artifactName"
     gh release upload $tag $artifactName
 }

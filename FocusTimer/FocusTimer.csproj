@@ -7,13 +7,23 @@
         <TargetFramework>net6.0-windows</TargetFramework>
         <PlatformTarget>x64</PlatformTarget>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <PublishSingleFile>false</PublishSingleFile>
-        <SelfContained>false</SelfContained>
         <Nullable>enable</Nullable>
         <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
         <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Deterministic>false</Deterministic>
+
+        <!--
+         ~ 이 속성들은 publish에 영향을 미칩니다.
+         ~ 단순 프로젝트 빌드에는 영향을 미치지 않습니다.
+         ~ 추가적인 속성들이 publish 프로파일에 정의되어 있을 수 있습니다(예: ClickOnceProfile).
+         ~ 아래 속성들은 단일 실행 파일을 생성하도록 설정되어 있습니다.
+         ~ 단일 실행 파일을 만들고자 한다면, 아래에 언급된 속성들을 유지한 채로(커맨드라인 인자 넣어서 바꾸지 말고!) publish를 진행하면 됩니다.
+         -->
+        <SelfContained>false</SelfContained>
+        <PublishSingleFile>true</PublishSingleFile>
+        <PublishReadyToRun>false</PublishReadyToRun>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     </PropertyGroup>
 
     <ItemGroup>
