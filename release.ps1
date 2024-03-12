@@ -87,6 +87,7 @@ if ($ClickOnce)
     # 그것은 dotnet이 ClickOnce를 "제대로" 지원하지 않기 때문입니다.
     # 빌드는 되는데 파일이 몇 개 빠진다든가... 그런 문제가 있습니다.
     Write-Output "Publishing ClickOnce..."
+    dotnet restore -r win-x64
     & $msBuildPath /target:publish `
         /p:PublishProfile=ClickOnceProfile `
         /p:Configuration=Release `
