@@ -76,15 +76,24 @@ if (Test-Path $outDir)
 # 2. 그렇게 publish된 결과를 배포용 저장소에 업로드합니다.
 if ($ClickOnce)
 {
+    # MSBuild의 경로를 찾습니다.
+    $msBuildPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+    -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe `
+    -prerelease | select-object -first 1
+    Write-Output "MSBuild: $( (Get-Command $msBuildPath).Path )"
+
     # ClickOnce 배포용 프로필을 사용하여 publish합니다.
+    # 아니 도대체 왜 dotnet publish가 아니라 msbuild를 쓰는 거지?
+    # 그것은 dotnet이 ClickOnce를 "제대로" 지원하지 않기 때문입니다.
+    # 빌드는 되는데 파일이 몇 개 빠진다든가... 그런 문제가 있습니다.
     Write-Output "Publishing ClickOnce..."
-    dotnet publish `
-        --configuration Release `
-        --property:PublishProfile=ClickOnceProfile `
-        --property:ApplicationVersion=$version `
-        --property:PublishDir=$publishDir `
-        --property:PublishUrl=$publishDir `
-        --property:DefineConstants="$Constants"
+    & $msBuildPath /target:publish `
+        /p:PublishProfile=ClickOnceProfile `
+        /p:Configuration=Release `
+        /p:ApplicationVersion=$version `
+        /p:PublishDir=$publishDir `
+        /p:PublishUrl=$publishDir `
+        /p:DefineConstants="$Constants"
     
     Write-Output "Setting up distribution repository for ClickOnce..."
     # ClickOnce 배포용 저장소를 클론합니다.
@@ -112,10 +121,14 @@ if ($ClickOnce)
     {
         Remove-Item -Path "$appName.application"
     }
+    if (Test-Path "setup.exe")
+    {
+        Remove-Item -Path "setup.exe"
+    }
 
     # 새 빌드를 복사합니다.
     Write-Output "Copying new files..."
-    Copy-Item -Path "../../$outDir/Application Files", "../../$outDir/$appName.application" `
+    Copy-Item -Path "../../$outDir/Application Files", "../../$outDir/$appName.application", "../../$outDir/setup.exe" `
         -Destination . -Recurse
 
     # 스테이지 & 커밋 & 푸시합니다.
