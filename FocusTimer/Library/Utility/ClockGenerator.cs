@@ -34,16 +34,27 @@ public class ClockGenerator
     }
 
     private readonly DispatcherTimer _oneSecTickTimer = new();
-    
+
     private void StartClock(int intervalSec)
     {
+        var interval = TimeSpan.FromSeconds(intervalSec);
+
         _oneSecTickTimer.Stop();
         _oneSecTickTimer.RemoveHandlers();
         _oneSecTickTimer.Tick += (_, _) =>
         {
+            // N초 경계로부터 몇 틱이나 떨어져 있는지를 나타냅니다.
+            // 지금이 1초 경계로부터 0.6초 떨어져 있다면, 0.6초에 해당하는 틱 수가 나옵니다.
+            var remainder = DateTime.UtcNow.Ticks % interval.Ticks;
+            
+            // 초 경계로부터 0.5초 떨어진 곳을 기준으로 하여 인터벌을 설정합니다.
+            // 정확히 초 경계에 맞추면 다음 틱이 다음 초가 아니라 그 전 0.9999초 즈음에 실행될 수도 있습니다.
+            // 따라서 약간의 오차 정도는 허용되는 곳, 즉 경계가 아닌 중간 즈음에서 틱을 발생시킵니다.
+            _oneSecTickTimer.Interval = TimeSpan.FromTicks(interval.Ticks - remainder) + TimeSpan.FromMilliseconds(500);
+            
             OnTick?.Invoke();
         };
-        _oneSecTickTimer.Interval = TimeSpan.FromSeconds(intervalSec);
-        _oneSecTickTimer.Start();       
+        _oneSecTickTimer.Interval = interval;
+        _oneSecTickTimer.Start();
     }
 }
