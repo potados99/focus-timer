@@ -28,7 +28,16 @@ public static class Culture
     public static readonly CultureInfo[] SupportedCultures =
     {
         CultureInfo.GetCultureInfo("ko"),
-        CultureInfo.GetCultureInfo("en")
+        CultureInfo.GetCultureInfo("en"),
+        CultureInfo.GetCultureInfo("fr"),
+        CultureInfo.GetCultureInfo("de"),
+        CultureInfo.GetCultureInfo("it"),
+        CultureInfo.GetCultureInfo("es"),
+        CultureInfo.GetCultureInfo("zh-CN"),
+        CultureInfo.GetCultureInfo("zh-TW"),
+        CultureInfo.GetCultureInfo("ja"),
+        CultureInfo.GetCultureInfo("ru"),
+        CultureInfo.GetCultureInfo("ro")
     };
 
     public static void Initialize()

@@ -90,6 +90,14 @@
           <AutoGen>True</AutoGen>
           <DependentUpon>strings.ko-KR.resx</DependentUpon>
         </Compile>
+        <Compile Remove="Resources\strings.zh-CN.Designer.cs" />
+        <Compile Remove="Resources\strings.ru-RU.Designer.cs" />
+        <Compile Remove="Resources\strings.ro-RO.Designer.cs" />
+        <Compile Remove="Resources\strings.ja-JP.Designer.cs" />
+        <Compile Remove="Resources\strings.it-IT.Designer.cs" />
+        <Compile Remove="Resources\strings.fr-FR.Designer.cs" />
+        <Compile Remove="Resources\strings.es-ES.Designer.cs" />
+        <Compile Remove="Resources\strings.de-DE.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>
