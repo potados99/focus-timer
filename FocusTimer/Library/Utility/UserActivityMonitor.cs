@@ -58,5 +58,5 @@ public class UserActivityMonitor
 
     private bool _wasActive = true;
 
-    public bool IsActive => APIWrapper.GetElapsedFromLastInput() < (Timeout * 1000);
+    public bool IsActive => (Timeout == 0 /*타임아웃 비활성화된고임*/) || APIWrapper.GetElapsedFromLastInput() < (Timeout * 1000);
 }

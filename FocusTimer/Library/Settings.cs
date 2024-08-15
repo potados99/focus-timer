@@ -51,7 +51,7 @@ public static class Settings
         var got = Properties.Settings.Default.ActivityTimeout;
         const int fallback = 10;
 
-        return got <= 0 ? fallback : got;
+        return got < 0/*0도 허용해요!*/ ? fallback : got;
     }
 
     public static void SetActivityTimeout(int timeout)
