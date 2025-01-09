@@ -1,22 +1,22 @@
 ﻿<local:ChartViewModelWindow x:Class="FocusTimer.Features.Charting.ChartWindow"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                      xmlns:local="clr-namespace:FocusTimer.Features.Charting"
-                      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-                      xmlns:usages="clr-namespace:FocusTimer.Features.Charting.Usages"
-                      xmlns:metric="clr-namespace:FocusTimer.Features.Charting.Metric"
-                      xmlns:resources="clr-namespace:FocusTimer.Resources"
-                      mc:Ignorable="d"
-                      d:DataContext="{d:DesignInstance Type=local:ChartViewModel}"
-                      Title="Chart"
-                      Height="700"
-                      Width="1000"
-                      ResizeMode="NoResize"
-                      AllowsTransparency="True"
-                      WindowStyle="None"
-                      Background="{StaticResource Window.Background}">
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:local="clr-namespace:FocusTimer.Features.Charting"
+                            xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+                            xmlns:usages="clr-namespace:FocusTimer.Features.Charting.Usages"
+                            xmlns:metric="clr-namespace:FocusTimer.Features.Charting.Metric"
+                            xmlns:resources="clr-namespace:FocusTimer.Resources"
+                            mc:Ignorable="d"
+                            d:DataContext="{d:DesignInstance Type=local:ChartViewModel}"
+                            Title="Chart"
+                            SizeToContent="Height"
+                            Width="1000"
+                            ResizeMode="NoResize"
+                            AllowsTransparency="True"
+                            WindowStyle="None"
+                            Background="{StaticResource Window.Background}">
 
     <Window.Resources>
         <Style x:Key="TitleBarButtonStyle"
@@ -118,10 +118,10 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="1.2*" />
-                <RowDefinition Height="2*" />
+                <RowDefinition Height="180" />
+                <RowDefinition Height="300" />
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="2*" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
