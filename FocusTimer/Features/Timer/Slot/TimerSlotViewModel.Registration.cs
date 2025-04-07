@@ -22,7 +22,7 @@ namespace FocusTimer.Features.Timer.Slot;
 public partial class TimerSlotViewModel
 {
     public bool IsWaitingForApp { get; private set; }
-    
+
     public void StartWaitingForApp()
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에서 사용자의 창 선택을 기다립니다.");
@@ -34,10 +34,17 @@ public partial class TimerSlotViewModel
 
         OnRender();
     }
-    
+
     public void StopWaitingAndRegisterApp(AppItem appItem)
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 사용자가 선택한 앱({appItem.ProcessExecutablePath})을 등록합니다.");
+
+        if (CurrentAppItem?.App == appItem.App)
+        {
+            appItem.IsCountedOnConcentrationCalculation = CurrentAppItem?.IsCountedOnConcentrationCalculation ?? true;
+            this.GetLogger().Info($"아, 이거 같은 앱으로 교체되는거네요? 집중도 포함 여부를 승계해줍니다. 프로그램 '{appItem.App.Title}'은(는) 집중도 계산에 " +
+                                  (appItem.IsCountedOnConcentrationCalculation ? "포함됩니다." : "포함되지 않습니다."));
+        }
 
         CurrentAppItem?.Dispose();
         CurrentAppItem = appItem;
