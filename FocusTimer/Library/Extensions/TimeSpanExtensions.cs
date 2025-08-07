@@ -22,6 +22,8 @@ public static class TimeSpanExtensions
 {
     public static string ToSixDigits(this TimeSpan ts)
     {
-        return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
+        var hours = ts.Days * 24 + ts.Hours; // 그냥 Hours는 24시간 미만 시간 성분만 나와요!
+
+        return $"{hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
     }
 }
