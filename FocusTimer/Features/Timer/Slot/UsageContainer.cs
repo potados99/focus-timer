@@ -37,7 +37,7 @@ public abstract class UsageContainer<TUsage, TRunningUsage, TActiveUSage>
     /// <remarks>
     /// 외부로 노출될 일은 없기에 protected 접근 제한을 가집니다.
     /// </remarks>
-    protected TUsage? Usage { get; set; }
+    public TUsage? Usage { get; set; }
 
     /// <summary>
     /// 현재 <see cref="Usage"/>에서 타이머가 실행되는 동안 흐른 총 시간을 나타냅니다.

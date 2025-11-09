@@ -44,26 +44,33 @@ public class TimerUsage : IUsage<TimerRunningUsage>
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// 리셋 이후 흐른 시간입니다(tick).
-    /// 실제로 타이머가 켜져 있는 동안에만 증가하기 때문에,
-    /// <see cref="RunningUsage"/>의 <see cref="ElapsedTicks"/>와 사실상 같습니다.
+    /// [DEPRECATED] 이 필드는 더 이상 사용되지 않습니다.
+    /// 하위 호환성을 위해 DB 컬럼으로 남아있지만 항상 0입니다.
+    /// 실제 경과 시간은 <see cref="Elapsed"/> 프로퍼티를 사용하세요.
     /// </summary>
-    public long ElapsedTicks { get; set; }
+    [Obsolete("ElapsedTicks는 더 이상 사용되지 않습니다. Elapsed 프로퍼티를 사용하세요.")]
+    public long ElapsedTicks { get; set; } = 0;
 
     public ICollection<TimerRunningUsage> RunningUsages { get; } = new List<TimerRunningUsage>();
-    
+
     [NotMapped] public TimerRunningUsage RunningUsage => GetLastRunningUsage() ?? OpenNewRunningUsage();
+
+    /// <summary>
+    /// 리셋 이후 흐른 시간입니다.
+    /// 실제로 타이머가 켜져 있는 동안에만 증가하기 때문에,
+    /// <see cref="RunningElapsed"/>와 사실상 같습니다.
+    /// </summary>
+    [NotMapped]
+    public TimeSpan Elapsed => RunningElapsed;
+
+    [NotMapped] public TimeSpan RunningElapsed => TimeSpan.FromTicks(RunningUsages.Sum(u => u.Elapsed.Ticks));
+    [NotMapped] public TimeSpan ActiveElapsed => TimeSpan.FromTicks(RunningUsages.Sum(u => u.ActiveElapsed.Ticks));
     
-    [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
-    [NotMapped] public TimeSpan RunningElapsed => new(RunningUsages.Sum(u => u.Elapsed.Ticks));
-    [NotMapped] public TimeSpan ActiveElapsed => new(RunningUsages.Sum(u => u.ActiveElapsed.Ticks));
-    
-    public void TouchUsage()
+    public void TouchUsage(DateTime now)
     {
         this.GetLogger().Debug("TimerUsage를 갱신합니다.");
 
-        UpdatedAt = DateTime.Now;
-        ElapsedTicks += TimeSpan.TicksPerSecond;
+        UpdatedAt = now;
     }
     
     private TimerRunningUsage? GetLastRunningUsage()
@@ -71,7 +78,7 @@ public class TimerUsage : IUsage<TimerRunningUsage>
         var usage = RunningUsages.LastOrDefault();
         if (usage != null)
         {
-            this.GetLogger().Debug($"기존의 TimerRunningUsage를 가져왔습니다: {usage}");
+            // this.GetLogger().Debug($"기존의 TimerRunningUsage를 가져왔습니다: {usage}");
         }
 
         return usage;

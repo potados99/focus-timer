@@ -42,26 +42,26 @@ public class AppActiveUsage : IActiveUsage<AppRunningUsage>
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// 앱이 focus를 가지고 있는 동안 흐른 시간입니다(tick).
+    /// [DEPRECATED] 이 필드는 더 이상 사용되지 않습니다.
+    /// 하위 호환성을 위해 DB 컬럼으로 남아있지만 항상 0입니다.
+    /// 실제 경과 시간은 <see cref="Elapsed"/> 프로퍼티를 사용하세요.
     /// </summary>
-    public long ElapsedTicks { get; set; }
+    [Obsolete("ElapsedTicks는 더 이상 사용되지 않습니다. Elapsed 프로퍼티를 사용하세요.")]
+    public long ElapsedTicks { get; set; } = 0;
 
     public AppRunningUsage ParentRunningUsage { get; set; }
 
-    [NotMapped] public TimeSpan Elapsed => new(ElapsedTicks);
+    /// <summary>
+    /// 앱이 focus를 가지고 있는 동안 흐른 시간입니다.
+    /// </summary>
+    [NotMapped]
+    public TimeSpan Elapsed => UpdatedAt - StartedAt;
 
-    public void TouchUsage()
+    public void TouchUsage(DateTime now)
     {
         this.GetLogger().Debug("AppActiveUsage를 갱신합니다.");
 
-        if (UpdatedAt - StartedAt > Elapsed + TimeSpan.FromSeconds(5))
-        {
-            this.GetLogger()
-                .Error($"이 {ToString()}에는 중간에 5초 이상 downtime이 있었던 것으로 보입니다. 시작 이후 흐른 시간이 실제 유효 시간보다 5초 넘게 큽니다.");
-        }
-
-        UpdatedAt = DateTime.Now;
-        ElapsedTicks += TimeSpan.TicksPerSecond;
+        UpdatedAt = now;
     }
 
     public override string ToString()

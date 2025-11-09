@@ -14,6 +14,7 @@
 // 라이센스 전문은 이 프로그램과 함께 제공되었을 것입니다. 만약 아니라면,
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
+using System;
 using FocusTimer.Library;
 using FocusTimer.Library.Extensions;
 using FocusTimer.Library.Utility;
@@ -36,7 +37,7 @@ public class EventService
         _clockGenerator.OnTick += () =>
         {
             this.GetLogger().Info("[이벤트 발생] Tick 이벤트가 발생하였습니다.");
-            OnTick?.Invoke();
+            OnTick?.Invoke(DateTime.Now);
             OnRender?.Invoke();
         };
 
@@ -44,9 +45,10 @@ public class EventService
         _activityMonitor.OnActivated += () =>
         {
             this.GetLogger().Info("[이벤트 발생] Activated 이벤트가 발생하였습니다.");
-            
+
+            var now = DateTime.Now;
             OnRender?.Invoke();
-            OnActivated?.Invoke();
+            OnActivated?.Invoke(now);
         };
         _activityMonitor.OnDeactivated += () =>
         {
@@ -55,24 +57,27 @@ public class EventService
             OnRender?.Invoke();
             OnDeactivated?.Invoke();
         };
-        
+
         _windowWatcher = windowWatcher;
         _windowWatcher.OnFocused += (p, n) =>
         {
             this.GetLogger().Info("[이벤트 발생] Focused 이벤트가 발생하였습니다.");
 
-            OnFocusChanged?.Invoke(p, n);
+            var now = DateTime.Now;
+            OnFocusChanged?.Invoke(p, n, now);
             OnRender?.Invoke();
         };
     }
 
-    public event Signal? OnTick;
+    public delegate void FocusChangedEventHandler(IntPtr prev, IntPtr current, DateTime now);
+
+    public event SignalWithParams<DateTime>? OnTick;
     public event Signal? OnRender;
     public event Signal? OnReload;
-    public event Signal? OnActivated;
+    public event SignalWithParams<DateTime>? OnActivated;
     public event Signal? OnDeactivated;
 
-    public event WindowWatcher.FocusedEventHandler? OnFocusChanged;
+    public event FocusChangedEventHandler? OnFocusChanged;
     
     public void EmitRender()
     {

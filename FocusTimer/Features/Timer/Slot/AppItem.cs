@@ -33,7 +33,7 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
     private readonly AppUsageService _appUsageService = Modules.Get<AppUsageService>();
     private readonly UserActivityMonitor _activityMonitor = Modules.Get<UserActivityMonitor>();
     private readonly EventService _eventService = Modules.Get<EventService>();
-    
+
     public AppItem(string executablePath)
     {
         this.GetLogger().Info("AppItem을 초기화합니다.");
@@ -48,7 +48,7 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
         RegisterEvents();
         LoadUsage();
     }
-    
+
     public void Dispose()
     {
         this.GetLogger().Info("이 AppItem을 정리합니다.");
@@ -61,16 +61,17 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
     {
         this.GetLogger().Debug("강제로 새로운 AppUsage를 만들어줍니다.");
 
+        var now = DateTime.Now;
         Usage = _appUsageService.CreateNewUsage(App);
         Usage.IsConcentrated = IsCountedOnConcentrationCalculation;
         Usage.OpenNewRunningUsage();
-        Usage.RunningUsage.OpenNewActiveUsage(); // 기존의 것을 또 건드리는 일을 막기 위해 일단 무지성으로 새로 만들어줍니다.
-        
+        Usage.RunningUsage.OpenNewActiveUsage(now); // 기존의 것을 또 건드리는 일을 막기 위해 일단 무지성으로 새로 만들어줍니다.
+
         IsCountedOnConcentrationCalculation = Usage.IsConcentrated;
-        
-        UpdateUsage();
+
+        UpdateUsage(now);
     }
-    
+
     private void RegisterEvents()
     {
         _eventService.OnTick += OnTick;
@@ -85,55 +86,64 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
         _eventService.OnFocusChanged -= OnFocusChanged;
     }
 
-    private void OnTick()
+    private void OnTick(DateTime now)
     {
-        UpdateUsage();
+        UpdateUsage(now);
     }
 
-    private void OnActivated()
+    private void OnActivated(DateTime now)
     {
         if (IsActive)
         {
             this.GetLogger().Info("Activated 이벤트로 인해 새로운 AppActiveUsage를 생성합니다.");
 
-            Usage?.RunningUsage.OpenNewActiveUsage();
+            Usage?.RunningUsage.OpenNewActiveUsage(now);
         }
     }
-    
-    private void OnFocusChanged(IntPtr prev, IntPtr current)
+
+    private bool _WasActive = false;
+
+    private void OnFocusChanged(IntPtr prev, IntPtr current, DateTime now)
     {
-        if (IsActive)
+        if (!_WasActive && IsActive)
         {
             this.GetLogger().Info("Focused 이벤트로 인해 새로운 AppActiveUsage를 생성합니다.");
-
-            Usage?.RunningUsage.OpenNewActiveUsage();
+            Usage?.RunningUsage.OpenNewActiveUsage(now);
         }
+        else if (_WasActive && !IsActive)
+        {
+            // Lost focus
+            Usage?.RunningUsage.ActiveUsage.TouchUsage(now);
+        }
+        
+        _WasActive = IsActive;
     }
 
     private void LoadUsage()
     {
         this.GetLogger().Debug("AppUsage를 불러옵니다.");
-        
+
+        var now = DateTime.Now;
         Usage = _appUsageService.GetLastUsage(App) ?? _appUsageService.CreateNewUsage(App);
         Usage.OpenNewRunningUsage();
-        Usage.RunningUsage.OpenNewActiveUsage(); // 기존의 것을 또 건드리는 일을 막기 위해 일단 무지성으로 새로 만들어줍니다.
-        
+        Usage.RunningUsage.OpenNewActiveUsage(now); // 기존의 것을 또 건드리는 일을 막기 위해 일단 무지성으로 새로 만들어줍니다.
+
         IsCountedOnConcentrationCalculation = Usage.IsConcentrated;
     }
 
-    private void UpdateUsage()
+    private void UpdateUsage(DateTime now)
     {
         if (Usage == null)
         {
             return;
         }
-        
-        Usage.TouchUsage(IsCountedOnConcentrationCalculation);
-        Usage.RunningUsage.TouchUsage();
-        
+
+        Usage.TouchUsage(now, IsCountedOnConcentrationCalculation);
+        Usage.RunningUsage.TouchUsage(now);
+
         if (IsActive)
         {
-            Usage.RunningUsage.ActiveUsage.TouchUsage();
+            Usage.RunningUsage.ActiveUsage.TouchUsage(now);
         }
 
         _appUsageService.SaveRepository();

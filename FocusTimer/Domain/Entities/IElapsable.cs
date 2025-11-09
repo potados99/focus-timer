@@ -25,6 +25,10 @@ public interface IElapsable
 {
     public DateTime StartedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    
-    public long ElapsedTicks { get; set; }
+
+    /// <summary>
+    /// 경과 시간을 나타냅니다.
+    /// UpdatedAt - StartedAt으로 계산되거나, 하위 항목들의 합으로 계산됩니다.
+    /// </summary>
+    public TimeSpan Elapsed { get; }
 }

@@ -77,7 +77,7 @@ public partial class MainViewModel : BaseViewModel
         NotifyPropertyChanged(nameof(IsOnConcentration));
     }
 
-    private void OnFocusChanged(IntPtr prev, IntPtr current)
+    private void OnFocusChanged(IntPtr prev, IntPtr current, DateTime now)
     {
         if (CurrentRegisteringTimerSlot != null && !APIWrapper.IsThisProcessForeground())
         {

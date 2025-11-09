@@ -17,3 +17,4 @@
 namespace FocusTimer.Library;
 
 public delegate void Signal();
+public delegate void SignalWithParams<T>(T param);

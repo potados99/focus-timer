@@ -69,8 +69,8 @@ public class UsageSplitter<T> where T : IElapsable, new()
         return new T
         {
             StartedAt = startedAt,
-            UpdatedAt = updatedAt,
-            ElapsedTicks = (updatedAt - startedAt).Ticks
+            UpdatedAt = updatedAt
+            // Elapsed는 이제 계산 프로퍼티이므로 자동으로 UpdatedAt - StartedAt으로 계산됩니다.
         };
     }
 
@@ -86,7 +86,7 @@ public class UsageSplitter<T> where T : IElapsable, new()
 
         var activeUsages = usage.RunningUsages
             .SelectMany(u => u.ActiveUsages)
-            .Where(u => (u.UpdatedAt - u.StartedAt).Ticks > 0 || u.ElapsedTicks > 0) // 실제로 사용된 것만 취급합니다.
+            .Where(u => u.Elapsed.Ticks > 0) // 실제로 사용된 것만 취급합니다.
             .SelectMany(u => new UsageSplitter<TActiveUsage>(u).Split())
             .ToList(); // 이렇게 이 시점에 컬렉션을 확보해야 아래에서 수정할 수 있습니다.
 

@@ -35,7 +35,7 @@ public class TimerUsageService
         var usage = _repository.FindLastTimerUsage();
         if (usage != null)
         {
-            this.GetLogger().Debug($"기존의 TimerUsage를 가져왔습니다: {usage}");
+            // this.GetLogger().Debug($"기존의 TimerUsage를 가져왔습니다: {usage}");
         }
 
         return usage;
