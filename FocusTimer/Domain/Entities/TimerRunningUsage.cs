@@ -67,17 +67,17 @@ public class TimerRunningUsage : IRunningUsage<TimerUsage, TimerActiveUsage>
 
     public void TouchUsage(DateTime now)
     {
-        this.GetLogger().Debug("TimerRunningUsage를 갱신합니다.");
+        this.GetLogger().Debug($"TimerRunningUsage 갱신: UpdatedAt={now:HH:mm:ss}");
 
         UpdatedAt = now;
     }
-    
+
     private TimerActiveUsage? GetLastActiveUsage()
     {
         var usage = ActiveUsages.LastOrDefault();
         if (usage != null)
         {
-            // this.GetLogger().Debug($"기존의 TimerActiveUsage를 가져왔습니다: {usage}");
+            this.GetLogger().Debug($"기존 TimerActiveUsage 조회: {usage}");
         }
 
         return usage;
@@ -90,7 +90,7 @@ public class TimerRunningUsage : IRunningUsage<TimerUsage, TimerActiveUsage>
 
     public TimerActiveUsage OpenNewActiveUsage(DateTime now)
     {
-        this.GetLogger().Debug("새로운 TimerActiveUsage를 생성합니다.");
+        this.GetLogger().Debug($"새 TimerActiveUsage 생성: StartedAt={now:HH:mm:ss}");
 
         var usage = new TimerActiveUsage
         {

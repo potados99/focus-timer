@@ -31,6 +31,12 @@ public class AppService
     {
         var existing = _repository.FindAppByPath(path);
         
-        return existing ?? Entities.App.FromExecutablePath(path);
+        if (existing != null)
+        {
+            existing.TryUpdateTitleIfEmpty();
+            return existing;
+        }
+        
+        return Entities.App.FromExecutablePath(path);
     }
 }

@@ -15,6 +15,7 @@
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Threading;
 
@@ -30,14 +31,15 @@ public class WindowWatcher
     {
         StartListening();
     }
-    
+
     public delegate void FocusedEventHandler(IntPtr prev, IntPtr current);
 
     public event FocusedEventHandler? OnFocused;
 
     private readonly DispatcherTimer _timer = new();
 
-    public static readonly string[] SkipList = {
+    public static readonly string[] SkipList =
+    {
         "TaskListThumbnailWnd", // 윈도우가 여러 개일 때 작업표시줄에 표시되는 작은 썸네일
         "ForegroundStaging", // Alt + Tab으로 보이는 UI
         "MultitaskingViewFrame", // Alt + Tab으로 보이는 UI
@@ -48,8 +50,20 @@ public class WindowWatcher
         "WorkerW", // 작업표시줄 오른쪽 눌러서 나오는 바탕화면 UI
         "NotifyIconOverflowWindow", // 작업표시줄에 아이콘이 몰려있는 곳 위로가는 쉐브론 누르면 나오는 UI
     };
-    
+
     private IntPtr _focusedWindow = IntPtr.Zero;
+
+    /// <summary>
+    /// 현재 포커스를 가지고 있는 프로세스입니다.
+    /// </summary>
+    public Process? FocusedProcess => _focusedWindow == IntPtr.Zero
+        ? null
+        : APIWrapper.GetProcessByWindowHandle(_focusedWindow);
+    
+    /// <summary>
+    /// 현재 포커스를 가지고 있는 프로세스의 실행 파일 경로입니다.
+    /// </summary>
+    public string? FocusedProcessExecutablePath => FocusedProcess?.MainModule?.FileName;
 
     private void StartListening()
     {
@@ -58,7 +72,7 @@ public class WindowWatcher
 
         _timer.Start();
     }
-    
+
     private void Tick()
     {
         var nowFocused = APIWrapper.GetForegroundWindow();
@@ -81,8 +95,12 @@ public class WindowWatcher
             return;
         }
         
-        OnFocused?.Invoke(_focusedWindow, nowFocused);
-        
+        var prev = _focusedWindow;
+        var current = nowFocused;
+
+        // 이벤트 핸들러 호출하기 전에 현재 포커스 상태를 갱신합니다.
         _focusedWindow = nowFocused;
+        
+        OnFocused?.Invoke(prev, current);
     }
 }

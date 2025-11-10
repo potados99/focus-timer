@@ -32,20 +32,20 @@ public partial class TimerItem : UsageContainer<TimerUsage, TimerRunningUsage, T
     public TimerItem()
     {
         this.GetLogger().Info("TimerItem을 초기화합니다.");
-        
+
         RegisterEvents();
         LoadUsage();
     }
 
     public List<TimerSlotViewModel> TimerSlots { get; } = new()
     {
-        new TimerSlotViewModel {SlotNumber = 0},
-        new TimerSlotViewModel {SlotNumber = 1},
-        new TimerSlotViewModel {SlotNumber = 2},
-        new TimerSlotViewModel {SlotNumber = 3},
-        new TimerSlotViewModel {SlotNumber = 4},
+        new TimerSlotViewModel { SlotNumber = 0 },
+        new TimerSlotViewModel { SlotNumber = 1 },
+        new TimerSlotViewModel { SlotNumber = 2 },
+        new TimerSlotViewModel { SlotNumber = 3 },
+        new TimerSlotViewModel { SlotNumber = 4 },
     };
-    
+
     private void RegisterEvents()
     {
         _eventService.OnTick += OnTick;
@@ -63,7 +63,7 @@ public partial class TimerItem : UsageContainer<TimerUsage, TimerRunningUsage, T
     {
         Usage = _timerUsageService.CreateNewUsage();
     }
-    
+
     private void OnActivated(DateTime now)
     {
         if (IsAnyAppActive)
@@ -73,8 +73,9 @@ public partial class TimerItem : UsageContainer<TimerUsage, TimerRunningUsage, T
             Usage?.RunningUsage.OpenNewActiveUsage(now);
         }
     }
-    
+
     private bool _WasAnyAppActive = false;
+
     private void OnFocusChanged(IntPtr prev, IntPtr current, DateTime now)
     {
         if (!_WasAnyAppActive && IsAnyAppActive)
@@ -82,12 +83,13 @@ public partial class TimerItem : UsageContainer<TimerUsage, TimerRunningUsage, T
             this.GetLogger().Info("Focused 이벤트로 인해 새로운 TimerActiveUsage를 생성합니다.");
 
             Usage?.RunningUsage.OpenNewActiveUsage(now);
-        } else if (_WasAnyAppActive && !IsAnyAppActive)
+        }
+        else if (_WasAnyAppActive && !IsAnyAppActive)
         {
             // Lost focus
             Usage?.RunningUsage.ActiveUsage.TouchUsage(now);
         }
-        
+
         _WasAnyAppActive = IsAnyAppActive;
     }
 
@@ -137,47 +139,43 @@ public partial class TimerItem : UsageContainer<TimerUsage, TimerRunningUsage, T
                 appsActiveElapsedTicksSum += slot.CurrentAppItem.ActiveElapsedTicks;
             }
         }
+
         var appsActiveElapsedSum = new TimeSpan(appsActiveElapsedTicksSum);
 
         // 차이 계산
         var discrepancy = timerActiveElapsed - appsActiveElapsedSum;
-
-        // 무조건 콘솔 출력
+        
         this.GetLogger().Info($"[시간 비교] 타이머 Active: {timerActiveElapsed.ToSixDigits()}, " +
-                             $"앱들 합계: {appsActiveElapsedSum.ToSixDigits()}, " +
-                             $"차이: {discrepancy.TotalSeconds:F2}초");
+                              $"앱들 합계: {appsActiveElapsedSum.ToSixDigits()}, " +
+                              $"차이: {discrepancy.TotalSeconds:F2}초");
 
-        // 차이가 1초 이상이면 상세 분석 출력
-        if (Math.Abs(discrepancy.TotalSeconds) >= 1.0)
+        // 상세 분석: 각 TimerActiveUsage와 AppActiveUsage 출력
+        this.GetLogger().Debug("=== TimerActiveUsages ===");
+        foreach (var ru in Usage.RunningUsages)
         {
-            // 상세 분석: 각 TimerActiveUsage와 AppActiveUsage 출력
-            this.GetLogger().Info("=== TimerActiveUsages ===");
-            foreach (var ru in Usage.RunningUsages)
+            foreach (var au in ru.ActiveUsages)
             {
-                foreach (var au in ru.ActiveUsages)
-                {
-                    this.GetLogger().Info($"  TimerActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
-                                         $"UpdatedAt={au.UpdatedAt:HH:mm:ss.fff}, " +
-                                         $"Elapsed={au.Elapsed.ToSixDigits()}");
-                }
+                this.GetLogger().Debug($"  TimerActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
+                                      $"UpdatedAt={au.UpdatedAt:HH:mm:ss.fff}, " +
+                                      $"Elapsed={au.Elapsed.ToSixDigits()}");
             }
+        }
 
-            this.GetLogger().Info("=== AppActiveUsages (슬롯별) ===");
-            foreach (var slot in TimerSlots)
+        this.GetLogger().Debug("=== AppActiveUsages (슬롯별) ===");
+        foreach (var slot in TimerSlots)
+        {
+            if (slot.CurrentAppItem != null)
             {
-                if (slot.CurrentAppItem != null)
+                this.GetLogger().Debug($"  슬롯 #{slot.SlotNumber}:");
+
+                foreach (var ru in slot.CurrentAppItem.Usage?.RunningUsages ?? Enumerable.Empty<AppRunningUsage>())
                 {
-                    this.GetLogger().Info($"  슬롯 #{slot.SlotNumber}:");
-                    
-                    foreach (var ru in slot.CurrentAppItem.Usage?.RunningUsages ?? Enumerable.Empty<AppRunningUsage>())
+                    foreach (var au in ru.ActiveUsages)
                     {
-                        foreach (var au in ru.ActiveUsages)
-                        {
-                            this.GetLogger().Info($"    AppActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
-                                                   $"UpdatedAt={au.UpdatedAt:HH:mm:ss.fff}, " +
-                                                   $"Elapsed={au.Elapsed.ToSixDigits()}");                        }
+                        this.GetLogger().Debug($"    AppActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
+                                              $"UpdatedAt={au.UpdatedAt:HH:mm:ss.fff}, " +
+                                              $"Elapsed={au.Elapsed.ToSixDigits()}");
                     }
-                    
                 }
             }
         }

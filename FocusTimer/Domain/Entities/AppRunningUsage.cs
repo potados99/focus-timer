@@ -67,7 +67,7 @@ public class AppRunningUsage : IRunningUsage<AppUsage, AppActiveUsage>
 
     public void TouchUsage(DateTime now)
     {
-        this.GetLogger().Debug("AppRunningUsage를 갱신합니다.");
+        this.GetLogger().Debug($"AppRunningUsage 갱신: UpdatedAt={now:HH:mm:ss}");
 
         UpdatedAt = now;
     }
@@ -77,7 +77,7 @@ public class AppRunningUsage : IRunningUsage<AppUsage, AppActiveUsage>
         var usage = ActiveUsages.LastOrDefault();
         if (usage != null)
         {
-            // this.GetLogger().Debug($"기존의 AppActiveUsage를 가져왔습니다: {usage}");
+            this.GetLogger().Debug($"기존 AppActiveUsage 조회: {usage}");
         }
 
         return usage;
@@ -90,7 +90,7 @@ public class AppRunningUsage : IRunningUsage<AppUsage, AppActiveUsage>
 
     public AppActiveUsage OpenNewActiveUsage(DateTime now)
     {
-        this.GetLogger().Debug("새로운 AppActiveUsage를 생성합니다.");
+        this.GetLogger().Debug($"새 AppActiveUsage 생성: StartedAt={now:HH:mm:ss}");
 
         var usage = new AppActiveUsage
         {

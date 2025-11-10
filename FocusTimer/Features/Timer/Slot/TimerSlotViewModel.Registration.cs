@@ -25,7 +25,7 @@ public partial class TimerSlotViewModel
 
     public void StartWaitingForApp()
     {
-        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에서 사용자의 창 선택을 기다립니다.");
+        this.GetLogger().Debug($"앱 선택 대기 시작: 슬롯 #{SlotNumber}");
 
         CurrentAppItem?.Dispose();
         CurrentAppItem = null;
@@ -37,30 +37,25 @@ public partial class TimerSlotViewModel
 
     public void StopWaitingAndRegisterApp(AppItem appItem)
     {
-        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 사용자가 선택한 앱({appItem.ProcessExecutablePath})을 등록합니다.");
+        this.GetLogger().Debug($"앱 등록: 슬롯 #{SlotNumber}, 앱={appItem.ProcessExecutablePath}");
 
         if (CurrentAppItem?.App == appItem.App)
         {
             appItem.IsCountedOnConcentrationCalculation = CurrentAppItem?.IsCountedOnConcentrationCalculation ?? true;
-            this.GetLogger().Info($"아, 이거 같은 앱으로 교체되는거네요? 집중도 포함 여부를 승계해줍니다. 프로그램 '{appItem.App.Title}'은(는) 집중도 계산에 " +
-                                  (appItem.IsCountedOnConcentrationCalculation ? "포함됩니다." : "포함되지 않습니다."));
+            this.GetLogger().Debug($"집중도 설정 승계: 앱={appItem.App.Title}, 집중도포함={appItem.IsCountedOnConcentrationCalculation}");
         }
 
         if (CurrentAppItem != null)
         {
-            this.GetLogger().Warn($"[StopWaitingAndRegisterApp] 기존 AppItem을 Dispose합니다. App={CurrentAppItem.App?.Title}");
+            this.GetLogger().Debug($"기존 AppItem 교체: 슬롯 #{SlotNumber}, 기존앱={CurrentAppItem.App?.Title}");
             CurrentAppItem.Dispose();
-            this.GetLogger().Warn($"[StopWaitingAndRegisterApp] 기존 AppItem Dispose 완료.");
         }
 
-        this.GetLogger().Info($"[StopWaitingAndRegisterApp] 새 AppItem을 CurrentAppItem에 할당합니다.");
         CurrentAppItem = appItem;
         IsWaitingForApp = false;
 
         if (_slot != null)
         {
-            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 변동을 기록합니다.");
-
             _slot.App = appItem.App;
             _slotService.SaveRepository();
         }
@@ -70,7 +65,7 @@ public partial class TimerSlotViewModel
 
     public void UnableToHandleRegistering(string reason)
     {
-        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 앱을 등록할 수 없음을 표시합니다. 사유: {reason}");
+        this.GetLogger().Warn($"앱 등록 실패: 슬롯 #{SlotNumber}, 사유={reason}");
 
         WindowSelectPrompt = reason;
 
@@ -79,7 +74,7 @@ public partial class TimerSlotViewModel
 
     public void CancelRegisteringApp()
     {
-        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 앱 등록을 취소합니다.");
+        this.GetLogger().Debug($"앱 등록 취소: 슬롯 #{SlotNumber}");
 
         IsWaitingForApp = false;
 
@@ -88,7 +83,7 @@ public partial class TimerSlotViewModel
 
     public void ClearRegisteredApp()
     {
-        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 등록된 앱을 제거합니다.");
+        this.GetLogger().Debug($"등록된 앱 제거: 슬롯 #{SlotNumber}");
 
         CurrentAppItem?.ForceStartNewUsage(); // 새 AppUsage를 시작합니다. 이렇게 하면 앱을 다시 불러왔을 때에 기록이 0인 상태로 시작하니, 리셋의 효과가 있습니다.
         CurrentAppItem?.Dispose();
@@ -96,8 +91,6 @@ public partial class TimerSlotViewModel
 
         if (_slot != null)
         {
-            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 변동을 기록합니다.");
-
             _slot.App = null;
             _slotService.SaveRepository();
         }

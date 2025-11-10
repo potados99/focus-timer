@@ -78,7 +78,7 @@ public class AppUsage : IUsage<AppRunningUsage>
 
     public void TouchUsage(DateTime now, bool isConcentrated)
     {
-        this.GetLogger().Debug("AppUsage를 갱신합니다.");
+        this.GetLogger().Debug($"AppUsage 갱신: UpdatedAt={now:HH:mm:ss}, 집중도포함={isConcentrated}");
 
         UpdatedAt = now;
         IsConcentrated = isConcentrated;
@@ -89,23 +89,23 @@ public class AppUsage : IUsage<AppRunningUsage>
         var usage = RunningUsages.LastOrDefault();
         if (usage != null)
         {
-            // this.GetLogger().Debug($"기존의 AppRunningUsage를 가져왔습니다: {usage}");
+            this.GetLogger().Debug($"기존 AppRunningUsage 조회: {usage}");
         }
 
         return usage;
     }
-    
+
     public AppRunningUsage OpenNewRunningUsage()
     {
-        this.GetLogger().Debug("새로운 AppRunningUsage를 생성합니다.");
-        
+        this.GetLogger().Debug($"새 AppRunningUsage 생성: StartedAt={DateTime.Now:HH:mm:ss}");
+
         var usage = new AppRunningUsage
         {
             StartedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
             ParentUsage = this
         };
-        
+
         RunningUsages.Add(usage);
 
         return usage;

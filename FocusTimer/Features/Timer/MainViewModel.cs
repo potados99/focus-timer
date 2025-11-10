@@ -26,18 +26,15 @@ namespace FocusTimer.Features.Timer;
 public partial class MainViewModel : BaseViewModel
 {
     private readonly ILicenseService _licenseService;
-    private readonly WindowWatcher _watcher;
     private readonly AppUsageService _appUsageService;
     private readonly EventService _eventService;
 
     public MainViewModel(
         ILicenseService licenseService,
-        WindowWatcher watcher,
         AppUsageService appUsageService,
         EventService eventService)
     {
         _licenseService = licenseService;
-        _watcher = watcher;
         _appUsageService = appUsageService;
         _eventService = eventService;
     }

@@ -30,7 +30,6 @@ public partial class AppItem
 
     public bool IsCountedOnConcentrationCalculation { get; set; } = true;
 
-    public bool IsActive => APIWrapper.GetForegroundProcess()?.ExecutablePath() == ProcessExecutablePath &&
+    public bool IsActive => _watcher.FocusedProcessExecutablePath == ProcessExecutablePath &&
                             _activityMonitor.IsActive;
-    
 }

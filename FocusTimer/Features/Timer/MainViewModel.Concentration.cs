@@ -29,9 +29,12 @@ public partial class MainViewModel
 {
     private double CalculateConcentration()
     {
-        var elapsedTotal = TimerSlots
+        var includedApps = TimerSlots
             .Where(s => s.CurrentAppItem?.IsCountedOnConcentrationCalculation ?? false)
-            .Sum(s => s.CurrentAppItem?.ActiveElapsedTicks ?? 0);
+            .Select(s => s.CurrentAppItem!)
+            .ToList();
+
+        var elapsedTotal = includedApps.Sum(app => app.ActiveElapsedTicks);
 
         if (elapsedTotal == 0)
         {
@@ -40,9 +43,10 @@ public partial class MainViewModel
 
         double concentration = 100 * elapsedTotal / (TimerItem.ElapsedTicks + 1);
 
+        var appNames = string.Join(", ", includedApps.Select(app => app.AppName));
         this.GetLogger()
             .Info(
-                $"집중도 계산에 포함하는 앱들의 활성 사용 시간 합: {new TimeSpan(elapsedTotal).ToSixDigits()}, 타이머가 구동중인 시간의 합: {TimerItem.ElapsedString}");
+                $"[집중도 계산] 포함 앱: [{appNames}], 앱 Active 합: {new TimeSpan(elapsedTotal).ToSixDigits()}, 타이머 Running 합: {TimerItem.ElapsedString}, 집중도: {concentration:F1}%");
 
         return concentration;
     }

@@ -61,29 +61,25 @@ public partial class TimerSlotViewModel
     [SuppressMessage("ReSharper.DPA", "DPA0000: DPA issues")]
     private void LoadSlot()
     {
-        this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 앱 정보를 불러옵니다.");
+        this.GetLogger().Debug($"슬롯 정보 로드 시작: 슬롯 #{SlotNumber}");
 
         if (CurrentAppItem != null)
         {
-            this.GetLogger().Warn($"[LoadSlot] 기존 AppItem이 있습니다. Dispose될 예정입니다. App={CurrentAppItem.App?.Title}");
+            this.GetLogger().Debug($"기존 AppItem 존재: 슬롯 #{SlotNumber}, 앱={CurrentAppItem.App?.Title} (곧 교체됨)");
         }
 
         _slot = _slotService.GetOrCreateStatus(SlotNumber);
 
         if (_slot.App != null)
         {
-            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 등록된 앱({_slot.App.Title})을 복구합니다.");
+            this.GetLogger().Debug($"슬롯에 등록된 앱 복구: 슬롯 #{SlotNumber}, 앱={_slot.App.Title}");
 
             var newAppItem = new AppItem(_slot.App.ExecutablePath);
-            this.GetLogger().Info($"[LoadSlot] 새 AppItem 생성 완료. 이제 StopWaitingAndRegisterApp 호출합니다.");
-
             StopWaitingAndRegisterApp(newAppItem);
-
-            this.GetLogger().Info($"[LoadSlot] StopWaitingAndRegisterApp 완료.");
         }
         else
         {
-            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 등록된 앱이 없습니다.");
+            this.GetLogger().Debug($"슬롯에 등록된 앱 없음: 슬롯 #{SlotNumber}");
         }
     }
     
