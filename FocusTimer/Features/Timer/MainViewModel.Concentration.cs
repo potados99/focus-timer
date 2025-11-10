@@ -45,8 +45,8 @@ public partial class MainViewModel
 
         var appNames = string.Join(", ", includedApps.Select(app => app.AppName));
         this.GetLogger()
-            .Info(
-                $"[집중도 계산] 포함 앱: [{appNames}], 앱 Active 합: {new TimeSpan(elapsedTotal).ToSixDigits()}, 타이머 Running 합: {TimerItem.ElapsedString}, 집중도: {concentration:F1}%");
+            .Debug(
+                $"집중도 계산에 포함할 앱: [{appNames}], 앱 Active 합: {new TimeSpan(elapsedTotal).ToSixDigits()}, 타이머 Running 합: {TimerItem.ElapsedString}, 집중도: {concentration:F1}%");
 
         return concentration;
     }

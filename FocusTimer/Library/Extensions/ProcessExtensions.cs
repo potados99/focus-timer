@@ -54,7 +54,7 @@ public static class ProcessExtensions
         try
         {
             var filename = APIWrapper.GetProcessFilename(process);
-            logger.Info($"조사해보니, 이 프로세스({process.Id}, {process.SafeGetProcessName() ?? "???"})의 실행 파일 경로는 [{filename}] 입니다.");
+            logger.Debug($"조사해보니, 이 프로세스({process.Id}, {process.SafeGetProcessName() ?? "???"})의 실행 파일 경로는 [{filename}] 입니다.");
             
             return filename;
         }

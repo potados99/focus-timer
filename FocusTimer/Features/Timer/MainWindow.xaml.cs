@@ -24,6 +24,7 @@ using FocusTimer.Features.License;
 using FocusTimer.Features.Timer.Border;
 using FocusTimer.Library;
 using FocusTimer.Library.Control.Base;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Features.Timer;
 
@@ -80,6 +81,8 @@ public partial class MainWindow
 
     private void ResetItem_Click(object sender, RoutedEventArgs e)
     {
+        this.GetLogger().Info("[사용자 행동] 타이머를 초기화합니다.");
+        
         ViewModel.ResetTimer();
     }
 

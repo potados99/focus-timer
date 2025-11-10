@@ -56,32 +56,15 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
         LoadUsage();
     }
 
-    private volatile bool _disposed = false;
-
     public void Dispose()
     {
-        if (_disposed)
-        {
-            this.GetLogger().Warn($"AppItem 중복 Dispose 시도: 인스턴스 #{_instanceId}");
-            return;
-        }
-
         _disposedCounter++;
         this.GetLogger().Debug($"AppItem Dispose: 인스턴스 #{_instanceId} (총 생성={_instanceCounter}, Dispose됨={_disposedCounter}, 살아있음={_instanceCounter - _disposedCounter})");
 
-        _disposed = true;
         UnregisterEvents();
 
         // Usage를 null로 설정하여 Dispose 후 이벤트가 와도 다른 AppItem의 Usage를 건드리지 않도록 함
         Usage = null;
-    }
-
-    ~AppItem()
-    {
-        if (!_disposed)
-        {
-            this.GetLogger().Error($"AppItem 메모리 누수 감지: 인스턴스 #{_instanceId}가 Dispose 없이 GC됨");
-        }
     }
 
     public Domain.Entities.App App { get; }
@@ -117,24 +100,12 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
 
     private void OnTick(DateTime now)
     {
-        if (_disposed)
-        {
-            this.GetLogger().Error($"Dispose된 AppItem에서 OnTick 호출됨: 인스턴스 #{_instanceId}");
-            return;
-        }
-
         this.GetLogger().Debug($"OnTick: 인스턴스 #{_instanceId}, IsActive={IsActive}, 앱={App?.Title}");
         UpdateUsage(now);
     }
 
     private void OnActivated(DateTime now)
     {
-        if (_disposed)
-        {
-            this.GetLogger().Error($"Dispose된 AppItem에서 OnActivated 호출됨: 인스턴스 #{_instanceId}");
-            return;
-        }
-
         if (IsActive)
         {
             this.GetLogger().Debug($"사용자 활성화로 새 AppActiveUsage 생성: 인스턴스 #{_instanceId}");
@@ -147,23 +118,17 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
 
     private void OnFocusChanged(IntPtr prev, IntPtr current, DateTime now)
     {
-        if (_disposed)
-        {
-            this.GetLogger().Error($"Dispose된 AppItem에서 OnFocusChanged 호출됨: 인스턴스 #{_instanceId}, 앱={App?.Title}");
-            return;
-        }
-
-        this.GetLogger().Debug($"OnFocusChanged: 인스턴스 #{_instanceId}, IsActive={IsActive}, 앱={App?.Title}");
+        this.GetLogger().Debug($"OnFocusChanged: 인스턴스 #{_instanceId}, IsActive={IsActive}, 앱={App.Title}");
 
         if (!_WasActive && IsActive)
         {
-            this.GetLogger().Debug($"포커스 획득으로 새 AppActiveUsage 생성: 인스턴스 #{_instanceId}");
+            this.GetLogger().Info($"[ActiveUsage 변동] 포커스 획득으로 새 AppActiveUsage 생성: 인스턴스 #{_instanceId}(앱={App.Title})");
                 
             Usage?.RunningUsage.OpenNewActiveUsage(now);
         }
         else if (_WasActive && !IsActive)
         {
-            this.GetLogger().Debug($"포커스 상실로 ActiveUsage 종료: 인스턴스 #{_instanceId}");
+            this.GetLogger().Info($"[ActiveUsage 변동] 포커스 상실로 AppActiveUsage 종료: 인스턴스 #{_instanceId}(앱={App.Title})");
 
             // Lost focus
             if (Usage != null)
@@ -180,6 +145,8 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
                 Usage.RunningUsage.ActiveUsage.TouchUsage(now);
             }
         }
+        
+        _WasActive = IsActive;
     }
 
     private void LoadUsage()

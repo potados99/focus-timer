@@ -81,14 +81,14 @@ public class EventService
     
     public void EmitRender()
     {
-        this.GetLogger().Debug("즉시 전체 렌더링을 유발합니다.");
+        this.GetLogger().Info("[이벤트 발생] Render 이벤트를 발생시킵니다. 즉시 전체 렌더링을 유발합니다.");
 
         OnRender?.Invoke();
     }
 
     public void EmitReload()
     {
-        this.GetLogger().Debug("타임 리셋 및 슬롯 다시 불러오기를 유발합니다.");
+        this.GetLogger().Info("[이벤트 발생] Reload 이벤트를 발생시킵니다. 타임 리셋 및 슬롯 다시 불러오기를 유발합니다.");
 
         OnReload?.Invoke();
     }
