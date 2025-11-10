@@ -21,6 +21,7 @@ using FocusTimer.Domain.Services;
 using FocusTimer.Library;
 using FocusTimer.Library.Extensions;
 using FocusTimer.Library.Utility;
+using Microsoft.AppCenter.Crashes;
 
 namespace FocusTimer.Features.Timer.Slot;
 
@@ -138,8 +139,10 @@ public partial class AppItem : UsageContainer<AppUsage, AppRunningUsage, AppActi
 
                 if (timeSinceLastUpdate > 2)
                 {
-                    this.GetLogger().Error($"AppActiveUsage 갱신 시각 이상: 인스턴스 #{_instanceId}, UpdatedAt={Usage.RunningUsage.ActiveUsage.UpdatedAt:HH:mm:ss}, Now={now:HH:mm:ss}, 경과={timeSinceLastUpdate:F2}초");
-                    throw new Exception($"AppActiveUsage의 마지막 갱신 시각이 너무 오래되었습니다! 뭔가 잘못된 것 같습니다.");
+                    var exception = new Exception(
+                        $"AppActiveUsage의 마지막 갱신 시각이 너무 오래되었습니다! 뭔가 잘못된 것 같습니다. 인스턴스 #{_instanceId}, 앱={App.Title}, UpdatedAt={Usage.RunningUsage.ActiveUsage.UpdatedAt:HH:mm:ss}, Now={now:HH:mm:ss}, 경과={timeSinceLastUpdate:F2}초");
+                    this.GetLogger().Error(exception);
+                    Crashes.TrackError(exception);
                 }
 
                 Usage.RunningUsage.ActiveUsage.TouchUsage(now);
