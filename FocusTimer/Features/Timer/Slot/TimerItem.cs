@@ -151,29 +151,29 @@ public partial class TimerItem : UsageContainer<TimerUsage, TimerRunningUsage, T
         if (Math.Abs(discrepancy.TotalSeconds) >= 1.0)
         {
             // 상세 분석: 각 TimerActiveUsage와 AppActiveUsage 출력
-            this.GetLogger().Debug("=== TimerActiveUsages ===");
+            this.GetLogger().Info("=== TimerActiveUsages ===");
             foreach (var ru in Usage.RunningUsages)
             {
                 foreach (var au in ru.ActiveUsages)
                 {
-                    this.GetLogger().Debug($"  TimerActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
+                    this.GetLogger().Info($"  TimerActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
                                          $"UpdatedAt={au.UpdatedAt:HH:mm:ss.fff}, " +
                                          $"Elapsed={au.Elapsed.ToSixDigits()}");
                 }
             }
 
-            this.GetLogger().Debug("=== AppActiveUsages (슬롯별) ===");
+            this.GetLogger().Info("=== AppActiveUsages (슬롯별) ===");
             foreach (var slot in TimerSlots)
             {
                 if (slot.CurrentAppItem != null)
                 {
-                    this.GetLogger().Debug($"  슬롯 #{slot.SlotNumber}:");
+                    this.GetLogger().Info($"  슬롯 #{slot.SlotNumber}:");
                     
                     foreach (var ru in slot.CurrentAppItem.Usage?.RunningUsages ?? Enumerable.Empty<AppRunningUsage>())
                     {
                         foreach (var au in ru.ActiveUsages)
                         {
-                            this.GetLogger().Debug($"    AppActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
+                            this.GetLogger().Info($"    AppActiveUsage: StartedAt={au.StartedAt:HH:mm:ss.fff}, " +
                                                    $"UpdatedAt={au.UpdatedAt:HH:mm:ss.fff}, " +
                                                    $"Elapsed={au.Elapsed.ToSixDigits()}");                        }
                     }

@@ -63,17 +63,27 @@ public partial class TimerSlotViewModel
     {
         this.GetLogger().Info($"현재 슬롯({SlotNumber}번)의 앱 정보를 불러옵니다.");
 
+        if (CurrentAppItem != null)
+        {
+            this.GetLogger().Warn($"[LoadSlot] 기존 AppItem이 있습니다. Dispose될 예정입니다. App={CurrentAppItem.App?.Title}");
+        }
+
         _slot = _slotService.GetOrCreateStatus(SlotNumber);
 
         if (_slot.App != null)
         {
-            this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)에 등록된 앱({_slot.App.Title})을 복구합니다.");
+            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 등록된 앱({_slot.App.Title})을 복구합니다.");
 
-            StopWaitingAndRegisterApp(new AppItem(_slot.App.ExecutablePath));
+            var newAppItem = new AppItem(_slot.App.ExecutablePath);
+            this.GetLogger().Info($"[LoadSlot] 새 AppItem 생성 완료. 이제 StopWaitingAndRegisterApp 호출합니다.");
+
+            StopWaitingAndRegisterApp(newAppItem);
+
+            this.GetLogger().Info($"[LoadSlot] StopWaitingAndRegisterApp 완료.");
         }
         else
         {
-            this.GetLogger().Debug($"현재 슬롯({SlotNumber}번)에 등록된 앱이 없습니다.");
+            this.GetLogger().Info($"현재 슬롯({SlotNumber}번)에 등록된 앱이 없습니다.");
         }
     }
     

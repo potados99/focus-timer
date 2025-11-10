@@ -46,7 +46,14 @@ public partial class TimerSlotViewModel
                                   (appItem.IsCountedOnConcentrationCalculation ? "포함됩니다." : "포함되지 않습니다."));
         }
 
-        CurrentAppItem?.Dispose();
+        if (CurrentAppItem != null)
+        {
+            this.GetLogger().Warn($"[StopWaitingAndRegisterApp] 기존 AppItem을 Dispose합니다. App={CurrentAppItem.App?.Title}");
+            CurrentAppItem.Dispose();
+            this.GetLogger().Warn($"[StopWaitingAndRegisterApp] 기존 AppItem Dispose 완료.");
+        }
+
+        this.GetLogger().Info($"[StopWaitingAndRegisterApp] 새 AppItem을 CurrentAppItem에 할당합니다.");
         CurrentAppItem = appItem;
         IsWaitingForApp = false;
 
