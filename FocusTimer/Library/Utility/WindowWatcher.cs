@@ -18,6 +18,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Threading;
+using FocusTimer.Library.Extensions;
 
 namespace FocusTimer.Library.Utility;
 
@@ -59,11 +60,11 @@ public class WindowWatcher
     public Process? FocusedProcess => _focusedWindow == IntPtr.Zero
         ? null
         : APIWrapper.GetProcessByWindowHandle(_focusedWindow);
-    
+
     /// <summary>
     /// 현재 포커스를 가지고 있는 프로세스의 실행 파일 경로입니다.
     /// </summary>
-    public string? FocusedProcessExecutablePath => FocusedProcess?.MainModule?.FileName;
+    public string? FocusedProcessExecutablePath => FocusedProcess?.ExecutablePath();
 
     private void StartListening()
     {
