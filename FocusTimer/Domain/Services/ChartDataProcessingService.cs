@@ -256,6 +256,8 @@ public class ChartDataProcessingService
                 new AppUsageItem
                 {
                     AppPath = thisAppGroup.Key,
+                    Icon = thisAppGroup.First().ParentUsage.App.Icon,
+                    AppName = thisAppGroup.First().ParentUsage.App.Title,
                     UsageString = TickToMinutes(thisAppGroup.Sum(g => g.ActiveElapsed.Ticks)),
                     UsagesByTime = new UsageByTimeItem[]
                     {
@@ -283,6 +285,8 @@ public class ChartDataProcessingService
                 {
                     Date = thisAppGroup.First().StartedAt.Date,
                     AppPath = thisAppGroup.Key,
+                    Icon = thisAppGroup.First().ParentUsage.App.Icon,
+                    AppName = thisAppGroup.First().ParentUsage.App.Title,
                     UsageString = TickToMinutes(thisAppGroup.Sum(au => au.ActiveElapsed.Ticks)),
                     UsagesByTime = thisAppGroup.Select(au => new UsageByTimeItem
                     {
