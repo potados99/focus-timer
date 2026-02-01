@@ -133,29 +133,32 @@ public partial class App
             var regex = new Regex(fullPattern);
             var searchPattern = $"{baseFileName}*";
 
-            var filesToDelete = Directory.GetFiles(logDir, searchPattern)
-                .Select(filePath => Path.GetFileName(filePath))
-                .Select(fileName => new { FileName = fileName, Match = regex.Match(fileName) })
-                .Where(x => x.Match.Success && x.Match.Groups.Count > 1)
-                .Select(x => new
-                {
-                    x.FileName,
-                    DateString = x.Match.Groups[1].Value,
-                    FilePath = Path.Combine(logDir, x.FileName)
-                })
-                .Where(x => DateTime.TryParseExact(x.DateString, "yyyyMMdd", null,
-                    System.Globalization.DateTimeStyles.None, out var date) && date < cutoffDate)
-                .ToList();
-
-            foreach (var file in filesToDelete)
+            // EnumerateFiles로 스트리밍 방식 처리 (메모리 효율적)
+            foreach (var filePath in Directory.EnumerateFiles(logDir, searchPattern))
             {
-                try
+                var fileName = Path.GetFileName(filePath);
+                var match = regex.Match(fileName);
+
+                // 정규식 매칭 실패 시 스킵
+                if (!match.Success || match.Groups.Count <= 1)
                 {
-                    File.Delete(file.FilePath);
+                    continue;
                 }
-                catch
+
+                var dateString = match.Groups[1].Value;
+
+                // 날짜 파싱 및 기한 체크
+                if (DateTime.TryParseExact(dateString, "yyyyMMdd", null,
+                    System.Globalization.DateTimeStyles.None, out var date) && date < cutoffDate)
                 {
-                    // 삭제 실패해도 무시 (파일이 사용 중일 수 있음)
+                    try
+                    {
+                        File.Delete(filePath);
+                    }
+                    catch
+                    {
+                        // 삭제 실패해도 무시 (파일이 사용 중일 수 있음)
+                    }
                 }
             }
         }
