@@ -15,6 +15,9 @@
 // 다음 링크에서 받아볼 수 있습니다: <https://www.gnu.org/licenses/gpl-3.0.txt>
 
 using System;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using FocusTimer.Data.DataContext;
 using FocusTimer.Features.Splash;
@@ -27,20 +30,24 @@ namespace FocusTimer;
 public partial class App
 {
     private log4net.ILog Logger => this.GetLogger();
-    
+
     [STAThread]
     public static void Main()
     {
         SplashWindow.ShowAutoClosed();
-        
+
         var application = new App();
         application.InitializeComponent();
         application.Run();
     }
-    
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // log4net 초기화 전에 오래된 로그 파일 정리
+        CleanupOldLogFiles();
+
         Logger.Info("앱을 시작합니다.");
         
         Settings.UpgradeIfNeeded();
@@ -59,5 +66,101 @@ public partial class App
         Logger.Info("스트링 리소스를 초기화하였습니다.");
 
         new AppCenterCrashes().SetupExceptionHandler();
+    }
+
+    /// <summary>
+    /// log4net은 앱 시작 시 기존 로그 파일을 정리하지 않으므로,
+    /// 수동으로 maxSizeRollBackups 설정에 맞춰 오래된 로그 파일을 삭제합니다.
+    /// </summary>
+    private void CleanupOldLogFiles()
+    {
+        try
+        {
+            var logDir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "World Moment", "Focus Timer", "logs"
+            );
+
+            if (!Directory.Exists(logDir))
+            {
+                return;
+            }
+
+            // 이 기간 만큼의 로그만 남겨놔요
+            const int maxDaysToKeep = 7;
+
+            // log4net.config 설정과 일치하는 패턴으로 정리
+            // <file value="...\logs\app" />
+            // <datePattern value="'-'yyyyMMdd'.log'" />
+            // 결과: app-20260201.log
+            DeleteOldLogFilesByPattern(logDir, "app", "-yyyyMMdd.log", maxDaysToKeep);
+            DeleteOldLogFilesByPattern(logDir, "error", "-yyyyMMdd.log", maxDaysToKeep);
+
+            // 구버전 패턴도 정리 (app.log-20260201)
+            DeleteOldLogFilesByPattern(logDir, "app.log", "-yyyyMMdd", maxDaysToKeep);
+            DeleteOldLogFilesByPattern(logDir, "error.log", "-yyyyMMdd", maxDaysToKeep);
+        }
+        catch
+        {
+            // 로그 정리 실패해도 앱 시작은 계속
+        }
+    }
+
+    /// <summary>
+    /// 특정 파일명 패턴에 맞는 오래된 로그 파일을 삭제합니다.
+    /// </summary>
+    /// <param name="logDir">로그 디렉토리 경로</param>
+    /// <param name="baseFileName">기본 파일명 (예: "app", "error", "app.log")</param>
+    /// <param name="datePattern">날짜 패턴 (예: "-yyyyMMdd.log", "-yyyyMMdd")</param>
+    /// <param name="daysToKeep">보관할 일수</param>
+    private void DeleteOldLogFilesByPattern(string logDir, string baseFileName, string datePattern, int daysToKeep)
+    {
+        try
+        {
+            var cutoffDate = DateTime.Now.Date.AddDays(-daysToKeep);
+
+            // datePattern을 정규식으로 변환
+            // 예: "-yyyyMMdd.log" → "-(\d{8})\.log"
+            // 예: "-yyyyMMdd" → "-(\d{8})"
+            var regexDatePattern = datePattern.Replace("yyyyMMdd", @"(\d{8})");
+
+            // 특수문자 이스케이프 후 날짜 부분만 그룹으로
+            var escapedBase = Regex.Escape(baseFileName);
+            var escapedPattern = Regex.Escape(datePattern).Replace("yyyyMMdd", @"(\d{8})");
+            var fullPattern = $"^{escapedBase}{escapedPattern}$";
+
+            var regex = new Regex(fullPattern);
+            var searchPattern = $"{baseFileName}*";
+
+            var filesToDelete = Directory.GetFiles(logDir, searchPattern)
+                .Select(filePath => Path.GetFileName(filePath))
+                .Select(fileName => new { FileName = fileName, Match = regex.Match(fileName) })
+                .Where(x => x.Match.Success && x.Match.Groups.Count > 1)
+                .Select(x => new
+                {
+                    x.FileName,
+                    DateString = x.Match.Groups[1].Value,
+                    FilePath = Path.Combine(logDir, x.FileName)
+                })
+                .Where(x => DateTime.TryParseExact(x.DateString, "yyyyMMdd", null,
+                    System.Globalization.DateTimeStyles.None, out var date) && date < cutoffDate)
+                .ToList();
+
+            foreach (var file in filesToDelete)
+            {
+                try
+                {
+                    File.Delete(file.FilePath);
+                }
+                catch
+                {
+                    // 삭제 실패해도 무시 (파일이 사용 중일 수 있음)
+                }
+            }
+        }
+        catch
+        {
+            // 패턴 매칭 실패해도 무시
+        }
     }
 }

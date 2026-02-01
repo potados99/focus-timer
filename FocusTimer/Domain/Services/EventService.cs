@@ -36,7 +36,7 @@ public class EventService
         _clockGenerator = clockGenerator;
         _clockGenerator.OnTick += () =>
         {
-            this.GetLogger().Info("[이벤트 발생] Tick 이벤트가 발생하였습니다.");
+            this.GetLogger().Debug("[이벤트 발생] Tick 이벤트가 발생하였습니다.");
             OnTick?.Invoke(DateTime.Now);
             OnRender?.Invoke();
         };
