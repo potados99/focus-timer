@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using FocusTimer.Data.DataContext;
 using FocusTimer.Features.Splash;
@@ -45,8 +46,8 @@ public partial class App
     {
         base.OnStartup(e);
 
-        // log4net 초기화 전에 오래된 로그 파일 정리
-        CleanupOldLogFiles();
+        // 오래된 로그 파일을 백그라운드에서 비동기로 정리 (UI 블로킹 방지)
+        _ = Task.Run(() => CleanupOldLogFiles());
 
         Logger.Info("앱을 시작합니다.");
         
