@@ -74,8 +74,7 @@ public class App
             throw new InvalidOperationException($"주어진 경로({path})로부터 App 엔티티를 생성할 수 없습니다. 해당 경로에 파일이 존재하지 않습니다.");
         }
 
-        var versionInfo = FileVersionInfo.GetVersionInfo(path);
-        var title = GetAppTitle(versionInfo, path);
+        var title = GetAppTitle(path);
         var icon = APIWrapper.ExtractAssociatedIcon(path);
 
         return new App
@@ -86,10 +85,19 @@ public class App
         };
     }
 
-    private static string GetAppTitle(FileVersionInfo versionInfo, string path)
+    private static string GetAppTitle(string path)
     {
         var logger = log4net.LogManager.GetLogger(typeof(App));
-            
+
+        if (!File.Exists(path))
+        {
+            // 3순위: 실행 파일 이름 (확장자 제외)
+            return Path.GetFileNameWithoutExtension(path);
+        }
+        
+        // 이 호출은 주어진 경로의 파일이 존재하는 것이 확실할 때에만 수행해야 합니다.
+        var versionInfo = FileVersionInfo.GetVersionInfo(path);
+        
         // 1순위: FileDescription
         if (!string.IsNullOrWhiteSpace(versionInfo.FileDescription))
         {
@@ -154,8 +162,7 @@ public class App
             return;
         }
         
-        var versionInfo = FileVersionInfo.GetVersionInfo(ExecutablePath);
-        Title = GetAppTitle(versionInfo, ExecutablePath);
+        Title = GetAppTitle(ExecutablePath);
             
         this.GetLogger().Info($"앱 '{ExecutablePath}'의 Title이 비어있어 자동으로 '{Title}'(으)로 업데이트했습니다.");
     }
